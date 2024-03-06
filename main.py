@@ -224,7 +224,7 @@ The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data r
                                                                                             TECHNOLOGY_ID: Identifier for the crop technology applied.
                                                                                             CREATED_BY: Information about the user or process that created the transaction.
                                                                                             CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n                                                                                                                       CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n                                                                                    
-While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table \
+While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table but donot use record_status=1 if question asked for farmers \
 For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
                             FROM m_cbo c
@@ -232,8 +232,11 @@ What is the total count of SHG in Patna in 2023?....then query should be...SELEC
                             INNER JOIN m_district d ON c.DISTRICT_ID = d.DISTRICT_ID
                             WHERE upper(t.TYPE_SHORT_NAME) = 'SHG' 
                             AND upper(d.DISTRICT_NAME) = 'PATNA' AND EXTRACT(YEAR FROM c.formation_date) = 2023
-                            AND c.record_status=1...you can clearly see c.record_status=1 has been used which is important to get only the information for those values which are live..so this c.record_status=1 will be used almost in all sq query.
-
+                            AND c.record_status=1...you can clearly see c.record_status=1 has been used which is important  to get only the information for those values which are live..so this c.record_status=1 will be used almost in all sq query except for farmer tables \
+What is the total count of farmers?....then query should be.....
+                                        SELECT COUNT(DISTINCT FARMER_ID) AS total_farmers
+                                                FROM m_farmer......you can clearly see here record_status=1 has not been used as it belongs question from farmer tables \
+                                                
 While generating sql query donot do any silly mistakes or donot give wrong query...this query will be used for very important person whch is related to their livelihoods \
 For example:-
 
@@ -656,7 +659,10 @@ def api():
 #                             INNER JOIN m_district d ON c.DISTRICT_ID = d.DISTRICT_ID
 #                             WHERE upper(t.TYPE_SHORT_NAME) = 'SHG' 
 #                             AND upper(d.DISTRICT_NAME) = 'PATNA' AND EXTRACT(YEAR FROM c.formation_date) = 2023
-#                             AND c.record_status=1...you can clearly see c.record_status=1 has been used which is important to get only the information for those values which are live..so this c.record_status=1 will be used almost in all sq query.
+#                             AND c.record_status=1...you can clearly see c.record_status=1 has been used which is important to get only the information for those values which are live..so this c.record_status=1 will be used almost in all sq query except for farmer tables \
+# What is the total count of farmers?....then query should be.....
+#                                         SELECT COUNT(DISTINCT FARMER_ID) AS total_farmers
+#                                                 FROM m_farmer......you can clearly see here record_status=1 has not been used as it belongs question from farmer tables \.
 
 # While generating sql query donot do any silly mistakes or donot give wrong query...this query will be used for very important person whch is related to their livelihoods \
 # For example:-
