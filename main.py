@@ -140,6 +140,90 @@ Detail information about table and its columns are as follows:-
         The  table CLF_MASIK_GRADING contains information about the grades assigned to the clf. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, clf_id, criteria1, criteria2, criteria3, month_name, district_id, block_id and final_grade. The cbo_type_id of the clf is 1. \n
        The  table VO_MASIK_GRADING contains information about the grades assigned to the vo. It includes columns such as sl, year, month, criteria2, criteria3, criteria4, criteria5, total_marks, vo_id, criteria1, month_name, district_id, block_id, clf_id and final_grade. The cbo_type_id of the vo is 2. \n
        The  table SHG_MASIK_GRADING contains information about the grades assigned to the shg. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, shg_id, criteria1, criteria2, criteria3, month_name, clf_id, vo_id and final_grade. The cbo_type_id of the shg is 3. \n
+
+       The M_FARMER table stores essential details about farmers. Its columns include:
+                                                                    FARMER_ID: Unique identifier.
+                                                                    MEMBER_ID: Linked to a Community Based Organization (CBO) member.
+                                                                    AADHAR: Aadhar number for identification.
+                                                                    MOBILENO: Contact number.
+                                                                    BANK_ID: Bank identifier.
+                                                                    BRANCH_ID: Branch identifier.
+                                                                    ACCOUNT_NO: Bank account number.
+                                                                    PHOTO: Farmer's photograph.
+                                                                    CREATED_BY: Creator information.
+                                                                    CREATED_ON: Creation timestamp.   \n
+
+        The M_FARMER_CROP table manages information about crops cultivated by farmers. Its columns include:
+                                                                                        CROP_ID: Unique identifier for each crop record.
+                                                                                        CROP_NAME: Name of the crop being cultivated.
+                                                                                        CROP_TYPE_ID: Identifier representing the type of crop (e.g., cereal, legume, vegetable). \n
+        The M_FARMER_CROP_TECHNOLOGY table stores data related to agricultural technologies used for specific crops. Its columns are:
+                                                                                                        TECHNOLOGY_ID: Unique identifier for each technology entry.
+                                                                                                        CROP_ID: Identifier linking the technology to a specific crop.
+                                                                                                        TECHNOLOGY: Description or name of the agricultural technology utilized.  \n                                                                             
+        The M_FARMER_CROPTYPE table manages information about different types of crops. Its columns include:
+                                                                                            CROP_TYPE_ID: Unique identifier for each crop type.
+                                                                                            CROP_TYPE: Name or description of the crop type. \n
+
+        The M_FARMER_LAND table stores data regarding landholdings of farmers. Its columns include:
+                                                                                LAND_ID: Unique identifier for each land record.
+                                                                                FARMER_ID: Identifier linking the land to a specific farmer.
+                                                                                LANDHOLDINGOWN: Area of land owned by the farmer.
+                                                                                LANDHOLDINGLEASE: Area of land leased by the farmer.
+                                                                                IRRIGATEDLAND: Area of land that is irrigated.
+                                                                                NONIRRIGATEDLAND: Area of land that is not irrigated.
+                                                                                CREATED_BY: Information about the user or process that created the land record.
+                                                                                CREATED_ON: Timestamp indicating the date and time when the land record was created in the system. \n
+
+The M_FARMER_PEST_MANAGEMENT table contains data related to pest management treatments for farmers. Its columns include:
+                                                                                                    P_TREATMENT_ID: Unique identifier for each pest treatment entry.
+                                                                                                    TREATMENT: Description or name of the pest management treatment. \n
+
+The M_FARMER_SEED table maintains information about different types of seeds used by farmers. Its columns include:
+
+                                                                                            SEED_TYPE_ID: Unique identifier for each seed type.
+                                                                                            SEED_TYPE: Description or name of the seed type. \n                                                                                                 
+
+The M_FARMER_SOIL_MANAGEMENT table stores details regarding soil management practices adopted by farmers. Its columns include:
+
+                                                                                            SOILPRACTISE_ID: Unique identifier for each soil management practice entry.
+                                                                                            SOIL_PRACTISE: Description or name of the soil management practice. \n
+
+The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities. Its columns include:
+                                                            TRANSACTION_ID: Unique identifier for each transaction.
+                                                            FARMER_ID: Identifier linking the transaction to a specific farmer.
+                                                            VO_ID: Identifier for the Village Organisation (VO) associated with the transaction.
+                                                            SHG_ID: Identifier for the Self Help Group (SHG) associated with the transaction.
+                                                            FY: Fiscal year of the transaction.
+                                                            CROP_TYPE_ID: Identifier representing the type of crop involved in the transaction.
+                                                            CULTIVATION_AREA: Area of land cultivated for the transaction.
+                                                            SEEDS_USED: Quantity of seeds used.
+                                                            SEEDS_VARIETY: Variety of seeds used.
+                                                            SEED_TYPE_ID: Identifier representing the type of seed used.
+                                                            TECHNOLOGY_ID: Identifier representing the agricultural technology used.
+                                                            TOTAL_YIELD: Total yield obtained from the transaction.
+                                                            CREATED_BY: Information about the user or process that created the transaction.
+                                                            CREATED_ON: Timestamp indicating the date and time when the transaction was created.
+                                                            CROP_ID: Identifier for the specific crop involved in the transaction.
+                                                            SOILPRACTISE_ID: Identifier representing the soil management practice employed.
+                                                            TREATMENT_ID: Identifier representing the pest management treatment applied.  \n
+
+The T_MP_FARMER_TRANSACTION_PEST is mapping table records transactional data related to pest management treatments for farmers. Its columns include:
+                                                                                                        TRANSACTION_ID: Unique identifier for each transaction.
+                                                                                                        P_TREATMENT_ID: Identifier for the pest management treatment applied.
+                                                                                                        CREATED_BY: Information about the user or process that created the transaction.
+                                                                                                        CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n  
+
+The T_MP_FARMER_TRANSACTION_SOIL table contains transactional data related to soil management practices adopted by farmers. Its columns include:
+                                                                                                                            TRANSACTION_ID: Unique identifier for each transaction.
+                                                                                                                            SOILPRACTISE_ID: Identifier for the soil management practice applied.
+                                                                                                                            CREATED_BY: Information about the user or process that created the transaction. \n
+  
+The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data related to crop technologies used by farmers. Its columns include:
+                                                                                            TRANSACTION_ID: Unique identifier for each transaction.
+                                                                                            TECHNOLOGY_ID: Identifier for the crop technology applied.
+                                                                                            CREATED_BY: Information about the user or process that created the transaction.
+                                                                                            CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n                                                                                                                       CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n                                                                                    
 While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table \
 For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
@@ -394,7 +478,7 @@ def get_tables(categories: List[Table]) -> List[str]:
             )
             elif category.name == "Farmer":
                 tables.extend(["m_farmer", "m_farmer_crop","m_farmer_crop_technology", "m_farmer_croptype", "m_farmer_land",
-                            "m_farmer_pest_management", "m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology"])
+                            "m_farmer_pest_management", "m_farmer_seed", "m_farmer_soil_management","t_farmer_transaction","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology"])
         return tables
 
 
@@ -455,7 +539,91 @@ def api():
 # M_DESIGNATION is a master tables which contain the following columns DESIGNATION_ID DESIGNATION_SHORT_NAME DESIGNATION_FULL_NAME MEMBER_GROUP_ID CREATED_BY CREATED_ON UPDATED_BY UPDATED_ON RECORD_STATUS DESIGNATION_SHORT_NAME_HINDI DESIGNATION_FULL_NAME_HINDI EBS_JOB_ID EBS_THEMATIC_ID...whenever the question is the count of member then member_group_id=3 and designation_id!=31
     #     The  table CLF_MASIK_GRADING contains information about the grades assigned to the clf. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, clf_id, criteria1, criteria2, criteria3, month_name, district_id, block_id and final_grade. The cbo_type_id of the clf is 1.
     #    The  table VO_MASIK_GRADING contains information about the grades assigned to the vo. It includes columns such as sl, year, month, criteria2, criteria3, criteria4, criteria5, total_marks, vo_id, criteria1, month_name, district_id, block_id, clf_id and final_grade. The cbo_type_id of the vo is 2. \n
-    #    The  table SHG_MASIK_GRADING contains information about the grades assigned to the shg. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, shg_id, criteria1, criteria2, criteria3, month_name, clf_id, vo_id and final_grade. The cbo_type_id of the shg is 3.
+    #    The  table SHG_MASIK_GRADING contains information about the grades assigned to the shg. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, shg_id, criteria1, criteria2, criteria3, month_name, clf_id, vo_id and final_grade. The cbo_type_id of the shg is 3. \n
+    #       The M_FARMER table stores essential details about farmers. Its columns include:
+                                                                    # FARMER_ID: Unique identifier.
+                                                                    # MEMBER_ID: Linked to a Community Based Organization (CBO) member.
+                                                                    # AADHAR: Aadhar number for identification.
+                                                                    # MOBILENO: Contact number.
+                                                                    # BANK_ID: Bank identifier.
+                                                                    # BRANCH_ID: Branch identifier.
+                                                                    # ACCOUNT_NO: Bank account number.
+                                                                    # PHOTO: Farmer's photograph.
+                                                                    # CREATED_BY: Creator information.
+                                                                    # CREATED_ON: Creation timestamp. \n
+        # The M_FARMER_CROP table manages information about crops cultivated by farmers. Its columns include:
+
+        #                                                                                 CROP_ID: Unique identifier for each crop record.
+        #                                                                                 CROP_NAME: Name of the crop being cultivated.
+        #                                                                                 CROP_TYPE_ID: Identifier representing the type of crop (e.g., cereal, legume, vegetable). \n
+        # The M_FARMER_CROP_TECHNOLOGY table stores data related to agricultural technologies used for specific crops. Its columns are:
+
+        #                                                                                                 TECHNOLOGY_ID: Unique identifier for each technology entry.
+        #                                                                                                 CROP_ID: Identifier linking the technology to a specific crop.
+        #                                                                                                 TECHNOLOGY: Description or name of the agricultural technology utilized.  \n 
+            #  The M_FARMER_CROPTYPE table manages information about different types of crops. Its columns include:
+            #                                                                                 CROP_TYPE_ID: Unique identifier for each crop type.
+            #                                                                                 CROP_TYPE: Name or description of the crop type. \n
+        
+        # The M_FARMER_LAND table stores data regarding landholdings of farmers. Its columns include:
+        #                                                                         LAND_ID: Unique identifier for each land record.
+        #                                                                         FARMER_ID: Identifier linking the land to a specific farmer.
+        #                                                                         LANDHOLDINGOWN: Area of land owned by the farmer.
+        #                                                                         LANDHOLDINGLEASE: Area of land leased by the farmer.
+        #                                                                         IRRIGATEDLAND: Area of land that is irrigated.
+        #                                                                         NONIRRIGATEDLAND: Area of land that is not irrigated.
+        #                                                                         CREATED_BY: Information about the user or process that created the land record.
+        #                                                                         CREATED_ON: Timestamp indicating the date and time when the land record was created in the system. \n
+#         The M_FARMER_PEST_MANAGEMENT table contains data related to pest management treatments for farmers. Its columns include:
+
+                                                                                                # P_TREATMENT_ID: Unique identifier for each pest treatment entry.
+                                                                                                # TREATMENT: Description or name of the pest management treatment. \n
+        
+#         The M_FARMER_SEED table maintains information about different types of seeds used by farmers. Its columns include:
+
+                                                                                                # SEED_TYPE_ID: Unique identifier for each seed type.
+                                                                                                # SEED_TYPE: Description or name of the seed type. \n
+        
+#         The M_FARMER_SOIL_MANAGEMENT table stores details regarding soil management practices adopted by farmers. Its columns include:
+
+                                                                                                            # SOILPRACTISE_ID: Unique identifier for each soil management practice entry.
+                                                                                                            # SOIL_PRACTISE: Description or name of the soil management practice. \n
+        
+        # The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities. Its columns include:
+        #                                                     TRANSACTION_ID: Unique identifier for each transaction.
+        #                                                     FARMER_ID: Identifier linking the transaction to a specific farmer.
+        #                                                     VO_ID: Identifier for the Village Organisation (VO) associated with the transaction.
+        #                                                     SHG_ID: Identifier for the Self Help Group (SHG) associated with the transaction.
+        #                                                     FY: Fiscal year of the transaction.
+        #                                                     CROP_TYPE_ID: Identifier representing the type of crop involved in the transaction.
+        #                                                     CULTIVATION_AREA: Area of land cultivated for the transaction.
+        #                                                     SEEDS_USED: Quantity of seeds used.
+        #                                                     SEEDS_VARIETY: Variety of seeds used.
+        #                                                     SEED_TYPE_ID: Identifier representing the type of seed used.
+        #                                                     TECHNOLOGY_ID: Identifier representing the agricultural technology used.
+        #                                                     TOTAL_YIELD: Total yield obtained from the transaction.
+        #                                                     CREATED_BY: Information about the user or process that created the transaction.
+        #                                                     CREATED_ON: Timestamp indicating the date and time when the transaction was created.
+        #                                                     CROP_ID: Identifier for the specific crop involved in the transaction.
+        #                                                     SOILPRACTISE_ID: Identifier representing the soil management practice employed.
+        #                                                     TREATMENT_ID: Identifier representing the pest management treatment applied.  \n  
+
+# The T_MP_FARMER_TRANSACTION_PEST is mapping table records transactional data related to pest management treatments for farmers. Its columns include:
+#                                                                                                         TRANSACTION_ID: Unique identifier for each transaction.
+#                                                                                                         P_TREATMENT_ID: Identifier for the pest management treatment applied.
+#                                                                                                         CREATED_BY: Information about the user or process that created the transaction.
+#                                                                                                         CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n  
+        # The T_MP_FARMER_TRANSACTION_SOIL is mpping table contains transactional data related to soil management practices adopted by farmers. Its columns include:
+        #                                                                                                                     TRANSACTION_ID: Unique identifier for each transaction.
+        #                                                                                                                     SOILPRACTISE_ID: Identifier for the soil management practice applied.
+        #                                                                                                                     CREATED_BY: Information about the user or process that created the transaction.
+        #   
+        #                                                                                                                   CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n
+# The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data related to crop technologies used by farmers. Its columns include:
+                                                                                                        # TRANSACTION_ID: Unique identifier for each transaction.
+                                                                                                        # TECHNOLOGY_ID: Identifier for the crop technology applied.
+                                                                                                        # CREATED_BY: Information about the user or process that created the transaction.
+                                                                                                        # CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n
 # While calculating member or if the question contains find or count member then donot join m_cbo and m_cbo_member on cbo_id directly as both does not contain any common column...m_cbo contains cbo_id whereas m_cbo_member contains member_id \
 # in that case you must use mp_cbo_member which is a mapping table and contains both cbo_id and member_id... \
 
