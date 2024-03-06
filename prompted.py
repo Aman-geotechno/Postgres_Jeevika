@@ -614,4 +614,44 @@ l.designation_id!=31
             AND NOT EXISTS (SELECT 1 FROM clf_masik_grading b WHERE a.cbo_id = b.clf_id)""",
             "result": """[(64)]""",
             "answer": """There are 64 clf that are not graded""",
+        },
+        {
+           "input": "total count of farmers",
+            "sql_cmd": """SELECT
+                            COUNT(DISTINCT FARMER_ID) AS total_farmers
+                        FROM
+                            m_farmer""",
+            "result": """[(3477121,)]""",
+            "answer": """There are 3477121 total farmers""", 
+        },
+        {
+            "input": "total count of engaged farmers or active farmers or farmers with active transaction",
+            "sql_cmd": """SELECT
+                            COUNT(DISTINCT FARMER_ID) AS total_farmers
+                        FROM
+                            t_farmer_transaction""",
+            "result": """[(2439044,)]""",
+            "answer": """There are 2439044 total engaged farmers or ctive farmers or transaction farmers""", 
+        },
+        {
+              "input": "active farmers in 2023-2024",
+            "sql_cmd": """SELECT
+    COUNT(DISTINCT FARMER_ID) AS total_farmers
+FROM
+    t_farmer_transaction
+WHERE
+    FY = '2023-2024'""",
+            "result": """[(2006052,)]""",
+            "answer": """There are 2006052 active farmers in 2023-2024""", 
+        },
+        {
+            "input": "number of farmers having lease land",
+            "sql_cmd": """SELECT
+    COUNT(DISTINCT FARMER_ID) AS farmers_with_lease_land
+FROM
+    m_farmer_land
+WHERE
+    LANDHOLDINGLEASE > 0""",
+            "result": """[(1682700,)]""",
+            "answer": """There are 1682700 number of farmers having lease land""", 
         }]

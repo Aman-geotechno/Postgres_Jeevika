@@ -189,7 +189,7 @@ The M_FARMER_SOIL_MANAGEMENT table stores details regarding soil management prac
                                                                                             SOILPRACTISE_ID: Unique identifier for each soil management practice entry.
                                                                                             SOIL_PRACTISE: Description or name of the soil management practice. \n
 
-The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities. Its columns include:
+The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities.It also indicate that farmers are engaged and active. Its columns include:
                                                             TRANSACTION_ID: Unique identifier for each transaction.
                                                             FARMER_ID: Identifier linking the transaction to a specific farmer.
                                                             VO_ID: Identifier for the Village Organisation (VO) associated with the transaction.
