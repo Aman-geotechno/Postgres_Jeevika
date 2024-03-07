@@ -390,8 +390,8 @@ AND c.record_status = 1""",
                         AND c.record_status = 1
                         GROUP BY p.PANCHAYAT_NAME
                         ORDER BY shg_count DESC""",
-            "result": """[(1456)]""",
-            "answer": """There are 1456 shg in lakhani bigha panchayat""",
+            "result": """[(1. BARA - 4592 2. IBRAHIMPUR - 4190 3. BARAH - 4150 4. DARIYAPUR - 3959 5. GHOSWARI - 3025)]""",
+            "answer": """1. BARA - 4592 2. IBRAHIMPUR - 4190 3. BARAH - 4150 4. DARIYAPUR - 3959 5. GHOSWARI - 3025""",
         },
         {
             "input": "give me count of panchayat wise shg from patna district?",
@@ -712,4 +712,52 @@ WHERE
     )""",
             "result": """[(82811,)]""",
             "answer": """82811 farmers grew kharif crops"""
+        },
+        {
+            "input": "total count of agri enterprenure",
+            "sql_cmd": """select count(id) from profile_entry""",
+            "result": """[(3932,)]""",
+            "answer": """3932 count of agri enterprenure"""
+        },
+        {
+           "input": "total expenditure amount of agri enterprenures",
+            "sql_cmd": """select sum(amount) from t_expenditure_details""",
+            "result": """[(3156902,)]""",
+            "answer": """total expenditure amount of agri enterprenures 3156902""" 
+        },
+        {
+               "input": "total sell grain amount of agri enterprenures",
+            "sql_cmd": """select sum(total_amount) from t_sell_grain""",
+            "result": """[(12652544.70)]""",
+            "answer": """total sell grain amount of agri enterprenures are 12652544.70""" 
+        },
+        {
+            "input": "no of active enterprenure in agri input ativity",
+            "sql_cmd": """select count(distinct entry_by) from t_agri_input where entry_by is not null""",
+            "result": """[(177)]""",
+            "answer": """177 no of active enterprenure in agri input ativity""" 
+        },
+        {
+            "input": "no of active enterprenure in advisory farmer activity",
+            "sql_cmd": """select count(distinct entry_by) from t_advisory_farmer_entry where entry_by is not null""",
+            "result": """[(180)]""",
+            "answer": """180 no of active enterprenure in advisory farmer activity"""
+        },
+        {
+            "input": "no of active enterprenure in marketing services activity",
+            "sql_cmd": """select count(distinct entry_by) from t_marketing_services where entry_by is not null""",
+            "result": """[(73)]""",
+            "answer": """73 no of active enterprenure in marketing services activity"""
+        },
+        {
+            "input": "no of active enterprenure in digital banking activity",
+            "sql_cmd": """select count(distinct entry_by) from t_digital_banking where entry_by is not null""",
+            "result": """[(205)]""",
+            "answer": """205 no of active enterprenure in digital banking activity"""
+        },
+        {
+             "input": "no of active enterprenure in nursery services activity",
+            "sql_cmd": """select count(distinct entry_by) from t_nursery_services where entry_by is not null""",
+            "result": """[(89)]""",
+            "answer": """89 no of active enterprenure in nursery services activity"""
         }]

@@ -73,11 +73,11 @@ db = SQLDatabase.from_uri(f"postgresql://{db_user}:{db_password}@{db_host}:{db_p
 "m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block",
 "m_district","m_designation","m_village","m_panchayat","clf_masik_grading",
                     "vo_masik_grading",
-                    "shg_masik_grading"])
+                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type"])
 
 #print(db.get_usable_table_names())
 
-print(db.get_context())
+#print(db.get_context())
 
 llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True,google_api_key='AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ', temperature=0)
 
@@ -224,6 +224,199 @@ The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data r
                                                                                             TECHNOLOGY_ID: Identifier for the crop technology applied.
                                                                                             CREATED_BY: Information about the user or process that created the transaction.
                                                                                             CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n                                                                                                                       CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n                                                                                    
+
+                                                                                            
+The profile_entry table provides comprehensive information about farmers profiles, including personal details, training periods, banking information, farming activities, and certification statuses.The columns are.. \
+
+                                                                                training_period_rabi_season_module: Training period for Rabi season module.
+                                                                                training_period_zaid_season_module: Training period for Zaid season module.
+                                                                                training_period_organic_formulations: Training period for organic formulations.
+                                                                                id_of_bank_for_banking_services: Identifier of the bank for banking services.
+                                                                                training_period_natural_farming: Training period for natural farming.
+                                                                                date_of_joining: Date of joining the program.
+                                                                                updated_on: Timestamp of the last update.
+                                                                                date_of_birth: Date of birth of the individual.
+                                                                                created_on: Timestamp of the creation.
+                                                                                date_training_period_from: Starting date of the training period.
+                                                                                date_training_period_to: Ending date of the training period.
+                                                                                loan_first_tranch: Amount of the first tranche of the loan.
+                                                                                loan_second_tranch: Amount of the second tranche of the loan.
+                                                                                training_period_kharif_season_module: Training period for Kharif season module.
+                                                                                updated_date: Date of the last update.
+                                                                                id: Unique identifier.
+                                                                                gram_panchayat_name: Name of the gram panchayat.
+                                                                                village_id: Identifier of the village.
+                                                                                village_name: Name of the village.
+                                                                                pin_code: PIN code of the area.
+                                                                                mobile_number: Mobile number of the individual.
+                                                                                aadhaar_number: Aadhaar number of the individual.
+                                                                                pan_number: PAN number of the individual.
+                                                                                account_number: Bank account number.
+                                                                                bank_id: Identifier of the bank.
+                                                                                bank_name: Name of the bank.
+                                                                                branch_id: Identifier of the bank branch.
+                                                                                branch_name: Name of the bank branch.
+                                                                                ifsc_code: IFSC code of the bank branch.
+                                                                                clf_id: Identifier of the Cluster Level Federation (CLF).
+                                                                                clf_name: Name of the CLF.
+                                                                                vo_id: Identifier of the Village Organization (VO).
+                                                                                vo_name: Name of the VO.
+                                                                                shg_id: Identifier of the Self Help Group (SHG).
+                                                                                shg_name: Name of the SHG.
+                                                                                shg_member_id: Identifier of the SHG member.
+                                                                                shg_member_name: Name of the SHG member.
+                                                                                course_name_id: Identifier of the course name.
+                                                                                course_name_name: Name of the course.
+                                                                                certification_agency_id: Identifier of the certification agency.
+                                                                                certification_agency_name: Name of the certification agency.
+                                                                                course_training_mode_id: Identifier of the course training mode.
+                                                                                course_training_mode_name: Name of the course training mode.
+                                                                                gst_value: GST value.
+                                                                                is_seed_licence: Indicator for seed license.
+                                                                                seed_licence_number: Seed license number.
+                                                                                is_fertilizer_licence_number: Indicator for fertilizer license.
+                                                                                fertilizer_licence_number: Fertilizer license number.
+                                                                                is_banking_licence_number: Indicator for banking license.
+                                                                                banking_licence_number: Banking license number.
+                                                                                created_by: Creator of the entry.
+                                                                                person_id: Identifier of the person.
+                                                                                user_pwd: User password.
+                                                                                appiculture: Indicator for apiculture.
+                                                                                mushroom: Indicator for mushroom farming.
+                                                                                nursery: Indicator for nursery.
+                                                                                dairy: Indicator for dairy farming.
+                                                                                procurement: Indicator for procurement.
+                                                                                seed: Indicator for seed.
+                                                                                fertilizer: Indicator for fertilizer.
+                                                                                banking: Indicator for banking.
+                                                                                is_updates_approved: Indicator for updates approval.
+                                                                                name_of_bank_for_banking_services: Name of the bank for banking services.
+                                                                                services_offered: Services offered.
+                                                                                training_subject_id: Identifier of the training subject.
+                                                                                training_subject_name: Name of the training subject.
+                                                                                training_period_indays: Training period in days.
+                                                                                isloanprovided: Indicator for loan provision.
+                                                                                is_updated: Indicator for update.
+                                                                                updated_by: Updater of the entry.
+                                                                                type_id: Identifier of the type.
+                                                                                type_name: Name of the type.
+                                                                                name: Name.
+                                                                                father_husband_name: Father or husband's name.
+                                                                                gender_id: Identifier of the gender.
+                                                                                gender_name: Gender.
+                                                                                cast_belong_to_id: Identifier of the caste.
+                                                                                cast_belong_to_name: Name of the caste.
+                                                                                highest_qualification: Highest qualification.
+                                                                                address: Address.
+                                                                                district_id: Identifier of the district.
+                                                                                district_name: Name of the district.
+                                                                                block_id: Identifier of the block.
+                                                                                block_name: Name of the block.
+                                                                                gram_panchayat_id: Identifier of the gram panchayat.  \ 
+
+The "t_expenditure_details" table records expenditure details of farmers on agriculture...The columns are...
+                                                                                amount: The amount spent for the expenditure.
+                                                                                entry_date: The date when the expenditure entry was made.
+                                                                                year: The year associated with the expenditure.
+                                                                                month: The numerical representation of the month.
+                                                                                month_name: The name of the month.
+                                                                                district_id: Identifier for the district where the expenditure occurred.
+                                                                                block_id: Identifier for the block where the expenditure occurred.
+                                                                                ae_id: Identifier for the Agricultural Extension (AE) responsible for the expenditure.
+                                                                                remarks: Additional remarks or notes regarding the expenditure.
+                                                                                lat_val: Latitude value indicating the location of the expenditure.
+                                                                                long_val: Longitude value indicating the location of the expenditure.
+                                                                                address: Address where the expenditure took place.
+                                                                                entry_by: Identifier for the person who made the expenditure entry.
+                                                                                expenditure_id: Unique identifier for the expenditure entry.
+                                                                                fy: Fiscal year associated with the expenditure.   \
+                                                                                
+The "t_digital_banking" table records digital banking transactions of farmers on agriculture..the columns are...
+
+                                                                                        entry_date: The date when the digital banking transaction occurred.
+                                                                                        amount: The amount involved in the digital banking transaction.
+                                                                                        fy: The fiscal year associated with the transaction.
+                                                                                        transaction_type: The type of digital banking transaction (e.g., deposit, withdrawal, transfer).
+                                                                                        entry_by: Identifier for the person who made the transaction entry.
+                                                                                        lat_val: Latitude value indicating the location of the transaction.
+                                                                                        long_val: Longitude value indicating the location of the transaction.
+                                                                                        member_id: Identifier for the member involved in the transaction.
+                                                                                        address: Address associated with the transaction.
+                                                                                        member_name: Name of the member involved in the transaction. \
+                                                                                        
+The "t_advisory_farmer_entry" table maintains entries related to advisory services for farmers, including crop intervention ID and name, entry by, geographical coordinates, member ID, address, member name, and fiscal year.The columns are...
+
+                                                                                        crop_intervention_id: Identifier for the crop intervention provided to the farmer.
+                                                                                        crop_intervention_name: Name of the crop intervention provided to the farmer.
+                                                                                        entry_by: Identifier for the person who made the advisory entry.
+                                                                                        lat_val: Latitude value indicating the location of the advisory entry.
+                                                                                        long_val: Longitude value indicating the location of the advisory entry.
+                                                                                        member_id: Identifier for the member (farmer) who received the advisory service.
+                                                                                        address: Address associated with the advisory entry.
+                                                                                        member_name: Name of the member (farmer) who received the advisory service.
+                                                                                        fy: Fiscal year associated with the advisory entry.
+
+The "t_agri_input" table captures agricultural input transactions, including the amount, quantity, entry date, transaction type, crop season details, crop name and variety, company name, unit type, entry by, geographical coordinates, member details, and fiscal year.The columns are... \
+
+                                                                                    amount: The monetary value of the agricultural input transaction.
+                                                                                    quantity: The quantity of the agricultural input involved in the transaction.
+                                                                                    entry_date: The date when the transaction occurred.
+                                                                                    transaction_type: The type of transaction (e.g., purchase, sale).
+                                                                                    crop_season_id: Identifier for the crop season.
+                                                                                    crop_season_name: Name of the crop season.
+                                                                                    crop_name_id: Identifier for the crop name.
+                                                                                    crop_name: Name of the crop.
+                                                                                    seed_variety_name: Name of the seed variety.
+                                                                                    company_name: Name of the company providing the agricultural input.
+                                                                                    unit_type: Type of unit for the quantity (e.g., kg, liters).
+                                                                                    entry_by: Identifier for the person who made the transaction entry.
+                                                                                    lat_val: Latitude value indicating the location of the transaction.
+                                                                                    long_val: Longitude value indicating the location of the transaction.
+                                                                                    member_id: Identifier for the member (e.g., farmer) involved in the transaction.
+                                                                                    address: Address associated with the transaction.
+                                                                                    member_name: Name of the member (e.g., farmer) involved in the transaction.
+                                                                                    fy: Fiscal year associated with the transaction.
+
+
+The "t_marketing_services" table stores data related to marketing services, including purchase date, entry date, rate per kilogram, quantity in kilograms, total amount, crop name and identifier, entry by, geographical coordinates, member details, fiscal year, and crop season details.The columns are ... \
+
+                                                                                                                purchase_date: Date when the purchase was made.
+                                                                                                                entry_date: Date when the entry was made.
+                                                                                                                rate_per_kg: Rate per kilogram for the purchase.
+                                                                                                                quantity_in_kg: Quantity of the crop purchased in kilograms.
+                                                                                                                total_amount: Total amount spent on the purchase.
+                                                                                                                crop_name_id: Identifier for the crop name.
+                                                                                                                crop_name: Name of the crop purchased.
+                                                                                                                entry_by: Identifier for the person who made the entry.
+                                                                                                                lat_val: Latitude value indicating the location of the purchase.
+                                                                                                                long_val: Longitude value indicating the location of the purchase.
+                                                                                                                member_id: Identifier for the member involved in the transaction.
+                                                                                                                address: Address associated with the purchase.
+                                                                                                                member_name: Name of the member involved in the transaction.
+                                                                                                                fy: Fiscal year associated with the transaction.
+                                                                                                                crop_season_id: Identifier for the crop season.
+                                                                                                                crop_season_name: Name of the crop season.
+
+The "t_nursery_services" table records nursery services, including the amount spent, quantity of plants, entry date, plant type, plant identifier, entry by, geographical coordinates, member details, address, member name, and fiscal year...the columns are... \
+
+                                                                                                            amount: The monetary value of the nursery service.
+                                                                                                            quantity: The quantity of plants involved in the service.
+                                                                                                            entry_date: The date when the nursery service was provided.
+                                                                                                            plant_type: The type of plant provided in the service.
+                                                                                                            plant_id: Identifier for the plant.
+                                                                                                            entry_by: Identifier for the person who provided the nursery service.
+                                                                                                            lat_val: Latitude value indicating the location of the nursery service.
+                                                                                                            long_val: Longitude value indicating the location of the nursery service.
+                                                                                                            member_id: Identifier for the member (e.g., farmer) who received the nursery service.
+                                                                                                            address: Address where the nursery service was provided.
+                                                                                                            member_name: Name of the member (e.g., farmer) who received the nursery service.
+                                                                                                           fy: Fiscal year associated with the nursery service.
+
+The "m_expenditure_type" table contains information about different types of expenditures, including unique identifiers for each type, the name of the expenditure in English, and the name of the expenditure in Hindi...the columns are... \
+                                                                                                        expenditure_id: Unique identifier for each expenditure type.
+                                                                                                        expenditure_name: Name of the expenditure type in English.
+                                                                                                        expenditure_name_hin: Name of the expenditure type in Hindi.      \
+                                                                                                                                                                           
 While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table but donot use record_status=1 if question asked for farmers \
 For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
@@ -476,7 +669,16 @@ def get_tables(categories: List[Table]) -> List[str]:
                     "m_designation",
                     "clf_masik_grading",
                     "vo_masik_grading",
-                    "shg_masik_grading"
+                    "shg_masik_grading",
+                    "profile_entry",
+                    "t_expenditure_details",
+                    "t_sell_grain",
+                    "t_digital_banking",
+                    "t_advisory_farmer_entry",
+                    "t_agri_input",
+                    "t_marketing_services",
+                    "t_nursery_services",
+                    "m_expenditure_type"
                 ]
             )
             elif category.name == "Farmer":
