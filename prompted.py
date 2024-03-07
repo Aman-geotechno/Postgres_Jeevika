@@ -654,4 +654,62 @@ WHERE
     LANDHOLDINGLEASE > 0""",
             "result": """[(1682700,)]""",
             "answer": """There are 1682700 number of farmers having lease land""", 
+        },
+        {
+            "input": "no of shg having farmer",
+            "sql_cmd": """select count(distinct shg_id) from t_farmer_transaction""",
+            "result": """[(3877787,)]""",
+            "answer": """There are 3877787 shg having farmer"""
+        },
+        {
+            "input": "number of active farmers in banka",
+            "sql_cmd": """SELECT
+    COUNT(DISTINCT tf.FARMER_ID) AS total_farmers
+FROM
+    t_farmer_transaction tf
+    
+INNER JOIN m_farmer f ON tf.farmer_id=f.farmer_id
+INNER JOIN mp_cbo_member t ON t.member_id=f.member_id
+INNER JOIN m_cbo c ON c.cbo_id=t.cbo_id
+
+        WHERE
+            c.DISTRICT_ID = (
+                SELECT
+                    DISTRICT_ID
+                FROM
+                    m_district
+                WHERE
+                    upper(DISTRICT_NAME) = 'BANKA'
+            )""",
+            "result": """[(69435,)]""",
+            "answer": """There are 69435 active farmers in banka district"""
+        },
+        {
+            "input": "count of local seed used by farmer in 2018-2019",
+            "sql_cmd": """select count(distinct farmer_id) as seed_count from t_farmer_transaction ft
+inner join m_farmer_seed s on ft.seed_type_id=s.seed_type_id
+where UPPER(s.seed_type)='LOCAL' AND
+ft.FY='2018-2019'""",
+            "result": """[(82811,)]""",
+            "answer": """82811 local seed used by farmer in 2018-2019"""
+        },
+        {
+             "input": "count number of farmers grew kharif crops",
+            "sql_cmd": """SELECT
+    COUNT(DISTINCT f.FARMER_ID) AS total_farmers
+FROM
+    m_farmer f
+INNER JOIN
+    t_farmer_transaction t ON f.FARMER_ID = t.FARMER_ID
+WHERE
+    t.CROP_TYPE_ID = (
+        SELECT
+            CROP_TYPE_ID
+        FROM
+            m_farmer_croptype
+        WHERE
+            CROP_TYPE = 'Kharif Crops'
+    )""",
+            "result": """[(82811,)]""",
+            "answer": """82811 farmers grew kharif crops"""
         }]
