@@ -13,6 +13,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain.prompts import SemanticSimilarityExampleSelector
 from langchain.prompts import FewShotPromptTemplate
+from langchain.memory import ConversationBufferMemory
 
 import cx_Oracle
 import os
@@ -73,14 +74,14 @@ db = SQLDatabase.from_uri(f"postgresql://{db_user}:{db_password}@{db_host}:{db_p
 "m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block",
 "m_district","m_designation","m_village","m_panchayat","clf_masik_grading",
                     "vo_masik_grading",
-                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type"])
+                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details","t_farmer_booking","t_chc_expenditure_details","t_freight_details"])
 
 #print(db.get_usable_table_names())
 
 #print(db.get_context())
 
-llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True,google_api_key='AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ', temperature=0)
-
+llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True,google_api_key="AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ", temperature=0)
+#'AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ'
 #google_api_key='AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ'
 #api_key="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"
 # llm = ChatVertexAI(
@@ -416,7 +417,153 @@ The "m_expenditure_type" table contains information about different types of exp
                                                                                                         expenditure_id: Unique identifier for each expenditure type.
                                                                                                         expenditure_name: Name of the expenditure type in English.
                                                                                                         expenditure_name_hin: Name of the expenditure type in Hindi.      \
-                                                                                                                                                                           
+
+The "m_chc_details" table stores detailed information about Community Health Centers (CHCs), including their establishment date, location, type, associated organizations, and banking details....the columns are... \
+                                                                                                                    doe: Date of establishment.
+                                                                                                                    updated_on: Date of the last update.
+                                                                                                                    clf_id: Cluster level federation identifier.
+                                                                                                                    created_on: Date of creation.
+                                                                                                                    is_geo_tagged: Indicates whether the entry is geo-tagged.
+                                                                                                                    entry_date: Date of entry.
+                                                                                                                    branch_id: Branch identifier.
+                                                                                                                    ifsc_code: IFSC code.
+                                                                                                                    account_number: Account number.
+                                                                                                                    is_active: Indicates whether the entry is active.
+                                                                                                                    photo: Photograph.
+                                                                                                                    id: Unique identifier.
+                                                                                                                    longitude: Longitude.
+                                                                                                                    address_by_geo: Address derived from geographical coordinates.
+                                                                                                                    type_of_project: Type of project.
+                                                                                                                    type_of_chc: Type of Community Health Center (CHC).
+                                                                                                                    type_of_cbo: Type of Community-Based Organization (CBO).
+                                                                                                                    fpo_name: Name of Farmer Producer Organization (FPO).
+                                                                                                                    updated_by: Identifier of the user who last updated.
+                                                                                                                    created_by: Identifier of the user who created.
+                                                                                                                    latitude: Latitude.
+                                                                                                                    chc_name: Name of Community Health Center (CHC).
+                                                                                                                    address: Address.
+                                                                                                                    district_id: District identifier.
+                                                                                                                    block_id: Block identifier.
+                                                                                                                    bank_id: Bank identifier.
+                                                                                                                                                                          
+The t_farmer_booking table captures booking details including dates, service status, farmer information, geographical coordinates, and organizational associations for agricultural services...the columns are... \
+                                                                                                        date_for_booking: Date for which the booking is made
+                                                                                                        is_farmer_jeevika_member: Boolean indicating if the farmer is a Jeevika member
+                                                                                                        entry_date: Date when the booking entry was made
+                                                                                                        service_completed_status: Status of the service completion
+                                                                                                        booking_cancel: Boolean indicating if the booking was canceled
+                                                                                                        service_completed_date: Date when the service was completed
+                                                                                                        booking_cancel_date: Date when the booking was canceled
+                                                                                                        total_area_or_hour: Total area or hours for the booking
+                                                                                                        booking_id: Primary key for the booking record
+                                                                                                        shg_id: Identifier for the Self Help Group (SHG)
+                                                                                                        shg_name: Name of the SHG
+                                                                                                        shg_member_id: Identifier for the SHG member
+                                                                                                        farmer_name: Name of the farmer
+                                                                                                        gender: Gender of the farmer
+                                                                                                        father_name: Father's name of the farmer
+                                                                                                        farmer_mobile: Mobile number of the farmer
+                                                                                                        booking_description: Description of the booking
+                                                                                                        lat_val: Latitude value for the location
+                                                                                                        long_val: Longitude value for the location
+                                                                                                        address: Address of the farmer
+                                                                                                        entry_by: Identifier for the person who made the entry
+                                                                                                        device_id: Identifier for the device used for the entry
+                                                                                                        auto_fetch_mobile: Boolean indicating if the mobile number is fetched automatically
+                                                                                                        chc_id: Identifier for the CHC (Community Health Center)
+                                                                                                        booking_activity_id: Identifier for the booking activity
+                                                                                                        district_id: Identifier for the district
+                                                                                                        block_id: Identifier for the block
+                                                                                                        panchayat_id: Identifier for the panchayat
+                                                                                                        village_id: Identifier for the village
+                                                                                                        tola_name: Name of the tola (locality)
+                                                                                                        unit_type: Type of unit for the total area or hours
+
+
+The t_chc_expenditure_details utilized for recording and tracking expenditure details related to Community Health Centers (CHCs), including the date, amount, type, and organizational association for expenses incurred.The columns are ... \
+                                                                                                                exp_date: Date of expenditure
+                                                                                                                year: Year of the expenditure
+                                                                                                                amount: Amount of expenditure
+                                                                                                                month: Month of the expenditure
+                                                                                                                entry_date: Date when the entry was made
+                                                                                                                month_name: Name of the month
+                                                                                                                exp_id: Primary key for the expenditure record
+                                                                                                                chc_id: Identifier for the Community Health Center (CHC)
+                                                                                                                expenditure_type: Type of expenditure
+                                                                                                                entry_by: Identifier for the person who made the entry
+
+The table t_freight_details  can be utilized for storing details related to freight, including machine information, area or hours, amount, geographical coordinates, and organizational associations...the columns are ... \
+                                                                                                                    id: Unique identifier for each record (auto-generated)
+                                                                                                                    machine_id: Identifier for the machine
+                                                                                                                    total_area_or_hour: Total area or hours
+                                                                                                                    total_amount: Total amount
+                                                                                                                    entry_date: Date of entry
+                                                                                                                    long_val: Longitude value
+                                                                                                                    address: Address
+                                                                                                                    entry_by: Identifier for the person who made the entry
+                                                                                                                    device_id: Identifier for the device used for the entry
+                                                                                                                    booking_id: Identifier for the booking
+                                                                                                                    chc_id: Identifier for the Community Health Center (CHC)
+                                                                                                                    lat_val: Latitude value
+                                                                                                                    unit_type: Type of unit for the total area or hours \
+                                                                                                                
+ The neera_selling table  is designed to store information related to selling neera, including details such as dates, prices, quantities, organizational associations, and application versions....the columns are... \
+                                                                                                                        "id"
+                                                                                                                        "selling_date"
+                                                                                                                        "uploaded_on"
+                                                                                                                        "compfed"
+                                                                                                                        "price_per_liter"
+                                                                                                                        "total_amount"
+                                                                                                                        "created_by"
+                                                                                                                        "created_on"
+                                                                                                                        "gp_id"
+                                                                                                                        "gp_name"
+                                                                                                                        "district_id"
+                                                                                                                        "district_name"
+                                                                                                                        "block_id"
+                                                                                                                        "block_name"
+                                                                                                                        "quantity_used_in_gud"
+                                                                                                                        "member_row_id"
+                                                                                                                        "member_name"
+                                                                                                                        "member_type"
+                                                                                                                        "village_id"
+                                                                                                                        "pg_id"
+                                                                                                                        "total_tappers"
+                                                                                                                        "name_of_any_other"
+                                                                                                                        "quantity_of_neeara_used"
+                                                                                                                        "perm_sell_center_sold_neera"
+                                                                                                                        "temp_sell_center_sold_neera"
+                                                                                                                        "app_version"
+                                                                                                                        "quantity_gud_produced"
+                                                                                                                        "fresh_neera"                                                                                                                   
+This neera_collection table is designed to store information related to the collection of neera, including details such as amounts, quantities, qualities, organizational associations, and collection dates.....columns are... \
+                                                                                                                            "id"
+                                                                                                                            "total_amount"
+                                                                                                                            "quality"
+                                                                                                                            "quantity"
+                                                                                                                            "brix"
+                                                                                                                            "price_per_liter"
+                                                                                                                            "created_by"
+                                                                                                                            "created_on"
+                                                                                                                            "gp_id"
+                                                                                                                            "gp_name"
+                                                                                                                            "district_id"
+                                                                                                                            "district_name"
+                                                                                                                            "block_id"
+                                                                                                                            "block_name"
+                                                                                                                            "uploaded_on"
+                                                                                                                            "member_row_id"
+                                                                                                                            "member_name"
+                                                                                                                            "member_type"
+                                                                                                                            "village_id"
+                                                                                                                            "pg_id"
+                                                                                                                            "total_tappers"
+                                                                                                                            "name_of_any_other"
+                                                                                                                            "quantity_of_neeara_used"
+                                                                                                                            "quantity_used_in_gud"
+                                                                                                                            "quantity_gud_produced"
+                                                                                                                            "app_version"
+                                                                                                                            "collection_date"
 While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table but donot use record_status=1 if question asked for farmers \
 For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
@@ -609,7 +756,9 @@ but you can perform join on village_id and village_code ,similar for district_id
     suffix=PROMPT_SUFFIX,
     input_variables=["input", "table_info", "top_k"], 
 )
-query_chain = create_sql_query_chain(llm, db,prompt=few_shot_prompt)
+
+memory = ConversationBufferMemory(memory_key="chat_history")
+query_chain = create_sql_query_chain(llm, db,memory=memory,prompt=few_shot_prompt)
 
     
 
@@ -678,7 +827,11 @@ def get_tables(categories: List[Table]) -> List[str]:
                     "t_agri_input",
                     "t_marketing_services",
                     "t_nursery_services",
-                    "m_expenditure_type"
+                    "m_expenditure_type",
+                    "m_chc_details",
+                    "t_farmer_booking",
+                    "t_chc_expenditure_details",
+                    "t_freight_details"
                 ]
             )
             elif category.name == "Farmer":
@@ -690,7 +843,7 @@ def get_tables(categories: List[Table]) -> List[str]:
 table_chain = category_chain | get_tables
 table_chain = {"input": itemgetter("question")} | table_chain
 
-full_chain = RunnablePassthrough.assign(table_names_to_use=table_chain) | query_chain
+full_chain = RunnablePassthrough.assign(schema=db.get_table_info(),table_names_to_use=table_chain) | query_chain
 
 
 # query = full_chain.invoke(
@@ -1054,50 +1207,7 @@ def api():
         Remember that vo means village organisation,shg means self help group,cbo means community based organisation and clf means cluster level federation  \
                     Pay attention to not add anything from your side in answer.. just give simple natural language answer including this value {db.run(final_query)}. 
                 
-                if the answer is like this  [('PURBI CHAMPARAN', 3681), ('MUZAFFARPUR', 3659), ('SAMASTIPUR', 3404), ('GAYA', 3383), ('MADHUBANI', 3382), ('DARBHANGA', 3080), ('PATNA', 2726), ('SITAMARHI', 2706), ('PASHCHIM CHAMPARAN', 2668), ('VAISHALI', 2653), ('PURNIA', 2591), ('SARAN', 2363), ('KATIHAR', 2328), ('ARARIA', 2264), ('NALANDA', 2259), ('SIWAN', 2211), ('SUPAUL', 2122), ('BEGUSARAI', 2016), ('MADHEPURA', 1986), ('BHAGALPUR', 1973), ('AURANGABAD', 1838), ('GOPALGANJ', 1783), ('BANKA', 1743), ('ROHTAS', 1706), ('NAWADA', 1591), ('SAHARSA', 1565), ('BHOJPUR', 1537), ('KISHANGANJ', 1434), ('KHAGARIA', 1421), ('JAMUI', 1288), ('KAIMUR (BHABUA)', 1199), ('BUXAR', 994), ('JEHANABAD', 957), ('MUNGER', 791), ('SHEOHAR', 594), ('LAKHISARAI', 570), ('ARWAL', 570), ('SHEIKHPURA', 443)]...then return as it is...... donot make natural language answer in these kind of answers
-                
-                For example:-
-                
-                user question:-district wise count of vo
-                
-                your response should be:- [('PURBI CHAMPARAN', 3681),
-                                            ('MUZAFFARPUR', 3659), 
-                                            ('SAMASTIPUR', 3404), 
-                                            ('GAYA', 3383), 
-                                            ('MADHUBANI', 3382), 
-                                            ('DARBHANGA', 3080), 
-                                            ('PATNA', 2726), 
-                                            ('SITAMARHI', 2706), 
-                                            ('PASHCHIM CHAMPARAN', 2668), 
-                                            ('VAISHALI', 2653), 
-                                            ('PURNIA', 2591), 
-                                            ('SARAN', 2363), 
-                                            ('KATIHAR', 2328), 
-                                            ('ARARIA', 2264), 
-                                            ('NALANDA', 2259), 
-                                            ('SIWAN', 2211), 
-                                            ('SUPAUL', 2122), 
-                                            ('BEGUSARAI', 2016), 
-                                            ('MADHEPURA', 1986), 
-                                            ('BHAGALPUR', 1973), 
-                                            ('AURANGABAD', 1838), 
-                                            ('GOPALGANJ', 1783), 
-                                            ('BANKA', 1743), 
-                                            ('ROHTAS', 1706), 
-                                            ('NAWADA', 1591), 
-                                            ('SAHARSA', 1565), 
-                                            ('BHOJPUR', 1537), 
-                                            ('KISHANGANJ', 1434), 
-                                            ('KHAGARIA', 1421), 
-                                            ('JAMUI', 1288), 
-                                            ('KAIMUR (BHABUA)', 1199), 
-                                            ('BUXAR', 994), 
-                                            ('JEHANABAD', 957), 
-                                            ('MUNGER', 791), 
-                                            ('SHEOHAR', 594), 
-                                            ('LAKHISARAI', 570), 
-                                            ('ARWAL', 570), 
-                                            ('SHEIKHPURA', 443)]""")
+                Once you give the answer the based on user question suggest five more similar questions like this....{question}""")
         print(response)
 
         

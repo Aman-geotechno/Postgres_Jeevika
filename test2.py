@@ -608,6 +608,54 @@ WHERE
     {
           "input": "no of active enterprenure in nursery services activity",
             "query": """select count(distinct entry_by) from t_nursery_services where entry_by is not null""",
+    },
+    {
+          "input": "total count of agri enterprenure in 2024",
+            "query": """SELECT COUNT(id) 
+FROM profile_entry 
+WHERE EXTRACT(YEAR FROM date_of_joining) = 2024"""
+    },
+    {
+          "input": "total active agri enterprenures district wise",
+            "query": """SELECT pe.district_name, 
+       COUNT(DISTINCT CASE WHEN ai.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN afe.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN ms.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN db.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN ns.entry_by = pe.person_id THEN pe.person_id END) AS total_active_entrepreneurs
+FROM profile_entry pe
+LEFT JOIN t_agri_input ai ON pe.person_id = ai.entry_by
+LEFT JOIN t_advisory_farmer_entry afe ON pe.person_id = afe.entry_by
+LEFT JOIN t_marketing_services ms ON pe.person_id = ms.entry_by
+LEFT JOIN t_digital_banking db ON pe.person_id = db.entry_by
+LEFT JOIN t_nursery_services ns ON pe.person_id = ns.entry_by
+WHERE pe.person_id IS NOT NULL
+GROUP BY pe.district_name"""
+    },
+    {
+          "input": "total count of chc akshaykumar",
+            "query": """select count(distinct id) from m_chc_details """
+    },
+    {
+          
+            "input": "total count of active chc",
+            "query": """select count(distinct chc_id) from t_farmer_booking""",
+    },
+    {
+          "input": "how many service booking completed by farmer?",
+            "query": """select count(distinct booking_id) from t_farmer_booking where service_completed_satus=1"""
+    },
+    {
+          "input": "give me total expenditure details of chc",
+            "query": """select sum(amount) from t_chc_expenditure_details""",
+    },
+    {
+          "input": "give me total revenue generated of chc",
+            "query": """select sum(total_amount) from t_freight_details""",
+    },
+    {
+          "input": "give me number of machines used in chc",
+            "query": """select count(id) from m_machine""",
     }
 ]
 
@@ -648,7 +696,10 @@ db = SQLDatabase.from_uri(f"postgresql://{db_user}:{db_password}@{db_host}:{db_p
 "m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block",
 "m_district","m_designation","m_village","m_panchayat","clf_masik_grading",
                     "vo_masik_grading",
-                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type"])
+                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details",
+                    "t_farmer_booking",
+                    "t_chc_expenditure_details",
+                    "t_freight_details"])
 
 
 
@@ -1307,6 +1358,9 @@ CREATE TABLE m_expenditure_type (
     expenditure_name_hin VARCHAR(100)
 );
 
+
+
+
 Join Conditions:
 
 M_FARMER can be joined with MP_CBO_MEMBER on the MEMBER_ID column.
@@ -1323,7 +1377,170 @@ t_digital_banking can be joined with MP_CBO_MEMBER on the member_id column.
 t_advisory_farmer_entry can be joined with MP_CBO_MEMBER on the member_id column.
 t_agri_input can be joined with MP_CBO_MEMBER on the member_id column.
 t_marketing_services can be joined with MP_CBO_MEMBER on the member_id column.
-t_nursery_services can be joined with MP_CBO_MEMBER on the member_id column."""
+t_nursery_services can be joined with MP_CBO_MEMBER on the member_id column.
+
+CREATE TABLE m_chc_details (
+    doe DATE,
+    updated_on DATE,
+    clf_id INTEGER,
+    created_on DATE,
+    is_geo_tagged BOOLEAN,
+    entry_date DATE,
+    branch_id INTEGER,
+    ifsc_code VARCHAR(20),
+    account_number VARCHAR(20),
+    is_active BOOLEAN,
+    photo TEXT,
+    id SERIAL PRIMARY KEY,
+    longitude DECIMAL(11, 8),
+    address_by_geo VARCHAR(255),
+    type_of_project VARCHAR(100),
+    type_of_chc VARCHAR(100),
+    type_of_cbo VARCHAR(100),
+    fpo_name VARCHAR(100),
+    updated_by INTEGER,
+    created_by INTEGER,
+    latitude DECIMAL(10, 8),
+    chc_name VARCHAR(100),
+    address VARCHAR(255),
+    district_id INTEGER,
+    block_id INTEGER,
+    bank_id INTEGER
+);
+
+CREATE TABLE t_farmer_booking (
+   date_for_booking DATE,
+   is_farmer_jeevika_member BOOLEAN,
+   entry_date DATE,
+   service_completed_status VARCHAR(50),
+   booking_cancel BOOLEAN,
+   service_completed_date DATE,
+   booking_cancel_date DATE,
+   total_area_or_hour DECIMAL(10, 2),
+   booking_id INTEGER PRIMARY KEY,
+   shg_id INTEGER,
+   shg_name VARCHAR(100),
+   shg_member_id INTEGER,
+   farmer_name VARCHAR(100),
+   gender VARCHAR(10),
+   father_name VARCHAR(100),
+   farmer_mobile VARCHAR(20),
+   booking_description VARCHAR(255),
+   lat_val DECIMAL(10, 8),
+   long_val DECIMAL(11, 8),
+   address VARCHAR(255),
+   entry_by INTEGER,
+   device_id VARCHAR(50),
+   auto_fetch_mobile BOOLEAN,
+   chc_id INTEGER,
+   booking_activity_id INTEGER,
+   district_id INTEGER,
+   block_id INTEGER,
+   panchayat_id INTEGER,
+   village_id INTEGER,
+   tola_name VARCHAR(100),
+   unit_type VARCHAR(20)
+);
+
+This table can be joined with other tables based on the following relationships:
+
+shg_id can be joined with the M_CBO table (where CBO_TYPE_ID = 3) on the CBO_ID column.
+district_id can be joined with the M_DISTRICT table on the DISTRICT_ID column.
+block_id can be joined with the M_BLOCK table on the BLOCK_ID column.
+panchayat_id can be joined with the M_PANCHAYAT table on the PANCHAYAT_ID column.
+village_id can be joined with the M_VILLAGE table on the VILLAGE_ID column.
+shg_member_id can be joined with the MP_CBO_MEMBER table on the MEMBER_ID column.
+
+CREATE TABLE t_chc_expenditure_details (
+   exp_date DATE,
+   year INTEGER,
+   amount DECIMAL(10, 2),
+   month INTEGER,
+   entry_date DATE,
+   month_name VARCHAR(20),
+   exp_id INTEGER PRIMARY KEY,
+   chc_id INTEGER,
+   expenditure_type VARCHAR(100),
+   entry_by INTEGER
+);  This table can be utilized for recording and tracking expenditure details related to Community Health Centers (CHCs), including the date, amount, type, and organizational association for expenses incurred. \
+    
+    
+CREATE TABLE t_freight_details (
+   id SERIAL PRIMARY KEY,
+   machine_id INTEGER,
+   total_area_or_hour DECIMAL(10, 2),
+   total_amount DECIMAL(10, 2),
+   entry_date DATE,
+   long_val DECIMAL(11, 8),
+   address VARCHAR(255),
+   entry_by INTEGER,
+   device_id VARCHAR(50),
+   booking_id INTEGER,
+   chc_id INTEGER,
+   lat_val DECIMAL(10, 8),
+   unit_type VARCHAR(20)
+);
+
+CREATE TABLE neera_selling (
+   id SERIAL PRIMARY KEY,
+   selling_date DATE,
+   uploaded_on TIMESTAMP,
+   compfed BOOLEAN,
+   price_per_liter DECIMAL(10, 2),
+   total_amount DECIMAL(10, 2),
+   created_by INTEGER,
+   created_on TIMESTAMP,
+   gp_id INTEGER,
+   gp_name VARCHAR(100),
+   district_id INTEGER,
+   district_name VARCHAR(100),
+   block_id INTEGER,
+   block_name VARCHAR(100),
+   quantity_used_in_gud DECIMAL(10, 2),
+   member_row_id INTEGER,
+   member_name VARCHAR(100),
+   member_type VARCHAR(50),
+   village_id INTEGER,
+   pg_id INTEGER,
+   total_tappers INTEGER,
+   name_of_any_other VARCHAR(255),
+   quantity_of_neera_used DECIMAL(10, 2),
+   perm_sell_center_sold_neera BOOLEAN,
+   temp_sell_center_sold_neera BOOLEAN,
+   app_version VARCHAR(20),
+   quantity_gud_produced DECIMAL(10, 2),
+   fresh_neera BOOLEAN
+);
+
+CREATE TABLE neera_collection (
+   id SERIAL PRIMARY KEY,
+   total_amount DECIMAL(10, 2),
+   quality VARCHAR(50),
+   quantity DECIMAL(10, 2),
+   brix DECIMAL(10, 2),
+   price_per_liter DECIMAL(10, 2),
+   created_by INTEGER,
+   created_on TIMESTAMP,
+   gp_id INTEGER,
+   gp_name VARCHAR(100),
+   district_id INTEGER,
+   district_name VARCHAR(100),
+   block_id INTEGER,
+   block_name VARCHAR(100),
+   uploaded_on TIMESTAMP,
+   member_row_id INTEGER,
+   member_name VARCHAR(100),
+   member_type VARCHAR(50),
+   village_id INTEGER,
+   pg_id INTEGER,
+   total_tappers INTEGER,
+   name_of_any_other VARCHAR(255),
+   quantity_of_neeara_used DECIMAL(10, 2),
+   quantity_used_in_gud DECIMAL(10, 2),
+   quantity_gud_produced DECIMAL(10, 2),
+   app_version VARCHAR(20),
+   collection_date DATE
+);"""
 
 few_shot_prompt = FewShotPromptTemplate(
     example_selector=example_selector,
@@ -1352,4 +1569,4 @@ agent = create_sql_agent(
 )
 # print(full_prompt)
 # print(agent)
-print(agent.invoke({"input": "no of active enterprenure in advisory farmer activity"}))
+print(agent.invoke({"input": "The number of machines used in CHC"}))

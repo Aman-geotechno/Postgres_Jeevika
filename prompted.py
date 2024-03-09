@@ -720,6 +720,14 @@ WHERE
             "answer": """3932 count of agri enterprenure"""
         },
         {
+                "input": "total count of agri enterprenure in 2024",
+            "sql_cmd": """SELECT COUNT(id) 
+FROM profile_entry 
+WHERE EXTRACT(YEAR FROM date_of_joining) = 2024""",
+            "result": """[(220,)]""",
+            "answer": """220 total count of agri enterprenure in 2024"""
+        },
+        {
            "input": "total expenditure amount of agri enterprenures",
             "sql_cmd": """select sum(amount) from t_expenditure_details""",
             "result": """[(3156902,)]""",
@@ -760,4 +768,81 @@ WHERE
             "sql_cmd": """select count(distinct entry_by) from t_nursery_services where entry_by is not null""",
             "result": """[(89)]""",
             "answer": """89 no of active enterprenure in nursery services activity"""
+        },
+        {
+              "input": "total active agri enterprenures district wise",
+            "sql_cmd": """SELECT pe.district_name, 
+       COUNT(DISTINCT CASE WHEN ai.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN afe.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN ms.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN db.entry_by = pe.person_id THEN pe.person_id END) +
+       COUNT(DISTINCT CASE WHEN ns.entry_by = pe.person_id THEN pe.person_id END) AS total_active_entrepreneurs
+FROM profile_entry pe
+LEFT JOIN t_agri_input ai ON pe.person_id = ai.entry_by
+LEFT JOIN t_advisory_farmer_entry afe ON pe.person_id = afe.entry_by
+LEFT JOIN t_marketing_services ms ON pe.person_id = ms.entry_by
+LEFT JOIN t_digital_banking db ON pe.person_id = db.entry_by
+LEFT JOIN t_nursery_services ns ON pe.person_id = ns.entry_by
+WHERE pe.person_id IS NOT NULL
+GROUP BY pe.district_name""",
+            "result": """[("ARARIA"	67
+"ARWAL"	2
+"AURANGABAD"	167
+"BANKA"	35
+"BEGUSARAI"	24
+"BHAGALPUR"	3
+"BHOJPUR"	90
+"BUXAR"	88
+"DARBHANGA"	20)]""",
+            "answer": """"ARARIA"	67
+"ARWAL"	2
+"AURANGABAD"	167
+"BANKA"	35
+"BEGUSARAI"	24
+"BHAGALPUR"	3
+"BHOJPUR"	90
+"BUXAR"	88
+"DARBHANGA"	20"""
+        },
+        {
+            "input": "total count of chc",
+            "sql_cmd": """select count(distinct id) from m_chc_details """,
+            "result": """[(511)]""",
+            "answer": """511 are total chc""" 
+        },
+        {
+            "input": "total count of active chc",
+            "sql_cmd": """select count(distinct chc_id) from t_farmer_booking""",
+            "result": """[(462)]""",
+            "answer": """total active chc are 462""" 
+        },
+        {
+            "input": "give me total count of active chc",
+            "sql_cmd": """select count(distinct chc_id) from t_farmer_booking""",
+            "result": """[(462)]""",
+            "answer": """total active chc are 462""" 
+        },
+        {
+            "input": "how many service booking completed by farmer?",
+            "sql_cmd": """select count(distinct booking_id) from t_farmer_booking where service_completed_satus=1""",
+            "result": """[(462)]""",
+            "answer": """total active chc are 462""" 
+        },
+        {
+            "input": "give me total expenditure details of chc",
+            "sql_cmd": """select sum(amount) from t_chc_expenditure_details""",
+            "result": """[(13232575)]""",
+            "answer": """13232575 total expenditure details of chc""" 
+        },
+        {
+            "input": "give me total revenue generated of chc",
+            "sql_cmd": """select sum(total_amount) from t_freight_details""",
+            "result": """[(19335019.00)]""",
+            "answer": """19335019.00 total revenue generated of chc"""
+        },
+        {
+            "input": "give me number of machines used in chc",
+            "sql_cmd": """select count(id) from m_machine""",
+            "result": """[(37)]""",
+            "answer": """37 number of machines used in chc"""
         }]
