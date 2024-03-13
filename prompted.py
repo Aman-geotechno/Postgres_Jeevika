@@ -845,4 +845,1192 @@ GROUP BY pe.district_name""",
             "sql_cmd": """select count(id) from m_machine""",
             "result": """[(37)]""",
             "answer": """37 number of machines used in chc"""
-        }]
+        },
+        {
+            "input": "machines used in hours",
+            "sql_cmd": """select sum(total_area_or_hour) from t_freight_details t
+inner join m_chc_details mc on t.chc_id=mc.id
+inner join m_machine m on m.id=t.machine_id
+where mc.district_id is not null
+and m.machine_name is not null
+and upper(t.unit_type)='HOUR'""",
+            "result": """[(26156.73)]""",
+            "answer": """26156.73 machines used in hours"""
+        },
+        {
+             "input": "machines used in kathas",
+            "sql_cmd": """select sum(total_area_or_hour) from t_freight_details t
+inner join m_chc_details mc on t.chc_id=mc.id
+inner join m_machine m on m.id=t.machine_id
+where mc.district_id is not null
+and m.machine_name is not null
+and upper(t.unit_type)='KATTHA'""",
+            "result": """[(26156.73)]""",
+            "answer": """26156.73 machines used in hours"""
+        },
+        {
+             "input": "total booking done by farmers",
+            "sql_cmd": """select count(booking_id) from t_farmer_booking tf
+inner join m_district d on tf.district_id=d.district_id
+where d.district_name is not null""",
+            "result": """[(47004)]""",
+            "answer": """47004 total booking done by farmers"""
+        },
+        {
+            "input": "total booking done by farmers in nawada district",
+            "sql_cmd": """select count(booking_id) from t_farmer_booking tf
+inner join m_district d on tf.district_id=d.district_id
+where upper(d.district_name)='NAWADA'""",
+            "result": """[(1)]""",
+            "answer": """1 booking done by farmers in nawada district"""
+        },
+        {
+             "input": "total quantity of neera sold",
+            "sql_cmd": """SELECT 
+    SUM(fresh_neera) + SUM(temp_sell_center_sold_neera) + SUM(compfed) + SUM(perm_sell_center_sold_neera) AS total_sum
+FROM neera_selling
+""",
+            "result": """[(20606429.640)]""",
+            "answer": """20606429.640 total quantity of neera sold"""
+
+        },
+        {
+            
+            "input": "quantity of neera collected",
+            "sql_cmd": """select sum(quantity) from neera_collection """,
+            "result": """[(21832429.220)]""",
+            "answer": """21832429.220 quantity of neera collected"""
+        },
+        {
+            "input": "group of neera production",
+            "sql_cmd": """select count(id) from m_pg where bank_ac_number is not null and upper(is_active)='Y'""",
+            "result": """[(577)]""",
+            "answer": """577 group of neera production"""
+        },
+        {
+             "input": "Total count of PG",
+            "sql_cmd": """select count(pg_id) from m_pg where is_active='Y'""",
+            "result": """[(1014)]""",
+            "answer": """1014 Total count of PG"""
+        },
+        {
+            "input": "Total count of tappers",
+            "sql_cmd": """select count(id) from pg_non_pg_memberes where is_active='Y'""",
+            "result": """[(16879)]""",
+            "answer": """16879 Total count of tappers"""
+        },
+        {
+             "input": "Total number of libraries in didi ki library",
+            "sql_cmd": """select count(distinct clcdc_id) from m_clcdc where clcdc_name is not null and district_id is not null""",
+            "result": """[(124)]""",
+            "answer": """124 Total number of libraries in didi ki library"""
+        },
+        {
+             "input": "Total number of vidya didi",
+            "sql_cmd": """select count(distinct id) from t_vidya_didi where district_name is not null""",
+            "result": """[(93)]""",
+            "answer": """93 Total number of vidya didi"""
+        },
+        {
+            "input": "Total number of learners",
+            "sql_cmd": """select count(distinct registration_no) from t_learner_profile where district_name is not null""",
+            "result": """[(20634)]""",
+            "answer": """20634 Total number of learners"""
+        },
+        {
+            "input": "Total number of libraries district wise",
+            "sql_cmd": """SELECT m.district_name, COUNT(DISTINCT cl.clcdc_id)
+FROM m_clcdc cl
+INNER JOIN m_district m ON cl.district_id = m.district_id
+WHERE cl.clcdc_name IS NOT NULL AND m.district_id IS NOT NULL
+GROUP BY m.district_name""",
+            "result": """"ARARIA"	3
+"ARWAL"	3
+"AURANGABAD"	2
+"BANKA"	2
+"BEGUSARAI"	4
+"BHAGALPUR"	4
+"BHOJPUR"	5
+"BUXAR"	5
+"DARBHANGA"	4
+"GOPALGANJ"	3""",
+            "answer": """"ARARIA"	3
+"ARWAL"	3
+"AURANGABAD"	2
+"BANKA"	2
+"BEGUSARAI"	4
+"BHAGALPUR"	4
+"BHOJPUR"	5
+"BUXAR"	5
+"DARBHANGA"	4
+"GOPALGANJ"	3"""
+        },
+        {
+            "input": "Total vidya didi district wise",
+            "sql_cmd": """SELECT m.district_name, count(distinct id) from t_vidya_didi t
+INNER JOIN m_district m ON t.district_id = m.district_id
+GROUP BY m.district_name;""",
+            "result": """[("ARARIA"	2
+"ARWAL"	3
+"AURANGABAD"	3
+"BANKA"	1
+"BEGUSARAI"	3
+"BHAGALPUR"	4
+"BHOJPUR"	4
+"BUXAR"	4
+"DARBHANGA"	4
+"GOPALGANJ"	3)]""",
+            "answer": """"ARARIA"	2
+"ARWAL"	3
+"AURANGABAD"	3
+"BANKA"	1
+"BEGUSARAI"	3
+"BHAGALPUR"	4
+"BHOJPUR"	4
+"BUXAR"	4
+"DARBHANGA"	4
+"GOPALGANJ"	3"""
+        },
+        {
+            
+             "input": "total count of nursery till now",
+            "sql_cmd": """SELECT (
+    SELECT COUNT(DISTINCT id) FROM mp_nursery_fy
+) +
+(
+    SELECT COUNT(DISTINCT id) FROM profile_entry_2
+) AS total_count""",
+            "result": """[(602)]""",
+            "answer": """602 total count of nursery till now"""
+        },
+        {
+            "input": "total count of nursery in 2023-2024",
+            "sql_cmd": """SELECT (
+    SELECT COUNT(DISTINCT id)
+    FROM mp_nursery_fy
+    WHERE fy = '2023-2024'
+) +
+(
+    SELECT COUNT(DISTINCT id)
+    FROM profile_entry_2
+	where financial_year_name='2023-2024'
+) AS total_count""",
+            "result": """[(183)]""",
+            "answer": """183 total count of nursery in 2023-2024"""
+        },
+        {
+            "input": "total number of plant to sell",
+            "sql_cmd": """select sum(total_plant_to_sell) from t_sell_plant""",
+            "result": """[(1100)]""",
+            "answer": """1100 total number of plant to sell"""
+        },
+        {
+            "input": "give total number of plant to sell in 2023-2024",
+            "sql_cmd": """select sum(total_plant_to_sell) from t_sell_plant where fy='2023-2024'  """,
+            "result": """[(225)]""",
+            "answer": """225 total number of plant to sell in 2023-2024"""
+        },
+        {
+            "input": "total plant sell in didi ki nursery year wise",
+            "sql_cmd": """select tp.fy,sum(tp.total_plant_to_sell) from t_sell_plant tp 
+inner join m_district m on tp.district_id=m.district_id
+group by tp.fy""",
+            "result": """[("2022-2023"	175
+"2023-2024"	225
+"2019-2020"	700)]""",
+            "answer": """"2022-2023"	175
+"2023-2024"	225
+"2019-2020"	700"""
+        },
+        {
+            "input": "total recieved amount in didi ki nursery",
+            "sql_cmd": """select sum(total_amount) from t_payment_receive_details  """,
+            "result": """[(50000)]""",
+            "answer": """50000 total recieved amount in didi ki nursery"""
+        },
+        {
+            "input": "total expenditure in didi ki nursery",
+            "sql_cmd": """select sum(amount) from t_expenditure_details  """,
+            "result": """[(3444992)]""",
+            "answer": """3444992 total expenditure in didi ki nursery"""
+        },
+        {
+              "input": "total expenditure in didi ki nursery in 2023-2024",
+            "sql_cmd": """select sum(amount) from t_expenditure_details  """,
+            "result": """[(3444992)]""",
+            "answer": """3444992 total expenditure in didi ki nursery"""
+        },
+        {
+            "input": "total expenditure details in didi ki nursery district wise",
+            "sql_cmd": """select m.district_name,sum(t.amount) from t_expenditure_details t
+inner join m_district m on t.district_id=m.district_id
+group by m.district_name""",
+            "result": """[("MUNGER"	40000
+"PATNA"	203775
+"LAKHISARAI"	17250
+"DARBHANGA"	82700
+"SARAN"	20000
+"ROHTAS"	25000
+"SITAMARHI"	10000)]""",
+            "answer": """3"MUNGER"	40000
+"PATNA"	203775
+"LAKHISARAI"	17250
+"DARBHANGA"	82700
+"SARAN"	20000
+"ROHTAS"	25000
+"SITAMARHI"	10000"""
+        },
+        {
+            
+              "input": "total expenditure in didi ki nursery year wise",
+            "sql_cmd": """select t.fy,sum(t.amount) from t_expenditure_details t
+inner join m_district m on t.district_id=m.district_id
+group by t.fy""",
+            "result": """[("2023-2024"	3317721
+"2022-2023"	127271)]""",
+            "answer": """"2023-2024"	3317721
+"2022-2023"	127271"""
+        },
+        {
+            
+             "input": "Total count agent in bank sakhi",
+            "sql_cmd": """select count(distinct agent_id) from m_bankdataupload""",
+            "result": """[(5511)]""",
+            "answer": """5511 Total count agent in bank sakhi"""
+        },
+        {
+             "input": "Total count transacted agent in bank sakhi",
+            "sql_cmd": """select count(distinct agent_name) from m_bankdataupload where agent_name is not null""",
+            "result": """[(5167)]""",
+            "answer": """5167 Total count transacted agent in bank sakhi"""
+        },
+        {
+            
+             "input": "Total count of iibf certified agent in bank sakhi",
+            "sql_cmd": """select count(distinct mg.agent_id) from m_agentnew mg
+inner join m_bankdataupload mb on mg.agent_id=mb.agent_id
+where mb.agent_name is not null and  mg.iibf='PASS'""",
+            "result": """[(4073)]""",
+            "answer": """4073 Total count of iibf certified agent in bank sakhi"""
+        },
+        {
+            "input": "Total number of account open in bank sakhi",
+            "sql_cmd": """select sum(total_account_open) from m_bankdataupload where agent_name is not null""",
+            "result": """[(942432)]""",
+            "answer": """942432 Total number of account open in bank sakhi"""
+        },
+        {
+            "input": "Total number of transaction in bank sakhi",
+            "sql_cmd": """select sum(total_no_of_tranx) from m_bankdataupload where agent_name is not null""",
+            "result": """[(27893538)]""",
+            "answer": """27893538 Total number of transaction in bank sakhi"""
+        },
+        {
+            "input": "total amount of transaction in bank sakhi",
+            "sql_cmd": """select sum(total_amt_of_tranx) from m_bankdataupload where agent_name is not null""",
+            "result": """[(118563008461.11722)]""",
+            "answer": """118563008461.11722 total amount of transaction in bank sakhi"""
+        },
+        {
+            "input": "total commission earned in bank sakhi",
+            "sql_cmd": """select sum(total_commission) from m_bankdataupload where agent_name is not null""",
+            "result": """[(285589411.90768486)]""",
+            "answer": """285589411.90768486 total commission earned in bank sakhi"""
+        },
+        {
+            "input": "total count of agent in 2018 and 2019 in bank sakhi",
+            "sql_cmd": """SELECT COUNT(DISTINCT mg.agent_id) 
+FROM m_agentnew mg 
+INNER JOIN m_bankdataupload mb ON mg.agent_id = mb.agent_id 
+WHERE mb.agent_name IS NOT NULL 
+AND EXTRACT(YEAR FROM mg.date_of_activation) IN (2018, 2019);""",
+            "result": """[(495)]""",
+            "answer": """495 total count of agent in 2018 and 2019 in bank sakhi"""
+        },
+        {
+            "input": "total count of agent in BANKA district",
+            "sql_cmd": """SELECT COUNT(DISTINCT mg.agent_id) 
+FROM m_agentnew mg 
+INNER JOIN m_bankdataupload mb ON mg.agent_id = mb.agent_id 
+WHERE mb.agent_name IS NOT NULL 
+AND upper(mg.district_name)='BANKA'""",
+            "result": """[(128)]""",
+            "answer": """128 total count of agent in BANKA district"""
+        },
+        
+        {
+            "input": "In how many districts poultry is there?",
+            "sql_cmd": """select count(distinct district_id) as total_districts
+            from mp_pg_member""",
+            "result": """[(38,)]""",
+            "answer": """Poultry is present in 38 districts.""",
+        },
+        {
+            "input": "In how many blocks poultry is there?",
+            "sql_cmd": """select count(distinct block_id) as total_blocks
+            from mp_pg_member""",
+            "result": """[(303,)]""",
+            "answer": """Poultry is present in 303 blocks.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry?",
+            "sql_cmd": """select count(distinct pg_id) as total_pgs
+            from t_household_batch""",
+            "result": """[(377,)]""",
+            "answer": """Total number of pgs in poultry is 453.""",
+        },
+        {
+            "input": "What is the total number of PG in poultry in the finalcial yaer 2022-2023",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            where b.created_on BETWEEN '2022-04-01' AND '2023-03-31'""",
+            "result": """[(268,)]""",
+            "answer": """The total number of PG in poultry in the finalcial yaer 2022-2023 is 268.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry in patna",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where upper(c.district_name) = 'PATNA'""",
+            "result": """[(13,)]""",
+            "answer": """Total number of pgs in poultry in patna is 13""",
+        },
+        {
+            "input": "What is the count of chicks distributed?",
+            "sql_cmd": """SELECT SUM(quantity_received) AS total_chicks_distributed
+            FROM t_household_batch""",
+            "result": """[(2528433,)]""",
+            "answer": """The count of chicks distributed is 2528433""",
+        },
+        {
+            "input": "What is the total number of chicks distributed?",
+            "sql_cmd": """SELECT SUM(quantity_received) AS total_chicks_distributed
+            FROM t_household_batch""",
+            "result": """[(2528433,)]""",
+            "answer": """The total number of chicks distributed is 2528433""",
+        },
+        {
+            "input": "In the Siwan district what is the total number of chicks distributed",
+            "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
+            FROM t_household_batch a
+            INNER JOIN mp_pg_member b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'SIWAN'""",
+            "result": """[(8460,)]""",
+            "answer": """In the Siwan district, the total number of chicks distributed is 8460.""",
+        },
+        {
+            "input": "What is the total number of chicks distributed in the finalcial year 2023-2024 in Patna district",
+            "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
+            FROM t_household_batch a
+            INNER JOIN mp_pg_member b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'PATNA' AND b.created_on BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(15445,)]""",
+            "answer": """Total number of chicks distributed in the finalcial year 2023-2024 in Patna district is 15445.""",
+        },
+        {
+            "input": "In how many districts goatry is there?",
+            "sql_cmd": """select count(distinct district_id)
+            from g_member_mapping""",
+            "result": """[(19,)]""",
+            "answer": """Goatry service is available in 19 districts.""",
+        },
+        {
+            "input": "What is the count of pgs in nalanda district in the financial year 2020-2021 in goatry?",
+            "sql_cmd": """SELECT count( distinct a.pg_id) AS total_pgs
+            FROM g_goatry_distribution a
+            INNER JOIN g_member_mapping b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'NALANDA' AND a.date_of_procurement BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(10,)]""",
+            "answer": """The count of pgs in nalanda district in the financial year 2020-2021 in goatry is 10.""",
+        },
+        {
+            "input": "Total number of pg in goatry?",
+            "sql_cmd": """select count(distinct pg_id)
+            from g_goatry_distribution""",
+            "result": """[(423,)]""",
+            "answer": """Toatl number of PGs is 423.""",
+        },
+        {
+            "input": "What is the total number of beneficiaries or members in goatry?",
+            "sql_cmd": """select count(distinct member_id)
+            from g_goatry_distribution""",
+            "result": """[(16294,)]""",
+            "answer": """Toatl number of beneficiaries or members in goatry is 16294.""",
+        },
+        {
+            "input": "What is the total number of members in goatry?",
+            "sql_cmd": """select count(distinct member_id)
+            from g_goatry_distribution""",
+            "result": """[(16294,)]""",
+            "answer": """Toatl number of members in goatry is 16294.""",
+        },
+        {
+            "input": "What is the count of goats distributed?",
+            "sql_cmd": """SELECT SUM(no_of_goat_received) AS total_goats_distributed
+            FROM g_goatry_distribution""",
+            "result": """[(48882,)]""",
+            "answer": """The count of goats distributed is 48882.""",
+        },
+        {
+            "input": "What is the count of goats distributed in patna district in the financial year 2023-2024?",
+            "sql_cmd": """SELECT SUM(a.no_of_goat_received) AS total_goats_distributed
+            FROM g_goatry_distribution a
+            INNER JOIN g_member_mapping b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'PATNA' AND b.created_on BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(1170,)]""",
+            "answer": """Count of goats distributed in patna district in the financial year 2023-2024 is 1170.""",
+        },
+        {
+            "input": "Give the list of blocks in which dairy is there?",
+            "sql_cmd": """select distinct b.block_name
+            from m_dcs_profile a
+            inner join m_block b on a.block_id = b.block_id""",
+            "result": """[(Alauli, Saraiya, Sandesh)]""",
+            "answer": """The list of blocks in which dairy is there are:
+            - Alauli
+            - Saraiya
+            - Sandesh""",
+        },
+        {
+            "input": "what is the total number of shg member in dairy",
+            "sql_cmd": """select count(distinct member_id) as total_member
+            from mp_member_dcs
+            where is_active = '1'""",
+            "result": """[(33,)]""",
+            "answer": """The total number of shg member in dairy is 33.""",
+        },
+        {
+            "input": "what is the total number of dcs(dairy cop society)",
+            "sql_cmd": """select count(distinct dcs_id) as total_dcs
+            from m_dcs_profile""",
+            "result": """[(5,)]""",
+            "answer": """The total number of dcs is 5.""",
+        },
+        {
+            "input": "what is the total number members involved in dairy in bhojpur district?",
+            "sql_cmd": """select count(distinct a.member_id) as total_member
+            from mp_member_dcs a
+            inner join m_dcs_profile b on a.dcs_id = b.dcs_id
+            inner join m_district d on b.district_id = d.district_id
+            where upper(d.district_name) = 'BHOJPUR'""",
+            "result": """[(1,)]""",
+            "answer": """The total number members involved in dairy in bhojpur district is 1.""",
+        },
+        {
+            "input": "what is the total number districts in which fishery is there",
+            "sql_cmd": """select count(distinct district_id) as total_district
+            from mp_pond_fpg_mapping""",
+            "result": """[(26,)]""",
+            "answer": """The total number districts in which fishery is there is 26.""",
+        },
+        {
+            "input": "what is the total number blocks in which fishery is there",
+            "sql_cmd": """select count(distinct block_id) as total_block
+            from mp_pond_fpg_mapping""",
+            "result": """[(78,)]""",
+            "answer": """The total number blocks in which fishery is there is 78.""",
+        },
+        {
+            "input": "what is the total number of batch in fishery?",
+            "sql_cmd": """select count(distinct batch_number) as total_batch
+            from batch_creation""",
+            "result": """[(2,)]""",
+            "answer": """The total number of batch in fishery is 2.""",
+        },
+        {
+            "input": "What is the total number of stocking pond water area",
+            "sql_cmd": """select count(distinct actual_water_area_pond)
+            from m_pond""",
+            "result": """[(47,)]""",
+            "answer": """the total number of stocking pond water area is 47.""",
+        },
+        {
+            "input": "What is the total number of harvesting done?",
+            "sql_cmd": """select count(distinct id) as total_harvesting
+            from batch_creation
+            where is_cycle_completed = 1""",
+            "result": """[(5,)]""",
+            "answer": """The total number of harvesting done is 5""",
+        },
+        {
+            "input": "What is the quantity of fish harvested?",
+            "sql_cmd": """select sum(weight_in_kg) as total_fish_harvested
+            from t_sell_details""",
+            "result": """[(94784,)]""",
+            "answer": """The total number of harvesting done is 94784""",
+        },
+        {
+            "input": "What is the revenue generated from fish?",
+            "sql_cmd": """select sum(sell_amount) as revenue_generated_from_fish
+            from t_sell_details
+            where fish_type_id != '8'""",
+            "result": """[(1117312.00,)]""",
+            "answer": """The revenue generated from fish is 1117312.00""",
+        },
+        {
+            "input": "What is the revenue generated from fish?",
+            "sql_cmd": """select sum(sell_amount) as revenue_generated_from_fish
+            from t_sell_details
+            where fish_type_id != '8'""",
+            "result": """[(1117312.00,)]""",
+            "answer": """The revenue generated from fish is 1117312.00""",
+        },
+        {
+            "input": "What is the total number of matasya sakhi ponds?",
+            "sql_cmd": """select count(distinct matasya_sakhi_id) as total_matasya_sakhi_ponds
+            from mp_matasya_sakhi_pond_mapping""",
+            "result": """[(37,)]""",
+            "answer": """The total number of matasya sakhi ponds is 37""",
+        },
+        {
+            "input": "What is the total number of members in fishery?",
+            "sql_cmd": """select count(distinct member_id) as total_members
+            from mp_member_with_fpg_mapping""",
+            "result": """[(387,)]""",
+            "answer": """The total number of members in fishery is 387.""",
+        },
+        {
+            "input": "What is the total number of cnrp?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1""",
+            "result": """[(8772,)]""",
+            "answer": """The total number cnrp is 8772.""",
+        },
+        {
+            "input": "What is the total number of cnrp in munger district?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'MUNGER'""",
+            "result": """[(94,)]""",
+            "answer": """The total number of cnrp in munger district is 94.""",
+        },
+        {
+            "input": "What is the total number of cnrp in the year 2023-2024?",
+            "sql_cmd": """select count(distinct a.user_id) as total_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(3650,)]""",
+            "answer": """The total number of cnrp in the year 2023-2024 is 3650.""",
+        },
+        {
+            "input": "What is the total number of cnrp in the year 2023-2024 in munger district?",
+            "sql_cmd": """select count(distinct a.user_id) as total_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(d.district_name) = 'MUNGER'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(19,)]""",
+            "answer": """The total number of cnrp in the year 2023-2024 munger district is 19.""",
+        },
+        {
+            "input": "What is the count of trained cnrp in the year 2023-2024?",
+            "sql_cmd": """select count(distinct c.cm_cnrp_id) as toatl_trained_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join t_training_of_cadre_and_pmt c on a.user_id = c.cm_cnrp_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and c.training_completed_status = 'Yes'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(1243,)]""",
+            "answer": """The total count of trained cnrp in the year 2023-2024 is 1243 """,
+        },
+        {
+            "input": "What is the count of trained cnrp in the year 2023-2024 in munger district?",
+            "sql_cmd": """select count(distinct c.cm_cnrp_id) as toatl_trained_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join t_training_of_cadre_and_pmt c on a.user_id = c.cm_cnrp_id
+            inner join m_district d on a.district_code = d.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and c.training_completed_status = 'Yes'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'
+            and upper(d.district_name) = 'MUNGER'""",
+            "result": """[(14,)]""",
+            "answer": """The total count of trained cnrp in the year 2023-2024 in munger district is 15.""",
+        },
+        {
+            "input": "What is the total number of active trained cnrp in buxar district?",
+            "sql_cmd": """select count(distinct c.cm_cnrp_id) as toatl_trained_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join t_training_of_cadre_and_pmt c on a.user_id = c.cm_cnrp_id
+            inner join m_district d on a.district_code = d.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.training_completed_status) = 'YES'
+            and upper(d.district_name) = 'BUXAR'""",
+            "result": """[(129,)]""",
+            "answer": """The total number of active trained cnrp in buxar district is 129""",
+        }
+        ,
+        {
+            "input": "What is the total number of active cnrp in arrah block in the financial year 2023-2024?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block c on a.block_code = c.block_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.block_name) = 'ARRAH'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(10,)]""",
+            "answer": """The total number of active cnrp in arrah block in the financial year 2023-2024 is 10""",
+        },
+        {
+            "input": "What is the total number of mrp?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1""",
+            "result": """[(1692,)]""",
+            "answer": """The total number mrp is 1692""",
+        },
+        {
+            "input": "What is the total number of mrp in hilsa block?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block c on a.block_code = c.block_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(c.block_name) = 'HILSA'""",
+            "result": """[(3,)]""",
+            "answer": """The total number of mrp user in hilsa block is 3.""",
+        },
+        {
+            "input": "What is the total number of mrp user in nalanda district in the financial yaer 2023-2024?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(d.district_name) = 'NALANDA'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(15,)]""",
+            "answer": """The total number of mrp user in nalanda district in the financial yaer 2023-2024 is 15""",
+        },
+        {
+            "input": "What is the total number of swasthya mitra?",
+            "sql_cmd": """select count(distinct user_id) as total_swasthya_mitra
+            from m_user_profile
+            where active = 1
+            and upper(user_type) = 'SWASTHYA MITRA'""",
+            "result": """[(151,)]""",
+            "answer": """The total number of swasthya mitra is 151.""",
+        },
+        {
+            "input": "What is the total number of swasthya mitra in katihar district?",
+            "sql_cmd": """select count(distinct user_id) as total_swasthya_mitra
+            from m_user_profile
+            where active = 1
+            and upper(user_type) = 'SWASTHYA MITRA'
+            and upper(dist_name) = 'KATIHAR'""",
+            "result": """[(5,)]""",
+            "answer": """The total number of swasthya mitra is katihar district us 5.""",
+        },
+        {
+            "input": "What is the total number of swasthya mitra in fy(financial year 2023-2024)?",
+            "sql_cmd": """select count(distinct user_id) as total_swasthya_mitra
+            from m_user_profile
+            where active = 1
+            and upper(user_type) = 'SWASTHYA MITRA'
+            and created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(151,)]""",
+            "answer": """The total number of swasthya mitra is 151.""",
+        },
+        {
+            "input": "Total ipd?",
+            "sql_cmd": """select count(distinct id) as total_ipd
+            from t_patient_info
+            where upper(service_type) = 'IPD'""",
+            "result": """[(125699,)]""",
+            "answer": """The total number of IPD is 125699.""",
+        },
+        {
+            "input": "Total ipd in the fy(financial yaer) 2023-2024?",
+            "sql_cmd": """select count(distinct id) as total_ipd
+            from t_patient_info
+            where upper(service_type) = 'IPD'
+            and ipd_opd_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(115105,)]""",
+            "answer": """The total number of ipd in the fy(financial yaer) 2023-2024 is 115105.""",
+        },
+        {
+            "input": "What is the total number of ipd in rohtas district?",
+            "sql_cmd": """select count(distinct a.id) as tatal_ipd
+            from t_patient_info a
+            inner join m_user_profile b on a.entry_by = b.user_id
+            where upper(a.service_type) = 'IPD'
+            and upper(b.dist_name) = 'ROHTAS'""",
+            "result": """[(463,)]""",
+            "answer": """The total number of ipd in rohtas district is 463.""",
+        },
+        {
+            "input": "What is the total number of ipd in barh block?",
+            "sql_cmd": """select count(distinct a.id) as total_ipd
+            from t_patient_info a
+            inner join m_block b on a.block_id = b.block_id
+            where upper(a.service_type) = 'IPD'
+            and upper(b.block_name) = 'BARH'""",
+            "result": """[(36,)]""",
+            "answer": """The total number of ipd in barh block is 36.""",
+        },
+        {
+            "input": "Total opd?",
+            "sql_cmd": """select count(distinct id) as total_opd
+            from t_patient_info
+            where upper(service_type) = 'OPD'""",
+            "result": """[(618271,)]""",
+            "answer": """The total number of OPD is 618271.""",
+        },
+        {
+            "input": "Total opd in the fy(financial yaer) 2023-2024?",
+            "sql_cmd": """select count(distinct id) as total_opd
+            from t_patient_info
+            where upper(service_type) = 'OPD'
+            and ipd_opd_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(556693,)]""",
+            "answer": """The total number of opd in the fy(financial yaer) 2023-2024 is 556693.""",
+        },
+        {
+            "input": "What is the total number of opd in rohtas district?",
+            "sql_cmd": """select count(distinct a.id) as total_opd
+            from t_patient_info a
+            inner join m_user_profile b on a.entry_by = b.user_id
+            where upper(a.service_type) = 'OPD'
+            and upper(b.dist_name) = 'ROHTAS'""",
+            "result": """[(24217,)]""",
+            "answer": """The total number of opd in rohtas district is 24217.""",
+        },
+        {
+            "input": "What is the total number of opd in barh block?",
+            "sql_cmd": """select count(distinct a.id) as total_opd
+            from t_patient_info a
+            inner join m_block b on a.block_id = b.block_id
+            where upper(a.service_type) = 'OPD'
+            and upper(b.block_name) = 'BARH'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of opd in barh block is 0.""",
+        },
+        {
+            "input": "What is the total number of opd in rohtas district in the fy (finalcial year) 2023-2024?",
+            "sql_cmd": """select count(distinct a.id) as total_opd
+            from t_patient_info a
+            inner join m_user_profile b on a.entry_by = b.user_id
+            where upper(a.service_type) = 'OPD'
+            and upper(b.dist_name) = 'ROHTAS'
+            and ipd_opd_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(23374,)]""",
+            "answer": """The total number of opd in in rohtas district in the fy (finalcial year) 2023-2024 23374.""",
+        },
+        {
+            "input": "How many members are there in one (1) activity?",
+            "sql_cmd": """SELECT COUNT(distinct member_id) AS member_count
+            FROM(SELECT member_id, COUNT(DISTINCT activity_id) AS number_of_activities
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity)
+            GROUP BY 1)
+            WHERE number_of_activities = 1""",
+            "result": """[(344153,)]""",
+            "answer": """344153 memebers are there in one (1) activity.""",
+        },
+        {
+            "input": "How many members are involved in multiple activity?",
+            "sql_cmd": """SELECT number_of_activities, COUNT(*) AS member_count
+            FROM(SELECT member_id, COUNT(DISTINCT activity_id) AS number_of_activities
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity)
+            GROUP BY 1)
+            GROUP BY 1""",
+            "result": """[([(1, 344153), (2, 19654), (3, 2054, (4, 212), (5, 4), (6, 1)],)]""",
+            "answer": """Members are involved in multiple activity are:
+            - 1:  344153
+            - 2: 19654
+            - 3: 2054
+            - 4: 212
+            - 5: 4
+            - 6: 1
+            """,
+        },
+        {
+            "input": "What is the total number of members involved in any activity in ARARIA district?",
+            "sql_cmd": """SELECT count(distinct a.member_id) as member_count
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity
+            ) as a
+            inner join m_cbo_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where 0=0
+            and upper(c.district_name) = 'ARARIA'""",
+            "result": """[(5621,)]""",
+            "answer": """The total number of members involved in any activity in ARARIA district is 5621.""",
+        },
+        {
+            "input": "What is the count of total members in stitching?",
+            "sql_cmd": """select count(distinct member_id) as total_member
+            from mp_cbo_member_activity a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            where a.activity_id not in(1,2,3,19)
+            and upper(b.activity_short_name) = 'STITCHING'""",
+            "result": """[(2584,)]""",
+            "answer": """The total number of members involved in stitching activity is 2584.""",
+        },
+        {
+            "input": "Total members in araria district in vegetable farming?",
+            "sql_cmd": """SELECT count(distinct a.member_id) as member_count
+            FROM mp_cbo_member_activity a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            inner join m_cbo_member c on a.member_id = c.member_id
+            inner join m_district d on c.district_id = d.district_id
+            where a.activity_id not in(1,2,3,19)
+            and upper(b.activity_short_name) = 'VEGETABLE FARMING'
+            and upper(d.district_name) = 'ARARIA'""",
+            "result": """[(174,)]""",
+            "answer": """The total members in araria district in vegetable farming activity is 174.""",
+        },
+        {
+            "input": "Total members in arrah block in vegetable farming?",
+            "sql_cmd": """SELECT count(distinct a.member_id) as member_count
+            FROM mp_cbo_member_activity a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            inner join m_cbo_member c on a.member_id = c.member_id
+            inner join m_block d on c.block_id = d.block_id
+            where a.activity_id not in(1,2,3,19)
+            and upper(b.activity_short_name) = 'VEGETABLE FARMING'
+            and upper(d.block_name) = 'ARRAH'""",
+            "result": """[(37,)]""",
+            "answer": """The total members in arrah block in vegetable farming activity is 37.""",
+        },
+        {
+            "input": "Total members in bhopatpur village in vegetable farming?",
+            "sql_cmd": """SELECT count(distinct a.member_id) as member_count
+            FROM mp_cbo_member_activity a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            inner join m_cbo_member c on a.member_id = c.member_id
+            inner join m_village d on c.village_id = d.village_id
+            where a.activity_id not in(1,2,3,19)
+            and upper(b.activity_short_name) = 'VEGETABLE FARMING'
+            and upper(d.village_name) = 'BHOPATPUR'""",
+            "result": """[(38,)]""",
+            "answer": """The total members in bhopatpur village in vegetable farming activity is 38.""",
+        },
+        {
+            "input": "Total members in angra panchayat in regular farming?",
+            "sql_cmd": """SELECT count(distinct a.member_id) as member_count
+            FROM mp_cbo_member_activity a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            inner join m_cbo_member c on a.member_id = c.member_id
+            inner join m_village d on c.village_id = d.village_id
+            inner join m_panchayat e on d.panchayat_id = e.panchayat_id
+            where a.activity_id not in(1,2,3,19)
+            and upper(b.activity_short_name) = 'REGULAR FARMING'
+            and upper(e.panchayat_name) = 'ANGRA'""",
+            "result": """[(58,)]""",
+            "answer": """The total members in angra panchayat in regular farming activity is 58.""",
+        },
+        {
+            "input": "List of activites and its member count",
+            "sql_cmd": """SELECT distinct b.activity_short_name as activity_name
+            , count(distinct a.member_id) as member_count
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity where activity_id not in(1,2,3,19)
+            ) as a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            group by 1""",
+            "result": """[(Aggarbatti, 6011), (Art and Craft, 3599), (Beekeeping, 7868), (Dairy, 36), (Fisheries, 387), (General Store, 176), (Goatery, 16339), (Jute, 2584), (Kirana Dukan, 45), (Lac Bangle, 116), (Madhubani Painting, 63), (Mulberry, 1018), (Neera, 3619), (Nutri Enterprise, 28), (Poultry, 63838), (R, 243), (Regular Farming, 49951), (Stitching, 410), (Vegetable Farming, 15367)]""",
+            "answer": """The total number of members involved in stitching activity is (Aggarbatti, 6011), (Art and Craft, 3599), (Beekeeping, 7868), (Dairy, 36), (Fisheries, 387), (General Store, 176), (Goatery, 16339), (Jute, 2584), (Kirana Dukan, 45), (Lac Bangle, 116), (Madhubani Painting, 63), (Mulberry, 1018), (Neera, 3619), (Nutri Enterprise, 28), (Poultry, 63838), (R, 243), (Regular Farming, 49951), (Stitching, 410), (Vegetable Farming, 15367).""",
+        },
+        {
+            "input": "What is the total number of employer registered?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window""",
+            "result": """[(411,)]""",
+            "answer": """The total number of employer registered is 411.""",
+        },
+        {
+            "input": "What is the total number of employer registered in gaya district?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(district_name) = 'GAYA'""",
+            "result": """[(40,)]""",
+            "answer": """The total number of employer registered in gaya district is 40.""",
+        },
+        {
+            "input": "What is the total number of employer registered in alauli block?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(block_name) = 'ALAULI'""",
+            "result": """[(5,)]""",
+            "answer": """The total number of employer registered in alauli block is 5""",
+        },
+        {
+            "input": "What is the total number of employer registered in agri business?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(company_profile) = 'AGRI BUSINESS'""",
+            "result": """[(6,)]""",
+            "answer": """The total number of employer registered in agri business is 6.""",
+        },
+        {
+            "input": "What is the total number of employer registered in consultancy work?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(company_profile) = 'CONSULTANCY WORK'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of employer registered in consultancy work is 1.""",
+        },
+        {
+            "input": "What is the total number of employer registered in agriculture in gaya district?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(district_name) = 'GAYA'
+            and upper(company_profile) = 'AGRICULTURE'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of employer registered in agriculture in gaya district is 0.""",
+        },
+        {
+            "input": "What is the total number of employer registered in agriculture in alauli block?",
+            "sql_cmd": """select count(district_id) as total_employer_registered
+            from employer_window
+            where upper(block_name) = 'ALAULI'
+            and upper(company_profile) = 'AGRICULTURE'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of employer registered in agriculture in alauli block is 0.""",
+        },
+        {
+            "input": "What is the total number of job fair conducted?",
+            "sql_cmd": """select count(district_id) as total_job_fair_conducted
+            from plan_job_fair_training
+            where upper(activity) = 'JOB FAIR'""",
+            "result": """[(454,)]""",
+            "answer": """The total number of job fair conducted is 454.""",
+        },
+        {
+            "input": "What is the total number of job fair conducted in gaya district?",
+            "sql_cmd": """select count(district_id) as total_job_fair_conducted
+            from plan_job_fair_training
+            where upper(activity) = 'JOB FAIR'
+            and upper(district_name) = 'GAYA'""",
+            "result": """[(12,)]""",
+            "answer": """The total number of job fair conducted in gaya district is 12.""",
+        },
+        {
+            "input": "What is the total number of job fair conducted in alauli block?",
+            "sql_cmd": """select count(district_id) as total_job_fair_conducted
+            from plan_job_fair_training
+            where upper(activity) = 'JOB FAIR'
+            and upper(block_name) = 'ALAULI'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of job fair conducted in alauli block is 1.""",
+        },
+        {
+            "input": "What is the total number of candidates registered?",
+            "sql_cmd": """select count(distinct registration_number) as total_candidates_registered
+            from candidates_profile""",
+            "result": """[(223269,)]""",
+            "answer": """The total number of candidates registered is 223269.""",
+        },
+        {
+            "input": "What is the total number of candidates registered in patna district?",
+            "sql_cmd": """select count(distinct a.registration_number) as total_candidates_registered
+            from candidates_profile a
+            inner join m_district b on a.district_id = b.district_id
+            where upper(b.district_name) = 'PATNA'""",
+            "result": """[(4639,)]""",
+            "answer": """The total number of candidates registered in patna district is 4639.""",
+        },
+        {
+            "input": "What is the total number of candidates registered in alauli block?",
+            "sql_cmd": """select count(distinct a.registration_number) as total_candidates_registered
+            from candidates_profile a
+            inner join m_block b on a.block_id = b.block_id
+            where upper(b.block_name) = 'ALAULI'""",
+            "result": """[(99,)]""",
+            "answer": """The total number of candidates registered in alauli block is 99.""",
+        },
+        {
+            "input": "What is the total number of candidates registered in dabri village?",
+            "sql_cmd": """select count(distinct a.registration_number) as total_candidates_registered
+            from candidates_profile a
+            inner join m_village b on a.village_id = b.village_id
+            where upper(b.village_name) = 'DABRI'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of candidates registered in dabri village is 0.""",
+        },
+        {
+            "input": "What is the total number of candidates selected?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidates_selected
+            from is_letter_offered
+            where upper(is_offer_letter_issued) = 'Y'""",
+            "result": """[(5051,)]""",
+            "answer": """The total number of candidates selected is 5051.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in gaya district?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidates_selected
+            from is_letter_offered
+            where upper(is_offer_letter_issued) = 'Y'
+            and upper(district_name) = 'GAYA'""",
+            "result": """[(617,)]""",
+            "answer": """total number of candidates selected in gaya district is 617.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in alauli block?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidates_selected
+            from is_letter_offered
+            where upper(is_offer_letter_issued) = 'Y'
+            and upper(block_name) = 'ALAULI'""",
+            "result": """[(22,)]""",
+            "answer": """The total number of candidates selected in alauli block is 22.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in consultancy work?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidates_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_letter_issued) = 'Y'
+            and upper(b.company_profile) = 'CONSULTANCY WORK'""",
+            "result": """[(18,)]""",
+            "answer": """The total number of candidates selected in consultancy work is 18.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in gaya district in agriculture?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidates_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_letter_issued) = 'Y'
+            and upper(a.district_name) = 'GAYA'
+            and upper(b.company_profile) = 'AGRICULTURE'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of candidates selected in gaya district in agriculture is 0.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in alauli block in agriculture?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidates_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_letter_issued) = 'Y'
+            and upper(a.block_name) = 'ALAULI'
+            and upper(b.company_profile) = 'AGRICULTURE'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of candidates selected in alauli block in agriculture is 0.""",
+        },
+        {
+            "input": "What is the total number of candidates joined?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidated_joined
+            from is_letter_offered
+            where upper(is_offer_accepted) = 'Y'""",
+            "result": """[(3953,)]""",
+            "answer": """The total number of candidates joined is 3953.""",
+        },
+        {
+            "input": "What is the total number of candidates joined in gaya district?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidated_joined
+            from is_letter_offered
+            where upper(is_offer_accepted) = 'Y'
+            and upper(district_name) = 'GAYA'""",
+            "result": """[(609,)]""",
+            "answer": """The total number of candidates joined in gaya district is 609.""",
+        },
+        {
+            "input": "What is the total number of candidates joined in alauli block?",
+            "sql_cmd": """select count(distinct registration_num) as total_candidated_joined
+            from is_letter_offered
+            where upper(is_offer_accepted) = 'Y'
+            and upper(block_name) = 'ALAULI'""",
+            "result": """[(15,)]""",
+            "answer": """The total number of candidates joined in alauli block is 15.""",
+        },
+        {
+            "input": "What is the total number of candidates joined in consultancy work?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidates_joined
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_accepted) = 'Y'
+            and upper(b.company_profile) = 'CONSULTANCY WORK'""",
+            "result": """[(18,)]""",
+            "answer": """The total number of candidates joined in consultancy work is 18.""",
+        },
+        {
+            "input": "What is the total number of candidates joined in gaya district in agriculture?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidated_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_accepted) = 'Y'
+            and upper(a.district_name) = 'GAYA'
+            and upper(b.company_profile) = 'AGRICULTURE'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of candidates joined in gaya district in agriculture is 0.""",
+        },
+        {
+            "input": "What is the total number of candidates joined in alauli block in consultancy work?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidated_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_accepted) = 'Y'
+            and upper(a.block_name) = 'ALAULI'
+            and upper(b.company_profile) = 'CONSULTANCY WORK'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of candidates joined in alauli block in consultancy work is 0.""",
+        }
+        ]

@@ -74,7 +74,8 @@ db = SQLDatabase.from_uri(f"postgresql://{db_user}:{db_password}@{db_host}:{db_p
 "m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block",
 "m_district","m_designation","m_village","m_panchayat","clf_masik_grading",
                     "vo_masik_grading",
-                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details","t_farmer_booking","t_chc_expenditure_details","t_freight_details"])
+                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details","t_farmer_booking","t_chc_expenditure_details","t_freight_details","neera_selling","neera_collection","m_pg","pg_non_pg_memberes","m_clcdc","t_vidya_didi","t_learner_profile","mp_nursery_fy","t_sell_plant","t_payment_receive_details","t_expenditure_details","profile_entry_2","m_bankdataupload","m_agentnew","mp_pg_member","t_household_batch","g_member_mapping","g_goatry_distribution","m_dcs_profile","mp_member_dcs","mp_pond_fpg_mapping","batch_creation","t_sell_details","m_pond","t_sell_details","mp_matasya_sakhi_pond_mapping",
+"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity"])
 
 #print(db.get_usable_table_names())
 
@@ -564,8 +565,343 @@ This neera_collection table is designed to store information related to the coll
                                                                                                                             "quantity_gud_produced"
                                                                                                                             "app_version"
                                                                                                                             "collection_date"
-While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table but donot use record_status=1 if question asked for farmers \
-For example if question is like 
+
+                                                                                                                            
+The "m_pg" table represents information related to self-help groups or similar entities, including details such as financial transactions ("amount_send_to_pg"), formation date ("formation_date"), identification details ("id"), group ID ("pg_id"), geographical information, status ("is_active"), and other relevant attributes..the columns are..
+                                                                                                                                "amount_send_to_pg"
+                                                                                                                                "formation_date"
+                                                                                                                                "id"
+                                                                                                                                "pg_id"
+                                                                                                                                "panchayat_name"
+                                                                                                                                "block_name"
+                                                                                                                                "district_id"
+                                                                                                                                "district_name"
+                                                                                                                                "village_id"
+                                                                                                                                "village_name"
+                                                                                                                                "is_active"
+                                                                                                                                "bank_ac_number"
+                                                                                                                                "passbook_photo"
+                                                                                                                                "pg_name"
+                                                                                                                                "block_id"
+                                                                                                                                "panchayat_id"
+                                                                                                                            
+The "pg_non_pg_members" table captures comprehensive information about members associated with self-help groups or similar entities, encompassing personal details, financial information, group affiliations, and relevant administrative data..the columns are...
+                                                                                                                                                                                            "updated_on"
+                                                                                                                                                                                            "created_on"
+                                                                                                                                                                                            "id"
+                                                                                                                                                                                            "block_id"
+                                                                                                                                                                                            "block_name"
+                                                                                                                                                                                            "village_id"
+                                                                                                                                                                                            "village_name"
+                                                                                                                                                                                            "panchayat_id"
+                                                                                                                                                                                            "panchayat_name"
+                                                                                                                                                                                            "member_name"
+                                                                                                                                                                                            "father_name"
+                                                                                                                                                                                            "husband_name"
+                                                                                                                                                                                            "phone_no"
+                                                                                                                                                                                            "bank_id"
+                                                                                                                                                                                            "bank_name"
+                                                                                                                                                                                            "branch_id"
+                                                                                                                                                                                            "branch_name"
+                                                                                                                                                                                            "ifsc"
+                                                                                                                                                                                            "ac_number"
+                                                                                                                                                                                            "tapper_tree"
+                                                                                                                                                                                            "area"
+                                                                                                                                                                                            "member_type"
+                                                                                                                                                                                            "created_by"
+                                                                                                                                                                                            "pg_id"
+                                                                                                                                                                                            "pg_name"
+                                                                                                                                                                                            "member_id"
+                                                                                                                                                                                            "updated_by"
+                                                                                                                                                                                            "jeevika_non_jeevika"
+                                                                                                                                                                                            "shankul_sandh_name"
+                                                                                                                                                                                            "group_name"
+                                                                                                                                                                                            "group_didi_name"
+                                                                                                                                                                                            "licence_number"
+                                                                                                                                                                                            "aadhaar_number"
+                                                                                                                                                                                            "shg_member_name"
+                                                                                                                                                                                            "gram_sangathan_name"
+                                                                                                                                                                                            "is_active"
+                                                                                                                                                                                            "is_sjy_beneficiary"
+                                                                                                                                                                                            "district_id"
+                                                                                                                                                                                            "district_name"  
+                                                                                                                            
+ 
+The "m_clcdc" table stores information related to community-level climate change and disaster coordination centers, including details such as center ID, associated file references, creation information, contact details, and administrative affiliations.the columns are..                                                                                                                                                                                                                                                                                                                                                                               While generating query you have to take in consideration that only those values are considered whose record_status is 1,this record_status column is present in m_cbo table..so you have to always use where c.record_staus=1 in the query where c is alias name of m_cbo table but donot use record_status=1 if question asked for farmers \
+                                                                                                                                                    "clcdc_id"
+                                                                                                                                                    "clf_id"
+                                                                                                                                                    "file_1"
+                                                                                                                                                    "file_2"
+                                                                                                                                                    "file_3"
+                                                                                                                                                    "created_date"
+                                                                                                                                                    "clcdc_name"
+                                                                                                                                                    "address"
+                                                                                                                                                    "pin"
+                                                                                                                                                    "email"
+                                                                                                                                                    "mobile"
+                                                                                                                                                    "file_name_1"
+                                                                                                                                                    "file_name_3"
+
+   The "t_vidya_didi" table stores comprehensive information about educational facilitators, including their qualifications, personal details, contact information, and affiliations with community development centers and self-help groups.the columns are..
+                                                                                                                                                                                                    "clf_id"
+                                                                                                                                                                                                    "education_certificate_pic"
+                                                                                                                                                                                                    "shg_id"
+                                                                                                                                                                                                    "experience_certificate_pic"
+                                                                                                                                                                                                    "applicant_dob"
+                                                                                                                                                                                                    "aadhar_pic"
+                                                                                                                                                                                                    "applicant_doj"
+                                                                                                                                                                                                    "saving_account_pic"
+                                                                                                                                                                                                    "id"
+                                                                                                                                                                                                    "others_noneducation_certificate_pic"
+                                                                                                                                                                                                    "vo_id"
+                                                                                                                                                                                                    "month"
+                                                                                                                                                                                                    "year"
+                                                                                                                                                                                                    "vidya_didi_pic"
+                                                                                                                                                                                                    "created_date"
+                                                                                                                                                                                                    "aadhar"
+                                                                                                                                                                                                    "caste_id"
+                                                                                                                                                                                                    "caste_name"
+                                                                                                                                                                                                    "nishakt_id"
+                                                                                                                                                                                                    "nishakt"
+                                                                                                                                                                                                    "nishakta_type"
+                                                                                                                                                                                                    "temp_house_road_name_no"
+                                                                                                                                                                                                    "temp_village_name"
+                                                                                                                                                                                                    "temp_prakhand"
+                                                                                                                                                                                                    "temp_jila"
+  
+  The "t_learner_profile" table records detailed profiles of learners, encompassing personal information, educational details, contact information, affiliations with community development entities, and various options for community service, providing a comprehensive overview of each student's background and engagement...the columns are...
+                                                                                                                                                                                            "student_dob"
+                                                                                                                                                                                        "month"
+                                                                                                                                                                                        "year"
+                                                                                                                                                                                        "created_date"
+                                                                                                                                                                                        "student_pic"
+                                                                                                                                                                                        "admission_date"
+                                                                                                                                                                                        "is_active_update_date"
+                                                                                                                                                                                        "registration_no"
+                                                                                                                                                                                        "student_caste_category"
+                                                                                                                                                                                        "student_caste_category_id"
+                                                                                                                                                                                        "marital_status_id"
+                                                                                                                                                                                        "marital_status"
+                                                                                                                                                                                        "phone"
+                                                                                                                                                                                        "email_id"
+                                                                                                                                                                                        "district_id"
+                                                                                                                                                                                        "district_name"
+                                                                                                                                                                                        "block_id"
+                                                                                                                                                                                        "block_name"
+                                                                                                                                                                                        "clcdc_id"
+                                                                                                                                                                                        "clcdc_name"
+                                                                                                                                                                                        "panchayat_id"
+                                                                                                                                                                                        "panchayat_name"
+                                                                                                                                                                                        "village_id"
+                                                                                                                                                                                        "village_name"
+                                                                                                                                                                                        "ward_no"
+                                                                                                                                                                                        "pin_code"
+                                                                                                                                                                                        "emergency_name"
+                                                                                                                                                                                        "emergency_relation"
+                                                                                                                                                                                        "emergency_contact"
+                                                                                                                                                                                        "current_employment_id"
+                                                                                                                                                                                        "current_employment"
+                                                                                                                                                                                        "higher_qualification_id"
+                                                                                                                                                                                        "higher_qualification"
+                                                                                                                                                                                        "clf_id"
+                                                                                                                                                                                        "clf_name"
+                                                                                                                                                                                        "vo_id"
+                                                                                                                                                                                        "vo_name"
+                                                                                                                                                                                        "shg_id"
+                                                                                                                                                                                        "shg_name"
+                                                                                                                                                                                        "seva_option_a"
+                                                                                                                                                                                        "seva_option_a_name"
+                                                                                                                                                                                        "seva_option_b"
+                                                                                                                                                                                        "seva_option_b_name"
+                                                                                                                                                                                        "seva_option_c"
+                                                                                                                                                                                        "seva_option_c_name"
+                                                                                                                                                                                        "seva_option_d"
+                                                                                                                                                                                        "seva_option_d_name"
+                                                                                                                                                                                        "seva_option_e"
+                                                                                                                                                                                        "seva_option_e_name"
+                                                                                                                                                                                        "seva_option_f"
+                                                                                                                                                                                        "seva_option_f_name"
+                                                                                                                                                                                        "seva_option_g"
+                                                                                                                                                                                        "seva_option_g_name"
+                                                                                                                                                                                        "seva_option_h"
+                                                                                                                                                                                        "seva_option_h_name"
+                                                                                                                                                                                        "seva_option_i"
+                                                                                                                                                                                        "seva_option_i_name"
+                                                                                                                                                                                        "seva_option_j"
+                                                                                                                                                                                        "seva_option_j_name"
+                                                                                                                                                                                        "seva_option_k"
+                                                                                                                                                                                        "seva_option_k_name"
+                                                                                                                                                                                        "seva_option_l"
+                                                                                                                                                                                        "seva_option_l_name"
+                                                                                                                                                                                        "seva_option_m"
+                                                                                                                                                                                        "seva_option_m_name"
+                                                                                                                                                                                        "fy"
+                                                                                                                                                                                        "created_by"
+                                                                                                                                                                                        "is_active"
+                                                                                                                                                                                        "is_active_update_by"
+                                                                                                                                                                                        "entry_id"
+                                                                                                                                                                                        "student_name"
+                                                                                                                                                                                        "student_pic_name"
+                                                                                                                                                                                        "student_m_name"
+                                                                                                                                                                                        "student_f_name"
+                                                                                                                                                                                        "student_gender"
+                                                                                                                                                                                        "student_gender_id"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "temp_state"                                                                                                                                                 
+The "mp_nursery_fy" table stores information related to nursery registrations, including member details, renewal and training dates, district and block affiliations, and other relevant information for each fiscal year, facilitating management and tracking of nursery-related activities.The columns are...
+                                                                                                                                        "id"
+                                                                                                                                        "member_id"
+                                                                                                                                        "renewal_date"
+                                                                                                                                        "training_date_from"
+                                                                                                                                        "training_date_to"
+                                                                                                                                        "nursery_registration_date"
+                                                                                                                                        "mou_date"
+                                                                                                                                        "created_on"
+                                                                                                                                        "created_by"
+                                                                                                                                        "mobile"
+                                                                                                                                        "structure_type"
+                                                                                                                                        "district_id"
+                                                                                                                                        "block_id"
+                                                                                                                                        "nursery_registration"
+                                                                                                                                        "nursery_id"
+                                                                                                                                        "nursery_name"
+                                                                                                                                        "fy"
+                                                                                                                                        "is_active"
+
+The "t_sell_plant" table manages records of plant sales transactions, including details such as quantities available and sold, location information, entry specifics, and fiscal year-related data.The columns are...
+                                                                                                                                        "total_plant_to_sell"
+                                                                                                                                        "currently_available_plant"
+                                                                                                                                        "entry_date"
+                                                                                                                                        "id"
+                                                                                                                                        "month"
+                                                                                                                                        "month_name"
+                                                                                                                                        "district_id"
+                                                                                                                                        "block_id"
+                                                                                                                                        "plant_size_id"
+                                                                                                                                        "plant_sold_to_dept_id"
+                                                                                                                                        "plant_cat_id"
+                                                                                                                                        "plant_id"
+                                                                                                                                        "remarks"
+                                                                                                                                        "lat_val"
+                                                                                                                                        "long_val"
+                                                                                                                                        "address"
+                                                                                                                                        "entry_by"
+                                                                                                                                        "entry_type"
+                                                                                                                                        "nursery_id"
+                                                                                                                                        "fy"
+                                                                                                                                        "year"
+
+The "t_payment_receive_details" table tracks payment and receipt details, including monthly financial transactions, amounts received, remaining balances, and associated geographical and administrative information for efficient management and reconciliation.the columns are..
+                                                                                                                                                            "id"
+                                                                                                                                                            "month"
+                                                                                                                                                            "total_amount"
+                                                                                                                                                            "receive_amount"
+                                                                                                                                                            "remaining_amount"
+                                                                                                                                                            "entry_date"
+                                                                                                                                                            "long_val"
+                                                                                                                                                            "month_name"
+                                                                                                                                                            "dept_id_from_receive_amt"
+                                                                                                                                                            "address"
+                                                                                                                                                            "entry_by"
+                                                                                                                                                            "entry_type"
+                                                                                                                                                            "remarks"
+                                                                                                                                                            "lat_val"
+                                                                                                                                                            "nursery_id"
+                                                                                                                                                            "district_id"
+                                                                                                                                                            "block_id"
+                                                                                                                                                            "fy"
+                                                                                                                                            
+The "t_expenditure_details" table records financial expenditures, including amounts, dates, and geographical details, providing a comprehensive log for tracking and managing expenses at the district and block levels.the columns are..
+                                                                                                                                                                        "amount"
+                                                                                                                                                                        "entry_date"
+                                                                                                                                                                        "year"
+                                                                                                                                                                        "month"
+                                                                                                                                                                        "month_name"
+                                                                                                                                                                        "district_id"
+                                                                                                                                                                        "block_id"
+                                                                                                                                                                        "ae_id"
+                                                                                                                                                                        "remarks"
+                                                                                                                                                                        "lat_val"
+                                                                                                                                                                        "long_val"
+                                                                                                                                                                        "address"
+                                                                                                                                                                        "entry_by"
+                                                                                                                                                                        "expenditure_id"
+                                                                                                                                                                        "fy"
+
+The "m_bankdataupload" table stores data related to bank transactions and activities, including details such as transaction counts, amounts, commissions, account openings, and associated metadata, facilitating comprehensive monitoring and analysis...the columns are..
+                                                                                                                                id SERIAL PRIMARY KEY,
+                                                                                                                                date DATE,
+                                                                                                                                isactive BOOLEAN,
+                                                                                                                                year INTEGER,
+                                                                                                                                created_date TIMESTAMP,
+                                                                                                                                updated_by INTEGER,
+                                                                                                                                updated_date TIMESTAMP,
+                                                                                                                                deposit_no_of_tranx INTEGER,
+                                                                                                                                deposit_amt_of_tranx DECIMAL(10, 2),
+                                                                                                                                deposit_commission DECIMAL(10, 2),
+                                                                                                                                withdrawal_no_of_tranx INTEGER,
+                                                                                                                                withdrawal_amt_of_tranx DECIMAL(10, 2),
+                                                                                                                                withdrawal_commission DECIMAL(10, 2),
+                                                                                                                                total_no_of_tranx INTEGER,
+                                                                                                                                total_amt_of_tranx DECIMAL(10, 2),
+                                                                                                                                total_commission DECIMAL(10, 2),
+                                                                                                                                total_account_open INTEGER,
+                                                                                                                                action_type VARCHAR(50),
+                                                                                                                                month INTEGER,
+                                                                                                                                fileuploaded_by INTEGER,
+                                                                                                                                fileuploaded_date TIMESTAMP,
+                                                                                                                                agent_id INTEGER,
+                                                                                                                                agent_name VARCHAR(255),
+                                                                                                                                ip_address VARCHAR(50),
+                                                                                                                                created_by INTEGER,
+                                                                                                                                bank_name VARCHAR(255)
+
+                                                                                        
+ The "m_agentnew" table contains records of agents, including their activation details, contact information, affiliations with banks and administrative divisions, along with additional status indicators and training information...the columns are..
+                                                                                                                            id SERIAL PRIMARY KEY,
+                                                                                                                            bank_id INTEGER,
+                                                                                                                            district_id INTEGER,
+                                                                                                                            block_id INTEGER,
+                                                                                                                            panchayat_id INTEGER,
+                                                                                                                            date_of_activation DATE,
+                                                                                                                            month_of_activation INTEGER,
+                                                                                                                            created_date TIMESTAMP,
+                                                                                                                            is_active BOOLEAN,
+                                                                                                                            mobile_no VARCHAR(20),
+                                                                                                                            district_name VARCHAR(255),
+                                                                                                                            ip_address VARCHAR(50),
+                                                                                                                            block_name VARCHAR(255),
+                                                                                                                            created_by INTEGER,
+                                                                                                                            agent_id INTEGER,
+                                                                                                                            name VARCHAR(255),
+                                                                                                                            panchayat_name VARCHAR(255),
+                                                                                                                            bank_name VARCHAR(255),
+                                                                                                                            status VARCHAR(255),
+                                                                                                                            cbc VARCHAR(255),
+                                                                                                                            iibf VARCHAR(255),
+                                                                                                                            linkbranch VARCHAR(255)     
+
+
+The table MP_PG_MEMBER contains information about the poultry service. It includes columns such as id, pg_id, member_id, shg_id, created_on, village_id, created_by, category_id, district_id, block_id, is_sjy and pg_name. \n
+       The table T_HOUSEHOLD_BATCH contains information about the PGs, members and the quantity of the chicks distributed for poultry. It includes columns such as id, shelter_unit_id, member_id, quantity_received, contribution_received, receiving_date, created_on, material_name, address, lat_val, long_val, photo_url, photo, is_contributed, batch_name, scheme, village_id, pg_id, shg_id and created_by. Beneficiaries means members(member_id). \n
+       The table G_MEMBER_MAPPING contains information about the goatry service. It includes columns such as created_on, district_id, block_id, pg_id, village_id, member_id, shg_id, id, village_name, district_name, created_by, block_name, member_name, pg_name and husband_name. \n
+       The table G_GOATRY_DISTRIBUTION contains information about the PGs, members and the number of goats distributed for goatry. It includes columns such as no_of_goat_received, villag_id, date_of_procurement, shg_id, inserted_date, goat1_tagg_num, capture_date, goat2_tagg_num, updated_date, id, goat3_tagg_num, member_id, scheme_name, supplier_name, is_insurance, goat1_colour, goat2_colour, goat3_colour, photo1_url, inserted_by, pg_id and updated_by. Beneficiaries means members(member_id). Take pg_id from this table. \n
+       The table M_DCS_PROFILE contains information about the dairy service. It includes columns such as month_id, year, dcs_formation_date, created_on, sl, dcs_panchayat_name, dcs_id, dcs_name, meeting_date, meeting_frequency, dcs_tolla, dcs_address, ward_no, dcs_comfed_id, dcs_type, is_active, created_by, entry_id, district_id, block_id and dcs_panchayat_id. \n
+       The table MP_MEMBER_DCS contains dairy information like- members in dairy, etc. It includes columns such as sl, member_id, mapping_date, month_id, year, created_date, demap_date, updated_date, vo_name, shg_id, shg_name, is_active, member_name, member_husband_name, demaped_by, created_by, dcs_id, dcs_name, district_id, block_id, village_id, village_name and vo_id. The full form of dcs is dairy cop society. \n
+       The table MP_POND_FPG_MAPPING contains information about fishery. It includes columns such as pond_fpg_mapping_date, month_id, year, created_on, fpg_formation_date, sl, fpg_id, fpg_name, meeting_frequency, meeting_date, created_by, is_active, entry_id, district_id, block_id, pond_id and pond_name. \n
+       The table BATCH_CREATION contains information about fishery like number of batch etc. It includes columns such as cycle_completed_date, rohu, katla, mrigal, grass_carp, common_carp, silver_carp, others, collection_date, entry_date, is_cycle_completed, id, scheme_id, seed_id, seed_weight, seed_quantity, purchase_amount, district_id, block_id, batch_number, fpg_id, fpg_name, mobile_no, photo, lat_val, long_val, address and entry_by. \n
+       The table M_POND contains information about fishery ponds. It includes columns such as sl, doa_district_authority, month_id, year, pond_area, actual_water_area_pond, is_active, is_active_update_time, created_date, pond_type_id, pond_type, entry_id, unique_code_jjha, created_by, is_active_by, pond_id, pond_name, district_id, block_id, village_id, project_name, address and fy. \n
+       The table T_SELL_DETAILS contains information about fishery such as quantity of fish harvested, revenue generated from fish and others, etc. It includes columns such as entry_date, weight_in_kg, fish_quantity, avg_weight, sell_amount, sell_date, long_val, address, entry_by, district_id, block_id, fpg_id, batch_no, fish_type_id and lat_val. \n
+       The table MP_MATASYA_SAKHI_POND_MAPPING contains information about fishery and pond such as total matasya sakhi ponds, etc. It includes columns such as month_id, year, created_on, matasya_sakhi_formation_date, mapping_date, demaped_time, sl, matasya_sakhi_name, matasya_sakhi_meeting_frequency, matasya_sakhi_meeting_date, matasya_sakhi_address, created_by, is_active, demaped_by, district_id, block_id, entry_id, pond_id, pond_name and matasya_sakhi_id. \n
+       The table MP_MEMBER_WITH_FPG_MAPPING contains information about fishery such as hhs members in fishery etc. It includes columns such as sl, member_id, month_id, year, created_on, demaped_time, vo_id, vo_name, shg_id, shg_name, is_active, member_name, husband_name, demaped_by, created_by, entry_id, district_id, block_id, fpg_id and fpg_name. \n
+       The table M_PROFILE contains information about hns and hns help desk, the full form of hns is health nutrition sanitation. It includes columns such as dob, is_clf_not_created, dow, created_date, sl, panchayat_code, dist_name, block_name, panchayat_name, name, hus_name, gender, education_details, mobile, adhar_no, address, email_id, mobile_type, lat_value, long_value, location, created_by, clf_id, clf_name, clf_name_hindi, brlps_emp_id, vo_id, vo_name, vo_name_hindi, user_id, user_type, district_code and block_code. \n
+       The table M_SHG_HNS_USER_TABLE contains information about hns help desk, the full form of hns is health nutrition sanitation. It has information such as whether the user is active or not etc. It includes columns such as sl_no, active, user_id and password. \n
+       The table T_TRAINING_OF_CADRE_AND_PMT contains information about hns help desk, the full form of hns is health nutrition sanitation. It has information such as the training status of a user. It includes columns such as sl, date_of_training, entry_date, cm_cnrp_id, cm_cnrp_name, module_name, session_name, dist_code, verified_data, remarks, entry_by, block_code, cadre_type and training_completed_status. \n
+       The table M_USER_PROFILE contains information about swasthya mitra. It includes columns such as created_date, active, user_type, district_code, dist_name, hospital_id, name, mobile, aadhar_no, lat_value, long_value, location, created_by, user_id, swasthya_mitra_photo and password. \n
+       The table T_PATIENT_INFO contains information about IPD and OPD. It includes columns such as ipd_opd_date, is_discharged, discharged_date, revisit_date, admission_date, is_closed, entry_date, id, mobile_no, service_type, disease_id, other_reason, remarks, hospital_id, entry_by, lat_val, long_val, entry_address, remarks_at_discharge, discharge_reason, discharge_reason_hin, without_treatment_discharge_reason, arrangement, health_quality_services, quick_services, doctor_services, availability_medicine_services, admission_waiting_time, opd_ipd_no, patient_name, gender, is_jeevika_member, district_id, block_id and address. \n
+       The table MP_CBO_MEMBER_ACTIVITY contains information about multiple activites in which the members are involbed such as vegetable farming, regular farming, jute, atr and creft etc. It includes columns such as member_id, cbo_id, activity_id, id, record_status, created_by, created_on, updated_by and updated_on. \n
+       The table M_INTERVENTION_ACTIVITY contains information about the activity names. It includes columns such as activity_id, theme_id, created_on, updated_by, updated_on, record_status, created_by, activity_short_name, activity_description, activity_description_hindi and activity_short_name_hindi.
+                                                                                                         
+ 
+                                                                                                                                                                                        For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
                             FROM m_cbo c
                             INNER JOIN m_cbo_type t ON c.CBO_TYPE_ID = t.CBO_TYPE_ID  
@@ -758,7 +1094,7 @@ but you can perform join on village_id and village_code ,similar for district_id
 )
 
 memory = ConversationBufferMemory(memory_key="chat_history")
-query_chain = create_sql_query_chain(llm, db,memory=memory,prompt=few_shot_prompt)
+query_chain = create_sql_query_chain(llm, db,prompt=few_shot_prompt)
 
     
 
@@ -831,7 +1167,9 @@ def get_tables(categories: List[Table]) -> List[str]:
                     "m_chc_details",
                     "t_farmer_booking",
                     "t_chc_expenditure_details",
-                    "t_freight_details"
+                    "t_freight_details",
+                    "neera_selling","neera_collection","m_pg","pg_non_pg_memberes","m_clcdc","t_vidya_didi","t_learner_profile","mp_nursery_fy","t_sell_plant","t_payment_receive_details","t_expenditure_details","profile_entry_2","m_bankdataupload","m_agentnew","mp_pg_member","t_household_batch","g_member_mapping","g_goatry_distribution","m_dcs_profile","mp_member_dcs","mp_pond_fpg_mapping","batch_creation","t_sell_details","m_pond","t_sell_details","mp_matasya_sakhi_pond_mapping",
+"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity"
                 ]
             )
             elif category.name == "Farmer":
@@ -843,7 +1181,7 @@ def get_tables(categories: List[Table]) -> List[str]:
 table_chain = category_chain | get_tables
 table_chain = {"input": itemgetter("question")} | table_chain
 
-full_chain = RunnablePassthrough.assign(schema=db.get_table_info(),table_names_to_use=table_chain) | query_chain
+full_chain = RunnablePassthrough.assign(table_names_to_use=table_chain) | query_chain
 
 
 # query = full_chain.invoke(
