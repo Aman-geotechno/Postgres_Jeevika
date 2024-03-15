@@ -2137,17 +2137,71 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of mrp user in nalanda district in the financial year 2023-2024 is 15""",
         },
         {
-            "input": "What is the total number of hh member visit?",
+            "input": "What is the total number of hh visit or member visit?",
             "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
             where upper(a.user_type) = 'MRP USER'
             and b.active = 1""",
             "result": """[(1692,)]""",
-            "answer": """The total number hh member visit is 1692""",
+            "answer": """The total number of hh visit or member visit is 1692""",
         },
         {
-            "input": "What is the total number of hh member visit in patna district?",
+            "input": "What is the total number of hh visit or member visit last month?",
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+			inner join t_mrp_data_entry e on a.user_id = e.entry_by
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+			and e.entry_date >= CURRENT_DATE - INTERVAL '1 MONTH'""",
+            "result": """[(989,)]""",
+            "answer": """The total number of hh visit or member visit last month is 989""",
+        },
+        {
+            "input": "What is the total number of hh visit or member visit in last 6 months?",
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+			inner join t_mrp_data_entry e on a.user_id = e.entry_by
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+			and e.entry_date >= CURRENT_DATE - INTERVAL '6 MONTH'""",
+            "result": """[(1373,)]""",
+            "answer": """The total number of hh visit or member visit in last 6 months is 1373.""",
+        },
+        {
+            "input": "What is the total number of hh visit or member visit last month in patna district?",
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+			inner join t_mrp_data_entry e on a.user_id = e.entry_by
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+			and e.entry_date >= CURRENT_DATE - INTERVAL '1 MONTH'
+			and upper(d.district_name) = 'PATNA'""",
+            "result": """[(53,)]""",
+            "answer": """The total number of hh visit or member visit last month in patna district is 53.""",
+        },
+        {
+            "input": "What is the total number of hh visit or member visit in last 6 months in patna district?",
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+			inner join t_mrp_data_entry e on a.user_id = e.entry_by
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+			and e.entry_date >= CURRENT_DATE - INTERVAL '6 MONTH'
+			and upper(d.district_name) = 'PATNA'""",
+            "result": """[(58,)]""",
+            "answer": """The total number of hh visit or member visit in last 6 months in patna district is 58.""",
+        },
+        {
+            "input": "What is the total number of hh visit or member visit in patna district?",
             "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
@@ -2156,10 +2210,10 @@ AND upper(mg.district_name)='BANKA'""",
             and b.active = 1
             and upper(c.district_name) = 'PATNA'""",
             "result": """[(75,)]""",
-            "answer": """The total number of hh member visit in patna district is 75.""",
+            "answer": """The total number of hh visit or member visit in patna district is 75.""",
         },
         {
-            "input": "What is the total number of hh member visit in hilsa block?",
+            "input": "What is the total number of hh visit or member visit in hilsa block?",
             "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
@@ -2168,10 +2222,10 @@ AND upper(mg.district_name)='BANKA'""",
             and b.active = 1
             and upper(c.block_name) = 'HILSA'""",
             "result": """[(3,)]""",
-            "answer": """The total number of hh member visit in hilsa block is 3.""",
+            "answer": """The total number of hh visit or member visit in hilsa block is 3.""",
         },
         {
-            "input": "What is the total number of hh member visit in nalanda district in the financial year 2023-2024?",
+            "input": "What is the total number of hh visit or member visit in nalanda district in the financial year 2023-2024?",
             "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
@@ -2181,7 +2235,7 @@ AND upper(mg.district_name)='BANKA'""",
             and upper(d.district_name) = 'NALANDA'
             and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(15,)]""",
-            "answer": """The total number of hh member visit in nalanda district in the financial year 2023-2024 is 15""",
+            "answer": """The total number of hh visit or member visit in nalanda district in the financial year 2023-2024 is 15""",
         },
 
         {
