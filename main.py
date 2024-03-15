@@ -71,17 +71,16 @@ except (Exception, psycopg2.Error) as error:
 
 
 db = SQLDatabase.from_uri(f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}",include_tables=["m_cbo","m_cbo_type","m_cbo_member","m_cbo_shg_member","t_cbo_appl_mapping","t_cbo_loan_register","m_designation","t_acc_voucher","t_bulk_bank_acc","m_farmer", "m_farmer_crop","m_farmer_crop_technology", "m_farmer_croptype", "m_farmer_land",
-"m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block",
-"m_district","m_designation","m_village","m_panchayat","clf_masik_grading",
-                    "vo_masik_grading",
-                    "shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain","t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details","t_farmer_booking","t_chc_expenditure_details","t_freight_details","neera_selling","neera_collection","m_pg","pg_non_pg_memberes","m_clcdc","t_vidya_didi","t_learner_profile","mp_nursery_fy","t_sell_plant","t_payment_receive_details","t_expenditure_details","profile_entry_2","m_bankdataupload","m_agentnew","mp_pg_member","t_household_batch","g_member_mapping","g_goatry_distribution","m_dcs_profile","mp_member_dcs","mp_pond_fpg_mapping","batch_creation","t_sell_details","m_pond","t_sell_details","mp_matasya_sakhi_pond_mapping",
-"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity"])
+"m_farmer_pest_management", "mp_cbo_member","m_farmer_seed", "m_farmer_soil_management","t_mp_farmer_transaction_pest", "t_mp_farmer_transaction_soil","t_mp_trasaction_croptechnology","m_block", "m_district","m_designation","m_village","m_panchayat","clf_masik_grading","vo_masik_grading","shg_masik_grading","profile_entry","t_expenditure_details","t_sell_grain",
+"t_digital_banking","t_advisory_farmer_entry","t_agri_input","t_marketing_services","t_nursery_services","m_expenditure_type","m_chc_details","t_farmer_booking","t_chc_expenditure_details","t_freight_details","neera_selling","neera_collection","m_pg","pg_non_pg_memberes","m_clcdc","t_vidya_didi","t_learner_profile","mp_nursery_fy","t_sell_plant","t_payment_receive_details",
+"t_expenditure_details","profile_entry_2","m_bankdataupload","m_agentnew","mp_pg_member","t_household_batch","g_member_mapping","g_goatry_distribution","m_dcs_profile","mp_member_dcs","mp_pond_fpg_mapping","batch_creation","t_sell_details","m_pond","t_sell_details","mp_matasya_sakhi_pond_mapping",
+"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity", "employer_window", "plan_job_fair_training", "candidates_profile", "is_letter_offered"])
 
 #print(db.get_usable_table_names())
 
 #print(db.get_context())
 
-llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True,google_api_key="AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ", temperature=0)
+llm = ChatGoogleGenerativeAI(model="gemini-pro",convert_system_message_to_human=True,google_api_key="AIzaSyC1mncPJJKSU70yJspuzPx-jw_sH89jiCE", temperature=0)
 #'AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ'
 #google_api_key='AIzaSyCoPL_q2SIKtVEbn6MlvbSnf-MrFnfr9aQ'
 #api_key="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"
@@ -898,8 +897,11 @@ The table MP_PG_MEMBER contains information about the poultry service. It includ
        The table M_USER_PROFILE contains information about swasthya mitra. It includes columns such as created_date, active, user_type, district_code, dist_name, hospital_id, name, mobile, aadhar_no, lat_value, long_value, location, created_by, user_id, swasthya_mitra_photo and password. \n
        The table T_PATIENT_INFO contains information about IPD and OPD. It includes columns such as ipd_opd_date, is_discharged, discharged_date, revisit_date, admission_date, is_closed, entry_date, id, mobile_no, service_type, disease_id, other_reason, remarks, hospital_id, entry_by, lat_val, long_val, entry_address, remarks_at_discharge, discharge_reason, discharge_reason_hin, without_treatment_discharge_reason, arrangement, health_quality_services, quick_services, doctor_services, availability_medicine_services, admission_waiting_time, opd_ipd_no, patient_name, gender, is_jeevika_member, district_id, block_id and address. \n
        The table MP_CBO_MEMBER_ACTIVITY contains information about multiple activites in which the members are involbed such as vegetable farming, regular farming, jute, atr and creft etc. It includes columns such as member_id, cbo_id, activity_id, id, record_status, created_by, created_on, updated_by and updated_on. \n
-       The table M_INTERVENTION_ACTIVITY contains information about the activity names. It includes columns such as activity_id, theme_id, created_on, updated_by, updated_on, record_status, created_by, activity_short_name, activity_description, activity_description_hindi and activity_short_name_hindi.
-                                                                                                         
+       The table M_INTERVENTION_ACTIVITY contains information about the activity names. It includes columns such as activity_id, theme_id, created_on, updated_by, updated_on, record_status, created_by, activity_short_name, activity_description, activity_description_hindi and activity_short_name_hindi. \n
+       The table EMPLOYER_WINDOW acotains information about number of employer registered is differect districts, blocks and company profile. It includes columns such as id, district_id, district_name, block_id, block_name, name, company_profile, no_of_positions, age_range, salary_range, contact_person_name, designation, contact_number, created_by, created_on, updated_by, updated_on, type_of_industry and work_profile. \n
+       The table PLAN_JOB_FAIR_TRAINING contains information about number of job fair conducted in different districts and blocks. It includes columns such as date_of_event, plan_id, district_name, block_id, block_name, location_address, created_by, created_on, date_of_event2, activity and district_id. \n
+       The table CANDIDATES_PROFILE contains information about number of candidates registered in different districts, blocks and panchayats. It includes columns such as updated_on, id, block_id, village_id, name, father_name, dob, contact_number, education_qualification, year_of_experience, remarks_if_any, work_in_state, work_out_state, is_experienced, created_by, created_on, updated_by, in_district_id, out_district_name, aadhaar_number, photo, category_id, registration_number, latitude, longitude, isshg and district_id. \n
+       The IS_LETTER_OFFERED contains information about candidates selected and candidates joined in differect districts and blocks. It includes columns such as created_on, date_of_joining, emp_id, id, block_name, registration_num, event_id, is_offer_letter_issued, created_by, salary, is_offer_accepted, reason_id, reason_other, working_location, working_in_state, district_id, district_name and block_id.                                                                                            
  
                                                                                                                                                                                         For example if question is like 
 What is the total count of SHG in Patna in 2023?....then query should be...SELECT COUNT(c.CBO_ID) AS shg_count
@@ -1169,7 +1171,7 @@ def get_tables(categories: List[Table]) -> List[str]:
                     "t_chc_expenditure_details",
                     "t_freight_details",
                     "neera_selling","neera_collection","m_pg","pg_non_pg_memberes","m_clcdc","t_vidya_didi","t_learner_profile","mp_nursery_fy","t_sell_plant","t_payment_receive_details","t_expenditure_details","profile_entry_2","m_bankdataupload","m_agentnew","mp_pg_member","t_household_batch","g_member_mapping","g_goatry_distribution","m_dcs_profile","mp_member_dcs","mp_pond_fpg_mapping","batch_creation","t_sell_details","m_pond","t_sell_details","mp_matasya_sakhi_pond_mapping",
-"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity"
+"mp_member_with_fpg_mapping","m_profile", "m_shg_hns_user_table", "t_training_of_cadre_and_pmt","m_user_profile","t_patient_info","mp_cbo_member_activity","m_intervention_activity""employer_window", "plan_job_fair_training", "candidates_profile", "is_letter_offered"
                 ]
             )
             elif category.name == "Farmer":
@@ -1198,7 +1200,7 @@ def api():
         try:
             query = full_chain.invoke(
             {"question": question })
-            llm2= GoogleGenerativeAI(model="gemini-pro",google_api_key='AIzaSyBZswmKbZf8YzE_41upIXNNwwIh2nkd8v0', temperature=0)
+            llm2= GoogleGenerativeAI(model="gemini-pro",google_api_key='AIzaSyC1mncPJJKSU70yJspuzPx-jw_sH89jiCE', temperature=0)
 
         
             print(query)
@@ -1530,13 +1532,38 @@ def api():
 
         # except Exception as e:
         #      print(e)
-        try:
-            final_query=llm2(f"This is a postgres sql query {query} which is going to be executed but if the query contains semicolon(;),WHERE ROWNUM clause in the end or any special character at begining or end except query then it will not run ...your task is to return the same query by removing semicolon(;),WHERE ROWNUM clause  or any special character in the begining or end if it contains..if it does not contain then its good just return the query as it is.")
-
         
-            #print(final_query)
-        except Exception as e:
-             print(e)
+        final_query=llm2(f"""This is a postgres sql query {query} which is going to be executed against this question {question}... 
+            Your task is to Only return query, remove eveything from query at the begining or the end, don't return ```sql
+                         
+            For example: 
+            If query generated is like this... 
+
+            ```sql
+            select count(distinct cbo_id) as total_cbo from m_cbo
+            ``` 
+
+            then you should return 
+
+            select count(distinct cbo_id) as total_cbo from m_cbo 
+
+            Another example:
+            If query generated is like this... 
+
+            ```sql
+            SELECT COUNT(a.clf_id) AS clf_count
+            FROM clf_masik_grading a
+            WHERE a.year = 2023 and a.month_name = 'Dec' AND a.final_grade = 'A'
+
+            then you should return 
+
+            SELECT COUNT(a.clf_id) AS clf_count
+            FROM clf_masik_grading a
+            WHERE a.year = 2023 and a.month_name = 'Dec' AND a.final_grade = 'A'
+            """)
+        
+        print(final_query)
+        
 
         #print(db.run(final_query))
         

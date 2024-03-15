@@ -596,14 +596,40 @@ l.designation_id!=31
             "answer": """There are total 498 cadre of designation VRP in NALANDA district"""
         },
         {
+            "input": "count of total graded clf?",
+            "sql_cmd": """SELECT COUNT(distinct clf.clf_id) AS clf_count
+            FROM clf_masik_grading clf
+            INNER JOIN m_cbo c ON clf.clf_id = c.cbo_id
+            WHERE c.record_status = 1""",
+            "result": """[(1596,)]""",
+            "answer": """The count of total graded clf is 1596.""",
+        },
+        {
+            "input": "count of total graded clf in 2023?",
+            "sql_cmd": """SELECT COUNT(distinct clf.clf_id) AS clf_count
+            FROM clf_masik_grading clf
+            INNER JOIN m_cbo c ON clf.clf_id = c.cbo_id
+            WHERE c.record_status = 1 and clf.year = 2023""",
+            "result": """[(1556,)]""",
+            "answer": """The count of total graded clf in 2023 is 1556.""",
+        },
+        {
+            "input": "count of total graded clf in december 2023?",
+            "sql_cmd": """SELECT COUNT(distinct clf.clf_id) AS clf_count
+            FROM clf_masik_grading clf
+            INNER JOIN m_cbo c ON clf.clf_id = c.cbo_id
+            WHERE c.record_status = 1 and clf.year = 2023 and clf.month_name = 'Dec'""",
+            "result": """[(17,)]""",
+            "answer": """The count of total graded clf in december 2023 is 17.""",
+        },
+        {
             "input": "count of B graded clf in december 2023?",
             "sql_cmd": """SELECT COUNT(clf.clf_id) AS clf_count
             FROM clf_masik_grading clf
             INNER JOIN m_cbo c ON clf.clf_id = c.cbo_id
             WHERE clf.year = 2023 and clf.month_name = 'Dec' AND clf.final_grade = 'B' AND c.record_status = 1""",
-            "result": """[(7)]""",
-            "answer": """There are 7 B graded clf in December 2023""",
-
+            "result": """[(7,)]""",
+            "answer": """The count of B graded clf in december 2023 is 7.""",
         },
         {
             "input": "how many clf are not graded?",
@@ -612,8 +638,117 @@ l.designation_id!=31
             WHERE a.record_status = 1
             AND a.cbo_type_id = 1
             AND NOT EXISTS (SELECT 1 FROM clf_masik_grading b WHERE a.cbo_id = b.clf_id)""",
-            "result": """[(64)]""",
-            "answer": """There are 64 clf that are not graded""",
+            "result": """[(64,)]""",
+            "answer": """64 clf that are not graded.""",
+        },
+        {
+            "input": "count of total graded vo?",
+            "sql_cmd": """SELECT COUNT(distinct a.vo_id) AS vo_count
+            FROM vo_masik_grading a
+            INNER JOIN m_cbo c ON a.vo_id = c.cbo_id
+            WHERE c.record_status = 1""",
+            "result": """[(65819,)]""",
+            "answer": """The count of total graded vo is 65819.""",
+        },
+        {
+            "input": "count of total graded vo in 2023?",
+            "sql_cmd": """SELECT COUNT(distinct a.vo_id) AS vo_count
+            FROM vo_masik_grading a
+            INNER JOIN m_cbo c ON a.vo_id = c.cbo_id
+            WHERE c.record_status = 1 and a.year = 2023""",
+            "result": """[(64145,)]""",
+            "answer": """The count of total graded vo in 2023 is 64145.""",
+        },
+        {
+            "input": "count of total graded vo in december 2023?",
+            "sql_cmd": """SELECT COUNT(distinct a.vo_id) AS vo_count
+            FROM vo_masik_grading a
+            INNER JOIN m_cbo c ON a.vo_id = c.cbo_id
+            WHERE c.record_status = 1 and a.year = 2023 and a.month_name = 'Dec'""",
+            "result": """[(32381,)]""",
+            "answer": """The count of total graded vo in december 2023 is 32381.""",
+        },
+
+        {
+            "input": "count of a graded vo in december 2023?",
+            "sql_cmd": """SELECT COUNT(a.clf_id) AS vo_count
+            FROM vo_masik_grading a
+            INNER JOIN m_cbo c ON a.vo_id = c.cbo_id
+            WHERE a.year = 2023 and a.month_name = 'Dec' AND a.final_grade = 'A' AND c.record_status = 1""",
+            "result": """[(97,)]""",
+            "answer": """The count of A graded vo in december 2023 is 97.""",
+        },
+        {
+            "input": "count of total graded shg?",
+            "sql_cmd": """SELECT COUNT(distinct a.shg_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE c.record_status = 1""",
+            "result": """[(889467,)]""",
+            "answer": """The count of total graded shg is 889467.""",
+        },
+        {
+            "input": "count of total graded shg in 2023?",
+            "sql_cmd": """SELECT COUNT(distinct a.shg_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE c.record_status = 1 and a.year = 2023""",
+            "result": """[(852340,)]""",
+            "answer": """The count of total graded shg in 2023 is 852340.""",
+        },
+        {
+            "input": "count of total graded shg in december 2023?",
+            "sql_cmd": """SELECT COUNT(distinct a.shg_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE c.record_status = 1 and a.year = 2023 and a.month_name = 'Dec'""",
+            "result": """[(737400,)]""",
+            "answer": """The count of total graded shg in december 2023 is 737400.""",
+        },
+        {
+            "input": "count of total graded shg in feb 2023?",
+            "sql_cmd": """SELECT COUNT(distinct a.shg_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE c.record_status = 1 and a.year = 2023 and a.month_name = 'Dec'""",
+            "result": """[(737400,)]""",
+            "answer": """The count of total graded shg in december 2023 is 737400.""",
+        },
+        {
+            "input": "count of a graded shg in december 2023?",
+            "sql_cmd": """SELECT COUNT(a.clf_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE a.year = 2023 and a.month_name = 'Dec' AND a.final_grade = 'A' AND c.record_status = 1""",
+            "result": """[(245001,)]""",
+            "answer": """The count of A graded shg in december 2023 is 245001.""",
+        },
+        {
+            "input": "Distribution of a and a+ grade shg in januray 2024?",
+            "sql_cmd": """SELECT distinct a.final_grade as grade
+            , COUNT(a.clf_id) AS shg_count
+            FROM shg_masik_grading a
+            INNER JOIN m_cbo c ON a.shg_id = c.cbo_id
+            WHERE a.year = 2024 and a.month_name = 'Jan' AND a.final_grade in ('A+', 'A') AND c.record_status = 1
+            group by 1""",
+            "result": """[(('A', 256853), ('A+', 115866),)]""",
+            "answer": """Distribution of a and a+ grade shg in januray 2024 are:
+            - A: 256853
+            - A+: 115866 """,
+        },
+        {
+            "input": "give the grade distribution of vo for december 2023?",
+            "sql_cmd": """SELECT a.final_grade, COUNT(a.clf_id) AS vo_count
+            FROM vo_masik_grading a
+            INNER JOIN m_cbo c ON a.vo_id = c.cbo_id
+            WHERE a.year = 2023 and a.month_name = 'Dec' AND c.record_status = 1
+            GROUP BY a.final_grade""",
+            "result": """[('A', 97), ('B', 3809), ('C', 28475)]""",
+            "answer": """The grade distribution of village organisations (VOs) for December 2023 is as follows:
+
+            - A: 97
+            - B: 3809
+            - C: 28475""",
         },
         {
            "input": "total count of farmers",
@@ -908,10 +1043,10 @@ FROM neera_selling
             "answer": """577 group of neera production"""
         },
         {
-             "input": "Total count of PG",
+             "input": "Total count of PG in neera",
             "sql_cmd": """select count(pg_id) from m_pg where is_active='Y'""",
             "result": """[(1014)]""",
-            "answer": """1014 Total count of PG"""
+            "answer": """1014 Total count of PG in neera"""
         },
         {
             "input": "Total count of tappers",
@@ -1156,14 +1291,29 @@ WHERE mb.agent_name IS NOT NULL
 AND upper(mg.district_name)='BANKA'""",
             "result": """[(128)]""",
             "answer": """128 total count of agent in BANKA district"""
-        },
-        
+        }, 
         {
             "input": "In how many districts poultry is there?",
             "sql_cmd": """select count(distinct district_id) as total_districts
             from mp_pg_member""",
             "result": """[(38,)]""",
             "answer": """Poultry is present in 38 districts.""",
+        },
+        {
+            "input": "Poultry is open in how many districts?",
+            "sql_cmd": """select count(distinct district_id) as total_districts
+            from mp_pg_member""",
+            "result": """[(38,)]""",
+            "answer": """Poultry is open in 38 districts.""",
+        },
+        {
+            "input": "Poultry is open in how many districts in IPDS-2 scheme?",
+            "sql_cmd": """select count(distinct a.district_id) as total_districts
+            from mp_pg_member a
+			inner join t_household_batch b on a.member_id = b.member_id
+			where upper(b.scheme) = 'IPDS-2'""",
+            "result": """[(36,)]""",
+            "answer": """Poultry is open in 36 districts in IPDS-2 scheme.""",
         },
         {
             "input": "In how many blocks poultry is there?",
@@ -1173,30 +1323,216 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """Poultry is present in 303 blocks.""",
         },
         {
+            "input": "Poultry is open in how many blocks?",
+            "sql_cmd": """select count(distinct block_id) as total_blocks
+            from mp_pg_member""",
+            "result": """[(303,)]""",
+            "answer": """Poultry is open in 303 blocks.""",
+        },
+        {
+            "input": "Poultry is open in how many blocks in IPDS-2 scheme?",
+            "sql_cmd": """select count(distinct a.block_id) as total_districts
+            from mp_pg_member a
+			inner join t_household_batch b on a.member_id = b.member_id
+			where upper(b.scheme) = 'IPDS-2'""",
+            "result": """[(276,)]""",
+            "answer": """Poultry is open in 276 blocks in IPDS-2 scheme.""",
+        },
+        {
             "input": "what is the total number of pgs in poultry?",
             "sql_cmd": """select count(distinct pg_id) as total_pgs
             from t_household_batch""",
             "result": """[(377,)]""",
-            "answer": """Total number of pgs in poultry is 453.""",
+            "answer": """Total number of pgs in poultry is 377.""",
         },
         {
-            "input": "What is the total number of PG in poultry in the finalcial yaer 2022-2023",
-            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
-            from t_household_batch a
-            inner join mp_pg_member b on a.member_id = b.member_id
-            where b.created_on BETWEEN '2022-04-01' AND '2023-03-31'""",
-            "result": """[(268,)]""",
-            "answer": """The total number of PG in poultry in the finalcial yaer 2022-2023 is 268.""",
+            "input": "what is the total number of pgs in poultry in IPDS-2 scheme?",
+            "sql_cmd": """select count(distinct pg_id) as total_pgs
+            from t_household_batch
+            where upper(scheme) = 'IPDS-2'""",
+            "result": """[(362,)]""",
+            "answer": """Total number of pgs in poultry is 362.""",
         },
         {
-            "input": "what is the total number of pgs in poultry in patna",
+            "input": "what is the total number of pgs in poultry in patna district",
             "sql_cmd": """select count(distinct a.pg_id) as total_pgs
             from t_household_batch a
             inner join mp_pg_member b on a.member_id = b.member_id
             inner join m_district c on b.district_id = c.district_id
             where upper(c.district_name) = 'PATNA'""",
             "result": """[(13,)]""",
-            "answer": """Total number of pgs in poultry in patna is 13""",
+            "answer": """Total number of pgs in poultry in patna district is 13.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry in patna district in IPDS-2 scheme",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where upper(c.district_name) = 'PATNA'
+            and upper(scheme) = 'IPDS-2'""",
+            "result": """[(11,)]""",
+            "answer": """Total number of pgs in poultry in patna district in IPDS-2 scheme is 11.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry in arrah block",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where upper(c.block_name) = 'ARRAH'""",
+            "result": """[(1,)]""",
+            "answer": """Total number of pgs in poultry in arrah block is 1.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry in arrah block in IPDS-2 scheme",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where upper(c.block_name) = 'ARRAH'
+            and upper(scheme) = 'IPDS-2'""",
+            "result": """[(1,)]""",
+            "answer": """Total number of pgs in poultry in arrah block in IPDS-2 scheme is 1.""",
+        },
+        {
+            "input": "What is the total number of pg in poultry in 2023",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            where b.created_on BETWEEN '2023-01-01' AND '2023-12-31'""",
+            "result": """[(161,)]""",
+            "answer": """The total number of pg in poultry in 2023 is 161.""",
+        },
+        {
+            "input": "Total number of pg in poultry in 2023-2024",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            where b.created_on BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(175,)]""",
+            "answer": """The total number of pg in poultry in 2023-2024 is 175.""",
+        },
+        {
+            "input": "Total number of pg in poultry in 2023-2024 in nalanda district?",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where b.created_on BETWEEN '2023-04-01' AND '2024-03-31'
+            and upper(c.district_name) = 'PATNA'""",
+            "result": """[(7,)]""",
+            "answer": """The total number of pg in poultry in 2023-2024 in nalanda district is 7.""",
+        },
+        {
+            "input": "Total number of pg in poultry in 2023-2024 in arrah block?",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where b.created_on BETWEEN '2023-04-01' AND '2024-03-31'
+            and upper(c.block_name) = 'ARRAH'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of pg in poultry in 2023-2024 in arrah block is 0.""",
+        },
+        {
+            "input": "what is the total number of pgs in poultry in patna district in 2023-2024",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where upper(c.district_name) = 'PATNA'
+			and b.created_on BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(7,)]""",
+            "answer": """Total number of pgs in poultry in patna district in 2023-2024 is 7""",
+        },
+        {
+            "input": "Total number of pg in poultry in january 2024",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            where b.created_on BETWEEN '2024-01-01' AND '2024-01-31'""",
+            "result": """[(26,)]""",
+            "answer": """The total number of pg in poultry in january 2024is 26.""",
+        },
+        {
+            "input": "Total number of pg in poultry in january 2024 in nalanda district",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where b.created_on BETWEEN '2024-01-01' AND '2024-01-31'
+            and upper(c.district_name) = 'NALANDA'""",
+            "result": """[(2,)]""",
+            "answer": """The total number of pg in poultry in january 2024 in nalanda district is 2.""",
+        },
+        {
+            "input": "Total number of pg in poultry in january 2024 in arrah block",
+            "sql_cmd": """select count(distinct a.pg_id) as total_pgs
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where b.created_on BETWEEN '2024-01-01' AND '2024-01-31'
+            and upper(c.block_name) = 'ARRAH'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of pg in poultry in january 2024 in arrah block is 0.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry?",
+            "sql_cmd": """select count(distinct member_id) as total_members
+            from t_household_batch""",
+            "result": """[(64167,)]""",
+            "answer": """Total number of beneficiaries or members in poultry is 64167.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry in IPDS-2 scheme?",
+            "sql_cmd": """select count(distinct member_id) as total_members
+            from t_household_batch
+            where upper(scheme) = 'IPDS-2'""",
+            "result": """[(62551,)]""",
+            "answer": """Total number of beneficiaries or members in poultry in IPDS-2 scheme is 62551.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry in patna district",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where upper(c.district_name) = 'PATNA'""",
+            "result": """[(2310,)]""",
+            "answer": """Total number of beneficiaries or members in poultry in patna district is 2310.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry in patna district in IPDS-2 scheme",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_district c on b.district_id = c.district_id
+            where upper(c.district_name) = 'PATNA'
+            and upper(scheme) = 'IPDS-2'""",
+            "result": """[(2112,)]""",
+            "answer": """Total number of beneficiaries or members in poultry in patna district in IPDS-2 scheme is 2112.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry in arrah block",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where upper(c.block_name) = 'ARRAH'""",
+            "result": """[(180,)]""",
+            "answer": """Total number of beneficiaries or members in poultry in arrah block is 180.""",
+        },
+        {
+            "input": "what is the total number of beneficiaries or members in poultry in arrah block in IPDS-2 scheme",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from t_household_batch a
+            inner join mp_pg_member b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where upper(c.block_name) = 'ARRAH'
+            and upper(scheme) = 'IPDS-2'""",
+            "result": """[(180,)]""",
+            "answer": """Total number of beneficiaries or members in poultry in arrah block in IPDS-2 scheme is 180.""",
         },
         {
             "input": "What is the count of chicks distributed?",
@@ -1206,22 +1542,42 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The count of chicks distributed is 2528433""",
         },
         {
-            "input": "What is the total number of chicks distributed?",
+            "input": "Total number of chicks distributed?",
             "sql_cmd": """SELECT SUM(quantity_received) AS total_chicks_distributed
             FROM t_household_batch""",
             "result": """[(2528433,)]""",
             "answer": """The total number of chicks distributed is 2528433""",
         },
         {
-            "input": "In the Siwan district what is the total number of chicks distributed",
+            "input": "Total number of chicks distributed in IPDS-2 scheme?",
+            "sql_cmd": """SELECT SUM(quantity_received) AS total_chicks_distributed
+            FROM t_household_batch
+            where upper(scheme) = 'IPDS-2'""",
+            "result": """[(2508012,)]""",
+            "answer": """The total number of chicks distributed in IPDS-2 scheme is 2508012""",
+        },
+        {
+            "input": "What is the total number of chicks distributed in patna district",
             "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
             FROM t_household_batch a
             INNER JOIN mp_pg_member b on a.member_id = b.member_id
             INNER join m_district c on b.district_id = c.district_id
             INNER join m_block d on b.block_id = d.block_id
-            WHERE upper(c.district_name) = 'SIWAN'""",
-            "result": """[(8460,)]""",
-            "answer": """In the Siwan district, the total number of chicks distributed is 8460.""",
+            WHERE upper(c.district_name) = 'PATNA'""",
+            "result": """[(98494,)]""",
+            "answer": """Total number of chicks distributed in patna district is 98494.""",
+        },
+        {
+            "input": "What is the total number of chicks distributed in patna district IN IPDS-2 scheme",
+            "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
+            FROM t_household_batch a
+            INNER JOIN mp_pg_member b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'PATNA'
+            and upper(scheme) = 'IPDS-2'""",
+            "result": """[(93494,)]""",
+            "answer": """Total number of chicks distributed in patna district IPDS-2 scheme is 93494.""",
         },
         {
             "input": "What is the total number of chicks distributed in the finalcial year 2023-2024 in Patna district",
@@ -1235,11 +1591,41 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """Total number of chicks distributed in the finalcial year 2023-2024 in Patna district is 15445.""",
         },
         {
+            "input": "What is the total number of chicks distributed in last six months",
+            "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
+            FROM t_household_batch a
+            INNER JOIN mp_pg_member b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            WHERE b.created_on BETWEEN CURRENT_DATE - INTERVAL '6 MONTH' AND CURRENT_DATE""",
+            "result": """[(155549,)]""",
+            "answer": """The total number of chicks distributed in last six months in Patna district is 155549.""",
+        },
+        {
+            "input": "What is the total number of chicks distributed in last six months in Patna district",
+            "sql_cmd": """SELECT SUM(a.quantity_received) AS total_chicks_distributed
+            FROM t_household_batch a
+            INNER JOIN mp_pg_member b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            WHERE upper(c.district_name) = 'PATNA' 
+            AND b.created_on BETWEEN CURRENT_DATE - INTERVAL '6 MONTH' AND CURRENT_DATE""",
+            "result": """[(5445,)]""",
+            "answer": """The total number of chicks distributed in last six months in Patna district is 5445.""",
+        },
+        {
             "input": "In how many districts goatry is there?",
             "sql_cmd": """select count(distinct district_id)
             from g_member_mapping""",
             "result": """[(19,)]""",
             "answer": """Goatry service is available in 19 districts.""",
+        },
+        {
+            "input": "In how many districts goatry is there in IGSDS-4 scheme?",
+            "sql_cmd": """select count(distinct a.district_id)
+            from g_member_mapping a
+			inner join g_goatry_distribution b on a.member_id = b.member_id
+			where upper(scheme_name) = 'IGSDS-4'""",
+            "result": """[(12,)]""",
+            "answer": """Goatry service is available in 12 districts in IGSDS-4 scheme.""",
         },
         {
             "input": "What is the count of pgs in nalanda district in the financial year 2020-2021 in goatry?",
@@ -1281,6 +1667,29 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The count of goats distributed is 48882.""",
         },
         {
+            "input": "What is the count of goats distributed in patna district in IGSDS-5 scheme?",
+            "sql_cmd": """SELECT SUM(a.no_of_goat_received) AS total_goats_distributed
+            FROM g_goatry_distribution a
+            INNER JOIN g_member_mapping b on a.member_id = b.member_id
+            INNER join m_district c on b.district_id = c.district_id
+            INNER join m_block d on b.block_id = d.block_id
+            WHERE upper(c.district_name) = 'PATNA' 
+			AND upper(a.scheme_name) = 'IGSDS-5'""",
+            "result": """[(1170,)]""",
+            "answer": """Count of goats distributed in patna district in IGSDS-5 scheme is 1170.""",
+        },
+        {
+            "input": "What is the count of goats distributed in arrah block in IGSDS-5 scheme?",
+            "sql_cmd": """select count(distinct a.member_id) as total_goats_distributed
+            from g_goatry_distribution a
+            inner join g_member_mapping b on a.member_id = b.member_id
+            inner join m_block c on b.block_id = c.block_id
+            where upper(c.block_name) = 'ARRAH'
+            and upper(scheme_name) = 'IGSDS -5'""",
+            "result": """[(,)]""",
+            "answer": """Count of goats distributed in arrah block in IGSDS-5 scheme is 0.""",
+        },
+        {
             "input": "What is the count of goats distributed in patna district in the financial year 2023-2024?",
             "sql_cmd": """SELECT SUM(a.no_of_goat_received) AS total_goats_distributed
             FROM g_goatry_distribution a
@@ -1301,6 +1710,27 @@ AND upper(mg.district_name)='BANKA'""",
             - Alauli
             - Saraiya
             - Sandesh""",
+        },
+        {
+            "input": "Total number of districts in which dairy is there?",
+            "sql_cmd": """select count(distinct district_id) as total_districts
+            from m_dcs_profile""",
+            "result": """[(3,)]""",
+            "answer": """The total number of districts in which dairy is there is 3.""",
+        },
+        {
+            "input": "Total number of blocks in which dairy is there?",
+            "sql_cmd": """select count(distinct block_id) as total_blocks
+            from m_dcs_profile""",
+            "result": """[(3,)]""",
+            "answer": """The total number of blocks in which dairy is there is 3.""",
+        },
+        {
+            "input": "Total number of panchayats in which dairy is there?",
+            "sql_cmd": """select count(distinct dcs_panchayat_id) as total_panchayats
+            from m_dcs_profile""",
+            "result": """[(5,)]""",
+            "answer": """The total number of panchayats in which dairy is there is 5.""",
         },
         {
             "input": "what is the total number of shg member in dairy",
@@ -1328,6 +1758,16 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number members involved in dairy in bhojpur district is 1.""",
         },
         {
+            "input": "what is the total number members involved in dairy in arrah block?",
+            "sql_cmd": """select count(distinct a.member_id) as total_member
+            from mp_member_dcs a
+            inner join m_dcs_profile b on a.dcs_id = b.dcs_id
+            inner join m_block d on b.block_id = d.block_id
+            where upper(d.block_name) = 'ARRAH'""",
+            "result": """[(0,)]""",
+            "answer": """The total number members involved in dairy in arrah block is 0.""",
+        },
+        {
             "input": "what is the total number districts in which fishery is there",
             "sql_cmd": """select count(distinct district_id) as total_district
             from mp_pond_fpg_mapping""",
@@ -1347,6 +1787,24 @@ AND upper(mg.district_name)='BANKA'""",
             from batch_creation""",
             "result": """[(2,)]""",
             "answer": """The total number of batch in fishery is 2.""",
+        },
+        {
+            "input": "what is the total number of batch in fishery in gaya district?",
+            "sql_cmd": """select count(distinct a.batch_number) as total_batch
+            from batch_creation a
+			inner join m_district b on a.district_id = b.district_id
+			where upper(b.district_name) = 'GAYA'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of batch in fishery in gaya district is 1.""",
+        },
+        {
+            "input": "what is the total number of batch in fishery in arrah block?",
+            "sql_cmd": """select count(distinct a.batch_number) as total_batch
+            from batch_creation a
+			inner join m_block b on a.block_id = b.block_id
+			where upper(b.block_name) = 'ARRAH'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of batch in fishery in arrah block is 1.""",
         },
         {
             "input": "What is the total number of stocking pond water area",
@@ -1525,7 +1983,7 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of mrp user in hilsa block is 3.""",
         },
         {
-            "input": "What is the total number of mrp user in nalanda district in the financial yaer 2023-2024?",
+            "input": "What is the total number of mrp user in nalanda district in the financial year 2023-2024?",
             "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
@@ -1535,7 +1993,7 @@ AND upper(mg.district_name)='BANKA'""",
             and upper(d.district_name) = 'NALANDA'
             and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(15,)]""",
-            "answer": """The total number of mrp user in nalanda district in the financial yaer 2023-2024 is 15""",
+            "answer": """The total number of mrp user in nalanda district in the financial year 2023-2024 is 15""",
         },
         {
             "input": "What is the total number of swasthya mitra?",
@@ -1575,13 +2033,13 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of IPD is 125699.""",
         },
         {
-            "input": "Total ipd in the fy(financial yaer) 2023-2024?",
+            "input": "Total ipd in the fy(financial year) 2023-2024?",
             "sql_cmd": """select count(distinct id) as total_ipd
             from t_patient_info
             where upper(service_type) = 'IPD'
             and ipd_opd_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(115105,)]""",
-            "answer": """The total number of ipd in the fy(financial yaer) 2023-2024 is 115105.""",
+            "answer": """The total number of ipd in the fy(financial year) 2023-2024 is 115105.""",
         },
         {
             "input": "What is the total number of ipd in rohtas district?",
@@ -1612,13 +2070,13 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of OPD is 618271.""",
         },
         {
-            "input": "Total opd in the fy(financial yaer) 2023-2024?",
+            "input": "Total opd in the fy(financial year) 2023-2024?",
             "sql_cmd": """select count(distinct id) as total_opd
             from t_patient_info
             where upper(service_type) = 'OPD'
             and ipd_opd_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(556693,)]""",
-            "answer": """The total number of opd in the fy(financial yaer) 2023-2024 is 556693.""",
+            "answer": """The total number of opd in the fy(financial year) 2023-2024 is 556693.""",
         },
         {
             "input": "What is the total number of opd in rohtas district?",
@@ -1952,6 +2410,16 @@ AND upper(mg.district_name)='BANKA'""",
             and upper(b.company_profile) = 'CONSULTANCY WORK'""",
             "result": """[(18,)]""",
             "answer": """The total number of candidates selected in consultancy work is 18.""",
+        },
+        {
+            "input": "What is the total number of candidates selected in profile security guard?",
+            "sql_cmd": """select count(distinct a.registration_num) as total_candidates_selected
+            from is_letter_offered a
+            inner join employer_window b on a.emp_id = b.id
+            where upper(a.is_offer_letter_issued) = 'Y'
+            and upper(b.company_profile) = 'SECURITY GUARD'""",
+            "result": """[(118,)]""",
+            "answer": """The total number of candidates selected in profile security guard is 118.""",
         },
         {
             "input": "What is the total number of candidates selected in gaya district in agriculture?",
