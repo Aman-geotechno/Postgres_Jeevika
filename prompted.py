@@ -1814,12 +1814,50 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """the total number of stocking pond water area is 47.""",
         },
         {
+            "input": "What is the total number of stocking pond water area in patna district?",
+            "sql_cmd": """select count(distinct a.actual_water_area_pond)
+            from m_pond a
+			inner join m_district b on a.district_id = b.district_id
+			where upper(b.district_name) = 'PATNA'""",
+            "result": """[(4,)]""",
+            "answer": """the total number of stocking pond water area in patna district is 4.""",
+        },
+        {
+            "input": "What is the total number of stocking pond water area in arrah block?",
+            "sql_cmd": """select count(distinct a.actual_water_area_pond)
+            from m_pond a
+			inner join m_block b on a.block_id = b.block_id
+			where upper(b.block_name) = 'ARRAH'""",
+            "result": """[(2,)]""",
+            "answer": """the total number of stocking pond water area in arrah block is 2.""",
+        },
+        {
             "input": "What is the total number of harvesting done?",
             "sql_cmd": """select count(distinct id) as total_harvesting
             from batch_creation
             where is_cycle_completed = 1""",
             "result": """[(5,)]""",
             "answer": """The total number of harvesting done is 5""",
+        },
+        {
+            "input": "What is the total number of harvesting done in patna district?",
+            "sql_cmd": """select count(distinct a.id) as total_harvesting
+            from batch_creation a
+			inner join m_district b on a.district_id = b.district_id
+            where a.is_cycle_completed = 1
+			and upper(b.district_name) = 'PATNA'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of harvesting done in patna district is 0.""",
+        },
+        {
+            "input": "What is the total number of harvesting done in arrah block?",
+            "sql_cmd": """select count(distinct a.id) as total_harvesting
+            from batch_creation a
+			inner join m_block b on a.block_id = b.block_id
+            where a.is_cycle_completed = 1
+			and upper(b.block_name) = 'ARRAH'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of harvesting done in arrah block is 1.""",
         },
         {
             "input": "What is the quantity of fish harvested?",
@@ -1829,12 +1867,22 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of harvesting done is 94784""",
         },
         {
-            "input": "What is the revenue generated from fish?",
-            "sql_cmd": """select sum(sell_amount) as revenue_generated_from_fish
-            from t_sell_details
-            where fish_type_id != '8'""",
-            "result": """[(1117312.00,)]""",
-            "answer": """The revenue generated from fish is 1117312.00""",
+            "input": "What is the quantity of fish harvested in patna district?",
+            "sql_cmd": """select sum(a.weight_in_kg) as total_fish_harvested
+            from t_sell_details a
+			inner join m_district b on a.district_id = b.district_id
+            where upper(b.district_name) = 'PATNA'""",
+            "result": """[(0,)]""",
+            "answer": """The total number of harvesting done in patna district is 0""",
+        },
+        {
+            "input": "What is the quantity of fish harvested in arrah block?",
+            "sql_cmd": """select sum(a.weight_in_kg) as total_fish_harvested
+            from t_sell_details a
+			inner join m_block b on a.block_id = b.block_id
+            where upper(b.block_name) = 'ARRAH'""",
+            "result": """[(310,)]""",
+            "answer": """The total number of harvesting done in arrah block is 310""",
         },
         {
             "input": "What is the revenue generated from fish?",
@@ -1843,6 +1891,26 @@ AND upper(mg.district_name)='BANKA'""",
             where fish_type_id != '8'""",
             "result": """[(1117312.00,)]""",
             "answer": """The revenue generated from fish is 1117312.00""",
+        },
+        {
+            "input": "What is the revenue generated from fish in nawada district?",
+            "sql_cmd": """select sum(a.sell_amount) as revenue_generated_from_fish
+            from t_sell_details a
+			inner join m_district b on a.district_id = b.district_id
+			where fish_type_id != '8'
+            and upper(b.district_name) = 'NAWADA'""",
+            "result": """[(8000.00,)]""",
+            "answer": """The revenue generated from fish in nawada district is 8000.00""",
+        },
+        {
+            "input": "What is the revenue generated from fish in arrah block?",
+            "sql_cmd": """select sum(a.sell_amount) as revenue_generated_from_fish
+            from t_sell_details a
+			inner join m_block b on a.block_id = b.block_id
+			where fish_type_id != '8'
+            and upper(b.block_name) = 'ARRAH'""",
+            "result": """[(47510.00,)]""",
+            "answer": """The revenue generated from fish in arrah block is 47510.00""",
         },
         {
             "input": "What is the total number of matasya sakhi ponds?",
@@ -1852,11 +1920,47 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of matasya sakhi ponds is 37""",
         },
         {
+            "input": "What is the total number of matasya sakhi ponds in nawada district?",
+            "sql_cmd": """select count(distinct a.matasya_sakhi_id) as total_matasya_sakhi_ponds
+            from mp_matasya_sakhi_pond_mapping a
+			inner join m_district b on a.district_id = b.district_id
+            where upper(b.district_name) = 'NAWADA'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of matasya sakhi ponds in nawada district is 1.""",
+        },
+        {
+            "input": "What is the total number of matasya sakhi ponds in arrah block?",
+            "sql_cmd": """select count(distinct a.matasya_sakhi_id) as total_matasya_sakhi_ponds
+            from mp_matasya_sakhi_pond_mapping a
+			inner join m_block b on a.block_id = b.block_id
+            where upper(b.block_name) = 'ARRAH'""",
+            "result": """[(1,)]""",
+            "answer": """The total number of matasya sakhi ponds in arrah block is 1.""",
+        },
+        {
             "input": "What is the total number of members in fishery?",
             "sql_cmd": """select count(distinct member_id) as total_members
             from mp_member_with_fpg_mapping""",
             "result": """[(387,)]""",
             "answer": """The total number of members in fishery is 387.""",
+        },
+        {
+            "input": "What is the total number of members in fishery in nalanda district?",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from mp_member_with_fpg_mapping a
+			inner join m_district b on a.district_id = b.district_id
+            where upper(b.district_name) = 'NALANDA'""",
+            "result": """[(43,)]""",
+            "answer": """The total number of members in fishery in nalanda district is 43.""",
+        },
+        {
+            "input": "What is the total number of members in fishery in arrah block?",
+            "sql_cmd": """select count(distinct a.member_id) as total_members
+            from mp_member_with_fpg_mapping a
+			inner join m_block b on a.block_id = b.block_id
+            where upper(b.block_name) = 'ARRAH'""",
+            "result": """[(3,)]""",
+            "answer": """The total number of members in fishery in arrah blockis 3.""",
         },
         {
             "input": "What is the total number of cnrp?",
@@ -1881,6 +1985,18 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of cnrp in munger district is 94.""",
         },
         {
+            "input": "What is the total number of cnrp in alauli block?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block c on a.block_code = c.block_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+			and upper(c.block_name) = 'ALAULI'""",
+            "result": """[(24,)]""",
+            "answer": """The total number of cnrp in alauli block is 24.""",
+        },
+        {
             "input": "What is the total number of cnrp in the year 2023-2024?",
             "sql_cmd": """select count(distinct a.user_id) as total_cnrp
             from m_profile a
@@ -1903,6 +2019,19 @@ AND upper(mg.district_name)='BANKA'""",
             and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(19,)]""",
             "answer": """The total number of cnrp in the year 2023-2024 munger district is 19.""",
+        },
+        {
+            "input": "What is the total number of cnrp in the year 2023-2024 in alauli block?",
+            "sql_cmd": """select count(distinct a.user_id) as total_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block d on a.block_code = d.block_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(d.block_name) = 'ALAULI'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(10,)]""",
+            "answer": """The total number of cnrp in the year 2023-2024 alauli block is 10.""",
         },
         {
             "input": "What is the count of trained cnrp in the year 2023-2024?",
@@ -1971,6 +2100,18 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number mrp is 1692""",
         },
         {
+            "input": "What is the total number of mrp in patna district?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'PATNA'""",
+            "result": """[(75,)]""",
+            "answer": """The total number of mrp user in patna district is 75.""",
+        },
+        {
             "input": "What is the total number of mrp in hilsa block?",
             "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
             from m_profile a
@@ -2012,7 +2153,7 @@ AND upper(mg.district_name)='BANKA'""",
             and upper(user_type) = 'SWASTHYA MITRA'
             and upper(dist_name) = 'KATIHAR'""",
             "result": """[(5,)]""",
-            "answer": """The total number of swasthya mitra is katihar district us 5.""",
+            "answer": """The total number of swasthya mitra in katihar district is 5.""",
         },
         {
             "input": "What is the total number of swasthya mitra in fy(financial year 2023-2024)?",
@@ -2257,6 +2398,50 @@ AND upper(mg.district_name)='BANKA'""",
             group by 1""",
             "result": """[(Aggarbatti, 6011), (Art and Craft, 3599), (Beekeeping, 7868), (Dairy, 36), (Fisheries, 387), (General Store, 176), (Goatery, 16339), (Jute, 2584), (Kirana Dukan, 45), (Lac Bangle, 116), (Madhubani Painting, 63), (Mulberry, 1018), (Neera, 3619), (Nutri Enterprise, 28), (Poultry, 63838), (R, 243), (Regular Farming, 49951), (Stitching, 410), (Vegetable Farming, 15367)]""",
             "answer": """The total number of members involved in stitching activity is (Aggarbatti, 6011), (Art and Craft, 3599), (Beekeeping, 7868), (Dairy, 36), (Fisheries, 387), (General Store, 176), (Goatery, 16339), (Jute, 2584), (Kirana Dukan, 45), (Lac Bangle, 116), (Madhubani Painting, 63), (Mulberry, 1018), (Neera, 3619), (Nutri Enterprise, 28), (Poultry, 63838), (R, 243), (Regular Farming, 49951), (Stitching, 410), (Vegetable Farming, 15367).""",
+        },
+        {
+            "input": "Top 5 activites with highest number of members",
+            "sql_cmd": """SELECT distinct b.activity_short_name as activity_name
+            , count(distinct a.member_id) as member_count
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity where activity_id not in(1,2,3,19)
+            ) as a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            group by 1
+			order by member_count desc
+			limit 5""",
+            "result": """[(Poultry, 63838), (Regular Farming, 49951), (Goatery, 16339), (Vegetable Farming, 15367), (Beekeeping, 7868),]""",
+            "answer": """Top 5 activites with highest number of members are: (Poultry, 63838), (Regular Farming, 49951), (Goatery, 16339), (Vegetable Farming, 15367), (Beekeeping, 7868).""",
+        },
+        {
+            "input": "Bottom 5 activites with least number of members",
+            "sql_cmd": """SELECT distinct b.activity_short_name as activity_name
+            , count(distinct a.member_id) as member_count
+            FROM (
+            SELECT member_id, 1 AS activity_id FROM t_household_batch
+            UNION
+            SELECT member_id, 2 AS activity_id FROM g_goatry_distribution
+            UNION
+            SELECT member_id, 3 AS activity_id FROM mp_member_dcs
+            UNION
+            SELECT member_id, 19 AS activity_id FROM mp_member_with_fpg_mapping
+            UNION
+            SELECT member_id, activity_id FROM mp_cbo_member_activity where activity_id not in(1,2,3,19)
+            ) as a
+            inner join m_intervention_activity b on a.activity_id = b.activity_id
+            group by 1
+			order by member_count
+			limit 5""",
+            "result": """[(Nutri Enterprise, 28), (Dairy, 36), (Kirana Dukan, 45), (Madhubani Painting, 63), (Lac Bangle, 116),]""",
+            "answer": """Bottom 5 activites with least number of members are: (Nutri Enterprise, 28), (Dairy, 36), (Kirana Dukan, 45), (Madhubani Painting, 63), (Lac Bangle, 116).""",
         },
         {
             "input": "What is the total number of employer registered?",
