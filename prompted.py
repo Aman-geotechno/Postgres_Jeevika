@@ -2137,6 +2137,54 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of mrp user in nalanda district in the financial year 2023-2024 is 15""",
         },
         {
+            "input": "What is the total number of hh member visit?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1""",
+            "result": """[(1692,)]""",
+            "answer": """The total number hh member visit is 1692""",
+        },
+        {
+            "input": "What is the total number of hh member visit in patna district?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'PATNA'""",
+            "result": """[(75,)]""",
+            "answer": """The total number of hh member visit in patna district is 75.""",
+        },
+        {
+            "input": "What is the total number of hh member visit in hilsa block?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block c on a.block_code = c.block_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(c.block_name) = 'HILSA'""",
+            "result": """[(3,)]""",
+            "answer": """The total number of hh member visit in hilsa block is 3.""",
+        },
+        {
+            "input": "What is the total number of hh member visit in nalanda district in the financial year 2023-2024?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district d on a.district_code = d.district_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(d.district_name) = 'NALANDA'
+            and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
+            "result": """[(15,)]""",
+            "answer": """The total number of hh member visit in nalanda district in the financial year 2023-2024 is 15""",
+        },
+
+        {
             "input": "What is the total number of swasthya mitra?",
             "sql_cmd": """select count(distinct user_id) as total_swasthya_mitra
             from m_user_profile
