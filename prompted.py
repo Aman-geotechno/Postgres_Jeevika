@@ -2138,7 +2138,7 @@ AND upper(mg.district_name)='BANKA'""",
         },
         {
             "input": "What is the total number of hh member visit?",
-            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
             where upper(a.user_type) = 'MRP USER'
@@ -2148,7 +2148,7 @@ AND upper(mg.district_name)='BANKA'""",
         },
         {
             "input": "What is the total number of hh member visit in patna district?",
-            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
             inner join m_district c on a.district_code = c.district_id
@@ -2160,7 +2160,7 @@ AND upper(mg.district_name)='BANKA'""",
         },
         {
             "input": "What is the total number of hh member visit in hilsa block?",
-            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
             inner join m_block c on a.block_code = c.block_id
@@ -2172,7 +2172,7 @@ AND upper(mg.district_name)='BANKA'""",
         },
         {
             "input": "What is the total number of hh member visit in nalanda district in the financial year 2023-2024?",
-            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
             from m_profile a
             inner join m_shg_hns_user_table b on a.user_id = b.user_id
             inner join m_district d on a.district_code = d.district_id
