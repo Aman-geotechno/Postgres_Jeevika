@@ -596,6 +596,83 @@ l.designation_id!=31
             "answer": """There are total 498 cadre of designation VRP in NALANDA district"""
         },
         {
+            "input": "how many cadre in class 8",
+            "query": """SELECT
+    COUNT(DISTINCT m.MEMBER_ID) AS cadre_count
+FROM
+    m_cbo_member m
+INNER JOIN
+   mp_cbo_member t ON m.member_id=t.member_id
+INNER JOIN
+  m_designation l ON l.designation_id=t.designation_id
+INNER JOIN
+    m_cbo c ON t.CBO_ID = c.CBO_ID
+INNER JOIN
+    m_cbo_type k ON c.CBO_TYPE_ID = k.CBO_TYPE_ID
+WHERE
+l.member_group_id=3
+AND
+l.designation_id!=31
+  AND  l.designation_id=8
+
+    AND c.record_status = 1
+    AND t.record_status=1
+    AND m.record_status=1
+	AND m.education='8'""",
+        },
+        {
+            
+            "input": "total count of cadre in project nrlm in last year",
+            "query": """SELECT 
+    COUNT(DISTINCT m.member_id) AS total_members
+FROM
+    m_cbo_member m
+INNER JOIN
+    mp_cbo_member t on m.member_id=t.member_id
+INNER JOIN
+    m_cbo c ON t.cbo_id = c.cbo_id
+
+INNER JOIN m_block b ON b.block_id = c.block_id
+WHERE
+    EXTRACT(YEAR FROM m.date_of_joining) = EXTRACT(YEAR FROM CURRENT_DATE) - 1
+    AND c.record_status=1
+    AND t.record_status=1
+    AND m.record_status=1""",
+        },
+        {
+            "input": "total count of cadre in last 2 years district wise only give first five district",
+            "query": """SELECT 
+    d.district_name,
+    COUNT(DISTINCT m.member_id) AS total_members
+FROM
+    m_cbo_member m
+INNER JOIN
+    mp_cbo_member t ON m.member_id = t.member_id
+INNER JOIN
+    m_cbo c ON t.cbo_id = c.cbo_id
+INNER JOIN 
+    m_block b ON b.block_id = c.block_id
+INNER JOIN 
+m_district d on d.district_id=m.district_id
+WHERE
+    EXTRACT(YEAR FROM m.date_of_joining) >= EXTRACT(YEAR FROM CURRENT_DATE) - 2
+    AND c.record_status = 1
+    AND t.record_status = 1
+    AND m.record_status = 1
+GROUP BY
+    d.district_name
+ORDER BY
+    d.district_name
+LIMIT 5""",
+        },
+        {
+"input": "count of B graded clf in december 2023?",
+            "query": """SELECT COUNT(clf.clf_id) AS clf_count
+            FROM clf_masik_grading clf
+            INNER JOIN m_cbo c ON clf.clf_id = c.cbo_id
+            WHERE clf.year = 2023 and clf.month_name = 'Dec' AND clf.final_grade = 'B' AND c.record_status = 1""",
+        },
+        {
             "input": "count of total graded clf?",
             "sql_cmd": """SELECT COUNT(distinct clf.clf_id) AS clf_count
             FROM clf_masik_grading clf
@@ -970,10 +1047,39 @@ GROUP BY pe.district_name""",
             "answer": """13232575 total expenditure details of chc""" 
         },
         {
+"input": "how much expenditure pay this financial year",
+            "sql_cmd": """SELECT
+  SUM(amount)
+FROM
+  t_chc_expenditure_details
+WHERE
+  EXTRACT(YEAR FROM exp_date) BETWEEN 2023 AND 2024;""",
+            "result": """[(13232575)]""",
+            "answer": """13232575 expenditure pay this financial year""" 
+        },
+        {
             "input": "give me total revenue generated of chc",
             "sql_cmd": """select sum(total_amount) from t_freight_details""",
             "result": """[(19335019.00)]""",
             "answer": """19335019.00 total revenue generated of chc"""
+        },
+        {
+            "input": "show me the top  30 chc in profit",
+            "sql_cmd": """SELECT (t.total_amount - tc.amount) as profit
+FROM t_freight_details t
+INNER JOIN t_chc_expenditure_details tc ON t.chc_id=tc.chc_id order by profit desc limit 30""",
+            "result": """[(49737.00
+49337.00
+49317.00
+49207.00
+49207.00
+49207.00)]""",
+            "answer": """49737.00
+49337.00
+49317.00
+49207.00
+49207.00
+49207.00"""
         },
         {
             "input": "give me number of machines used in chc",
@@ -1018,6 +1124,37 @@ inner join m_district d on tf.district_id=d.district_id
 where upper(d.district_name)='NAWADA'""",
             "result": """[(1)]""",
             "answer": """1 booking done by farmers in nawada district"""
+        },
+        {
+           "input": "how many farmers are in green gram crop in district vaishali",
+            "sql_cmd": """SELECT COUNT(DISTINCT tf.FARMER_ID) AS total_farmers
+FROM t_farmer_transaction tf 
+inner JOIN m_farmer f ON tf.farmer_id=f.farmer_id
+inner JOIN mp_cbo_member t ON t.member_id=f.member_id
+inner JOIN m_cbo c ON c.cbo_id=t.cbo_id
+inner join m_district d on c.district_id = d.district_id
+inner join M_FARMER_CROP e on tf.crop_type_id = e.crop_type_id
+WHERE upper(d.DISTRICT_NAME) = 'VAISHALI'
+and upper(e.CROP_name) = 'GREEN GRAM'""",
+            "result": """[(992)]""",
+            "answer": """992 farmers are in green gram crop in district vaishali""" 
+        },
+        {
+"input": "number of farmers in different pest treatment category",
+            "sql_cmd": """select mf.treatment, count(distinct tf.farmer_id) from t_farmer_transaction tf
+inner join t_mp_farmer_transaction_pest tm
+on tf.transaction_id=tm.transaction_id
+inner join m_farmer_pest_management mf
+on mf.p_treatment_id=tm.p_treatment_id
+group by mf.treatment""",
+            "result": """[("Application Of Agro Chemicals Formulations"	1559576
+"Application Of INM/IPM/Organic Formulations"	893683
+"Use Of Bio Pesticide and Traps"	325311
+"Use Of Shednet/Protected Cultivation"	56948)]""",
+            "answer": """"Application Of Agro Chemicals Formulations"	1559576
+"Application Of INM/IPM/Organic Formulations"	893683
+"Use Of Bio Pesticide and Traps"	325311
+"Use Of Shednet/Protected Cultivation"	56948"""
         },
         {
              "input": "total quantity of neera sold",
@@ -1071,6 +1208,14 @@ FROM neera_selling
             "sql_cmd": """select count(distinct registration_no) from t_learner_profile where district_name is not null""",
             "result": """[(20634)]""",
             "answer": """20634 Total number of learners"""
+        },
+        {
+            "input": "how many learners in savitri library ",
+            "sql_cmd": """select count(distinct registration_no) from t_learner_profile tl
+inner join m_clcdc cl on cl.clcdc_id=tl.clcdc_id
+where upper(cl.clcdc_name)='SAVITRI'""",
+            "result": """[(20634)]""",
+            "answer": """20634 Total number of learners in savitri library"""
         },
         {
             "input": "Total number of libraries district wise",
@@ -2799,6 +2944,7 @@ AND upper(mg.district_name)='BANKA'""",
             "result": """[(0,)]""",
             "answer": """The total number of candidates joined in alauli block in consultancy work is 0.""",
         },]
+
 	   # {
     
 #             "input": "What is the total count of shg?",
