@@ -925,6 +925,39 @@ WHERE
             "result": """[(82811,)]""",
             "answer": """82811 farmers grew kharif crops"""
         },
+	{
+		    "input": "how many farmers are in green gram crop in district vaishali.",
+            "sql_cmd": """SELECT
+    COUNT(DISTINCT tf.FARMER_ID) AS total_farmers
+FROM
+    t_farmer_transaction tf
+LEFT JOIN 
+    m_farmer f ON tf.farmer_id = f.farmer_id
+LEFT JOIN 
+    mp_cbo_member t ON t.member_id = f.member_id
+LEFT JOIN 
+    m_cbo c ON c.cbo_id = t.cbo_id
+WHERE
+    c.DISTRICT_ID = (
+        SELECT
+            DISTRICT_ID
+        FROM
+            m_district
+        WHERE
+            UPPER(DISTRICT_NAME) = 'VAISHALI'
+    )
+    AND tf.CROP_TYPE_ID = (
+        SELECT
+            CROP_TYPE_ID
+        FROM
+            M_FARMER_CROPTYPE
+        WHERE
+            UPPER(CROP_TYPE) = 'GREEN GRAM'
+    );
+""",
+            "result": """[(0,)]""",
+            "answer": """0 farmers in green gram"""
+	},
         {
             "input": "total count of agri enterprenure",
             "sql_cmd": """select count(id) from profile_entry""",
