@@ -1086,7 +1086,7 @@ GROUP BY pe.district_name""",
 FROM
   t_chc_expenditure_details
 WHERE
-  EXTRACT(YEAR FROM exp_date) BETWEEN 2023 AND 2024;""",
+  exp_date between '2023-04-01' and '2024-03-31'""",
             "result": """[(13232575)]""",
             "answer": """13232575 expenditure pay this financial year""" 
         },
