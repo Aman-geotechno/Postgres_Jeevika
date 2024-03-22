@@ -178,6 +178,42 @@ AND c.record_status = 1""",
             "result": """[(1286)]""",
             "answer": """1286 SHG were formed in district Patna in 2023""",
         },
+	{
+		"input": "Can you provide information about Self-Help Groups (SHGs) operating in Patna district during 2023?",
+            "sql_cmd": """SELECT
+                                    c.cbo_id,
+                                    c.cbo_name,
+                                    c.formation_date,
+                                    t.type_description,
+                                    d.district_name,
+                                    b.block_name,
+                                    p.panchayat_name
+                                FROM
+                                    m_cbo c
+                                INNER JOIN
+                                    m_cbo_type t ON c.cbo_type_id = t.cbo_type_id
+                                INNER JOIN
+                                    m_district d ON c.district_id = d.district_id
+                                INNER JOIN
+                                    m_block b ON c.block_id = b.block_id
+                                INNER JOIN
+                                    m_panchayat p ON d.district_id = p.district_id
+                                WHERE
+                                    upper(t.type_short_name) = 'SHG'
+                                    AND upper(d.district_name) = 'PATNA'
+                                    AND EXTRACT(YEAR FROM c.formation_date) = 2023
+                                    AND c.record_status = 1 limit 5""",
+            "result": """[(1248111	"Diksha Jeevika Samuh 20/03/2023 Rahimpur"	"2023-03-20"	"Self Helped Group"	"PATNA"	"Phulwari"
+1245023	"Nidhi (04/01/2023) shahpur bodhicha"	"2023-03-04"	"Self Helped Group"	"PATNA"	"Sampatchak"
+1245026	"Vishnu 2 (26/01/2023) shahpur"	"2023-01-26"	"Self Helped Group"	"PATNA"	"Sampatchak"
+1246631	"Raj Darwar (01/03/2023)"	"2023-03-01"	"Self Helped Group"	"PATNA"	"Pandarak"
+1244144	"Akash 21.03.2023"	"2023-03-21"	"Self Helped Group"	"PATNA"	"Barh")]""",
+            "answer": """(1248111	"Diksha Jeevika Samuh 20/03/2023 Rahimpur"	"2023-03-20"	"Self Helped Group"	"PATNA"	"Phulwari"
+1245023	"Nidhi (04/01/2023) shahpur bodhicha"	"2023-03-04"	"Self Helped Group"	"PATNA"	"Sampatchak"
+1245026	"Vishnu 2 (26/01/2023) shahpur"	"2023-01-26"	"Self Helped Group"	"PATNA"	"Sampatchak"
+1246631	"Raj Darwar (01/03/2023)"	"2023-03-01"	"Self Helped Group"	"PATNA"	"Pandarak"
+1244144	"Akash 21.03.2023"	"2023-03-21"	"Self Helped Group"	"PATNA"	"Barh")""",
+	},
         {
             "input": "total count of members in district patna and darbhanga",
             "sql_cmd": """SELECT d.DISTRICT_NAME, COUNT(cm.MEMBER_ID) AS member_count
