@@ -116,269 +116,600 @@ example_selector = SemanticSimilarityExampleSelector(
     
    
 #print(connection.version)
-_postgres_prompt = """You are a postgres SQL expert. Given an input question, first create a syntactically correct postgres SQL query to run,.....and keep in mind its very very important that while generating sql query donot put ;(semicolon) in the end of query or any special character or brackets at begining or end only give sql query.. then look at the results of the query and return the answer to the input question.
-Unless the user specifies in the question a specific number of examples to obtain, query for at most {top_k} results using the WHERE LIMIT<=1 clause as per Postgres SQL. You can order the results to return the most informative data in the database.
+_postgres_prompt ="""You are a postgres SQL expert. Given an input question, first create a syntactically correct postgres SQL query to run,.....and keep in mind its very very important that while generating sql query donot put ;(semicolon) in the end of query or any special character or brackets at begining or end only give sql query..
+Unless the user specifies in the question a specific number of examples to obtain,only query for at most {top_k} results when user ask in the question else return the complete output using the clause LIMIT 50 clause as per Postgres SQL. You can order the results to return the most informative data in the database.
 Never query for all columns from a table. You must query only the columns that are needed to answer the question. Wrap each column name in double quotes (") to denote them as delimited identifiers.
-Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. Also, pay attention to which column is in which table.Use join and other oracle sql advance query to get the best query according to user query.
+Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. Also, pay attention to which column is in which table.Use join and other postgres sql advance query to get the best query according to user query.
 Pay attention to use CURRENT_DATE function to get the current date, if the question involves "today".
 Pay attention to write district name in capital letter while generating sql query..for example DISTRICT_NAME='DARBHANGA'
-Detail information about table and its columns are as follows:-
-       
-       The table M_CBO is a master table storing information about Community Based Organizations (CBOs),vo(Village Organisation),shg(Self Help Group) and clf(Cluster Level Federation) with columns including CBO_ID, CBO_NAME, DISTRICT_ID, BLOCK_ID, VILLAGE_ID, CBO_TYPE_ID, THEME_ID, LATITUDE, LONGITUDE, TOLA_MOHALLA_NAME, MEETING_PERIODICITY, MEETING_DAY, MEETING_DATE, GENERAL_SAVING_AMOUNT, HRF_SAVING_AMOUNT, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, SHARE_RATE, MEETING_START_TIME, STATE_ID, FORMATION_DATE, SCHEME_ID, CBO_NAME_HINDI, OTHER_SAVING_1, OTHER_SAVING_2, OTHER_SAVING_3, MEMBERSHIP_FEE, REGISTRATION_NUMBER, REGISTRATION_DATE, COMPLETE_STATUS, NRLM_CODE, PWD, LOKOS_CODE.\n
-        The table M_CBO_TYPE is a master table containing information about different types of Community Based Organizations (CBO types) with columns such as CBO_TYPE_ID, TYPE_SHORT_NAME, TYPE_DESCRIPTION, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, TYPE_SHORT_NAME_HINDI, TYPE_DESCRIPTION_HINDI, PARENT_CBO_TYPE_ID.\n
-       The table M_CBO_MEMBER is a master table containing information about individual members of a Community Based Organization (CBO) with columns such as MEMBER_ID, NAME, FATHER_NAME, HUSBAND_NAME, DOB (Date of Birth), GENDER, ADDRESS, EDUCATION, DATE_OF_JOINING, EMAIL_ADDRESS, PHONE_NO, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, STATE_ID, DISTRICT_ID, BLOCK_ID, VILLAGE_ID, NAME_HINDI, FATHER_NAME_HINDI, HUSBAND_NAME_HINDI, POSTOFFICE, THANA, KYC_TYPE, KYC_NUMBER, EBS_MEMBER_ID, SECC_PIN_NO, STATEID, DISTRICTID, BLOCKID, VILLAGEID, TOILET, AADHAR_NUMBER, AADHER_CARD_SEEDED, NRLM_MEMBER_ID, REF_CODE, AADHAR_STATUS, LOKOS_MEMBER_CODE.\n
-       The table M_CBO_SHG_MEMBER is a master table that stores detailed information about individual members associated with a Self Help Group (SHG) within a Community Based Organization (CBO). It includes columns such as MEMBER_ID, CATEGORY, CASTE, RELIGION, TOLA_NAME, CREATED_BY, UPDATED_BY, CREATED_ON, UPDATED_ON, RECORD_STATUS, CBO_ID, ENDORSED_BY_GRAMSABHA, DISTRICTID.\n
-       The table T_CBO_APPL_MAPPING is a transactional table responsible for storing information related to transactions involving the mapping of applications to a Community Based Organization (CBO). It includes columns such as APPLICATION_ID, ACC_NUMBER, ACC_OPENING_DATE, ACC_OPENING_STATUS, CBO_ID, CREATED_ON, UPDATED_ON, CREATED_BY, and UPDATED_BY to track transactional details associated with this mapping.\n
-       The table T_CBO_LOAN_REGISTER is a transactional table that maintains records of loans registered within a Community Based Organization (CBO). It contains columns such as LOAN_REGISTER_ID, CBO_ID, LOAN_TYPE_ID, LOAN_AMOUNT, LOAN_INSTALLMENTS, LOAN_DATE, RECORD_UPDATED_ON, RECORD_UPDATED_BY, RECORD_CREATED_ON, RECORD_CREATED_BY, LOAN_REASON, INTEREST_AMOUNT, PAID, TILL_DATE, LOAN_FROM_CBO_ID, IMEI_NUMBER, and RECORD_SYNCED_ON.\n
-       The table T_ACC_VOUCHER is a transactional table that stores accounting vouchers within the context of a Community Based Organization (CBO). It includes columns such as VOUCHER_ID, VOUCHER_DATE, CBO_ID, DEBIT_ACCOUNT, CREDIT_ACCOUNT, REMARKS, OTHER_NAME, DEBIT_STAKEHOLDER_ID, VOUCHER_TYPE_ID, CREATED_ON, CREATED_BY, CREDIT_STAKEHOLDER_ID, IMEI_NUMBER, RECORD_SYNCED_ON, CHEQUE_NO, and CHEQUE_DATE. \n
-       The table M_BLOCK represents information about different blocks. It includes columns such as BLOCK_ID, BLOCK_NAME, DISTRICT_ID, STATE_ID, BLOCK_NAME_HINDI, NRLM_BLOCK_CODE, ADDOPED_BY_SCHEME, PROJECT_CODE, and PROJECT_CODE_TILL_APRIL_2023. \n
-       The table M_DISTRICT contains information about different districts. It includes columns such as DISTRICT_ID, DISTRICT_NAME, STATE_ID, DISTRICT_NAME_HINDI, DISTRICT_CENS_2011_ID, and NRLM_DISTRICT_CODE.\n
-       The table M_PANCHAYAT contains information about various panchayats. It includes columns such as STATE_ID, DISTRICT_ID, BLOCK_ID, PANCHAYAT_ID, PANCHAYAT_NAME, PANCHAYAT_NAME_HINDI, and NRLM_PANCHAYAT_CODE. \n
-       The table M_VILLAGE contains information about various villages. It includes columns such as VILLAGE_ID, VILLAGE_NAME, BLOCK_ID, OTHER_POPULATION, SC_POPULATION, ST_POPULATION, DISTRICT_ID, STATE_ID, PANCHAYAT_ID, VILLAGE_NAME_HINDI, EBC_POPULATION, BC_POPULATION, MD_POPULATION, and NRLM_VILLAGE_CODE. \n
-       The table MP_CBO_MEMBER is a mapping table that associates members with a specific Community Based Organization (CBO). It includes columns such as MEMBER_ID, CBO_ID, DESIGNATION_ID, RECORD_STATUS, ID, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, and DISTRICTID.\n
-        T_BULK_BANK_ACC is a transactional tabe which contains columns APPLICATION_ID BRANCH_ID,ACC_TYPE_ID,APPLICATION_DATE,CREATED_ON,UPDATED_ON,BANK_ID,NO_OF_APPLICATIONS,STATUS,REMARKS,ACCOUNT_HOLDER_TYPE this able is used in conjunction with other tables when question asked about saving account of shg,vo or clf  \n
-        M_DESIGNATION is a master tables which contain the following columns DESIGNATION_ID DESIGNATION_SHORT_NAME DESIGNATION_FULL_NAME MEMBER_GROUP_ID CREATED_BY CREATED_ON UPDATED_BY UPDATED_ON RECORD_STATUS DESIGNATION_SHORT_NAME_HINDI DESIGNATION_FULL_NAME_HINDI EBS_JOB_ID EBS_THEMATIC_ID...whenever the question is the count of member then member_group_id=3 and designation_id!=31 \
-        The  table CLF_MASIK_GRADING contains information about the grades assigned to the clf. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, clf_id, criteria1, criteria2, criteria3, month_name, district_id, block_id and final_grade. The cbo_type_id of the clf is 1. \n
-       The  table VO_MASIK_GRADING contains information about the grades assigned to the vo. It includes columns such as sl, year, month, criteria2, criteria3, criteria4, criteria5, total_marks, vo_id, criteria1, month_name, district_id, block_id, clf_id and final_grade. The cbo_type_id of the vo is 2. \n
-       The  table SHG_MASIK_GRADING contains information about the grades assigned to the shg. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, shg_id, criteria1, criteria2, criteria3, month_name, clf_id, vo_id and final_grade. The cbo_type_id of the shg is 3. \n
 
-       The M_FARMER table stores essential details about farmers. Its columns include:
-                                                                    FARMER_ID: Unique identifier.
-                                                                    MEMBER_ID: Linked to a Community Based Organization (CBO) member.
-                                                                    AADHAR: Aadhar number for identification.
-                                                                    MOBILENO: Contact number.
-                                                                    BANK_ID: Bank identifier.
-                                                                    BRANCH_ID: Branch identifier.
-                                                                    ACCOUNT_NO: Bank account number.
-                                                                    PHOTO: Farmer's photograph.
-                                                                    CREATED_BY: Creator information.
-                                                                    CREATED_ON: Creation timestamp.   \n
-
-        The M_FARMER_CROP table manages information about crops cultivated by farmers. Its columns include:
-                                                                                        CROP_ID: Unique identifier for each crop record.
-                                                                                        CROP_NAME: Name of the crop being cultivated.
-                                                                                        CROP_TYPE_ID: Identifier representing the type of crop (e.g., cereal, legume, vegetable). \n
-        The M_FARMER_CROP_TECHNOLOGY table stores data related to agricultural technologies used for specific crops. Its columns are:
-                                                                                                        TECHNOLOGY_ID: Unique identifier for each technology entry.
-                                                                                                        CROP_ID: Identifier linking the technology to a specific crop.
-                                                                                                        TECHNOLOGY: Description or name of the agricultural technology utilized.  \n                                                                             
-        The M_FARMER_CROPTYPE table manages information about different types of crops. Its columns include:
-                                                                                            CROP_TYPE_ID: Unique identifier for each crop type.
-                                                                                            CROP_TYPE: Name or description of the crop type. \n
-
-        The M_FARMER_LAND table stores data regarding landholdings of farmers. Its columns include:
-                                                                                LAND_ID: Unique identifier for each land record.
-                                                                                FARMER_ID: Identifier linking the land to a specific farmer.
-                                                                                LANDHOLDINGOWN: Area of land owned by the farmer.
-                                                                                LANDHOLDINGLEASE: Area of land leased by the farmer.
-                                                                                IRRIGATEDLAND: Area of land that is irrigated.
-                                                                                NONIRRIGATEDLAND: Area of land that is not irrigated.
-                                                                                CREATED_BY: Information about the user or process that created the land record.
-                                                                                CREATED_ON: Timestamp indicating the date and time when the land record was created in the system. \n
-
-The M_FARMER_PEST_MANAGEMENT table contains data related to pest management treatments for farmers. Its columns include:
-                                                                                                    P_TREATMENT_ID: Unique identifier for each pest treatment entry.
-                                                                                                    TREATMENT: Description or name of the pest management treatment. \n
-
-The M_FARMER_SEED table maintains information about different types of seeds used by farmers. Its columns include:
-
-                                                                                            SEED_TYPE_ID: Unique identifier for each seed type.
-                                                                                            SEED_TYPE: Description or name of the seed type. \n                                                                                                 
-
-The M_FARMER_SOIL_MANAGEMENT table stores details regarding soil management practices adopted by farmers. Its columns include:
-
-                                                                                            SOILPRACTISE_ID: Unique identifier for each soil management practice entry.
-                                                                                            SOIL_PRACTISE: Description or name of the soil management practice. \n
-
-The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities.It also indicate that farmers are engaged and active. Its columns include:
-                                                            TRANSACTION_ID: Unique identifier for each transaction.
-                                                            FARMER_ID: Identifier linking the transaction to a specific farmer.
-                                                            VO_ID: Identifier for the Village Organisation (VO) associated with the transaction.
-                                                            SHG_ID: Identifier for the Self Help Group (SHG) associated with the transaction.
-                                                            FY: Fiscal year of the transaction.
-                                                            CROP_TYPE_ID: Identifier representing the type of crop involved in the transaction.
-                                                            CULTIVATION_AREA: Area of land cultivated for the transaction.
-                                                            SEEDS_USED: Quantity of seeds used.
-                                                            SEEDS_VARIETY: Variety of seeds used.
-                                                            SEED_TYPE_ID: Identifier representing the type of seed used.
-                                                            TECHNOLOGY_ID: Identifier representing the agricultural technology used.
-                                                            TOTAL_YIELD: Total yield obtained from the transaction.
-                                                            CREATED_BY: Information about the user or process that created the transaction.
-                                                            CREATED_ON: Timestamp indicating the date and time when the transaction was created.
-                                                            CROP_ID: Identifier for the specific crop involved in the transaction.
-                                                            SOILPRACTISE_ID: Identifier representing the soil management practice employed.
-                                                            TREATMENT_ID: Identifier representing the pest management treatment applied.  \n
-
-The T_MP_FARMER_TRANSACTION_PEST is mapping table records transactional data related to pest management treatments for farmers. Its columns include:
-                                                                                                        TRANSACTION_ID: Unique identifier for each transaction.
-                                                                                                        P_TREATMENT_ID: Identifier for the pest management treatment applied.
-                                                                                                        CREATED_BY: Information about the user or process that created the transaction.
-                                                                                                        CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n  
-
-The T_MP_FARMER_TRANSACTION_SOIL table contains transactional data related to soil management practices adopted by farmers. Its columns include:
-                                                                                                                            TRANSACTION_ID: Unique identifier for each transaction.
-                                                                                                                            SOILPRACTISE_ID: Identifier for the soil management practice applied.
-                                                                                                                            CREATED_BY: Information about the user or process that created the transaction. \n
-  
-The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data related to crop technologies used by farmers. Its columns include:
-                                                                                            TRANSACTION_ID: Unique identifier for each transaction.
-                                                                                            TECHNOLOGY_ID: Identifier for the crop technology applied.
-                                                                                            CREATED_BY: Information about the user or process that created the transaction.
-                                                                                            CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n                                                                                                                       CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n                                                                                    
-
-                                                                                            
-The profile_entry table provides comprehensive information about farmers profiles, including personal details, training periods, banking information, farming activities, and certification statuses.The columns are.. \
-
-                                                                                training_period_rabi_season_module: Training period for Rabi season module.
-                                                                                training_period_zaid_season_module: Training period for Zaid season module.
-                                                                                training_period_organic_formulations: Training period for organic formulations.
-                                                                                id_of_bank_for_banking_services: Identifier of the bank for banking services.
-                                                                                training_period_natural_farming: Training period for natural farming.
-                                                                                date_of_joining: Date of joining the program.
-                                                                                updated_on: Timestamp of the last update.
-                                                                                date_of_birth: Date of birth of the individual.
-                                                                                created_on: Timestamp of the creation.
-                                                                                date_training_period_from: Starting date of the training period.
-                                                                                date_training_period_to: Ending date of the training period.
-                                                                                loan_first_tranch: Amount of the first tranche of the loan.
-                                                                                loan_second_tranch: Amount of the second tranche of the loan.
-                                                                                training_period_kharif_season_module: Training period for Kharif season module.
-                                                                                updated_date: Date of the last update.
-                                                                                id: Unique identifier.
-                                                                                gram_panchayat_name: Name of the gram panchayat.
-                                                                                village_id: Identifier of the village.
-                                                                                village_name: Name of the village.
-                                                                                pin_code: PIN code of the area.
-                                                                                mobile_number: Mobile number of the individual.
-                                                                                aadhaar_number: Aadhaar number of the individual.
-                                                                                pan_number: PAN number of the individual.
-                                                                                account_number: Bank account number.
-                                                                                bank_id: Identifier of the bank.
-                                                                                bank_name: Name of the bank.
-                                                                                branch_id: Identifier of the bank branch.
-                                                                                branch_name: Name of the bank branch.
-                                                                                ifsc_code: IFSC code of the bank branch.
-                                                                                clf_id: Identifier of the Cluster Level Federation (CLF).
-                                                                                clf_name: Name of the CLF.
-                                                                                vo_id: Identifier of the Village Organization (VO).
-                                                                                vo_name: Name of the VO.
-                                                                                shg_id: Identifier of the Self Help Group (SHG).
-                                                                                shg_name: Name of the SHG.
-                                                                                shg_member_id: Identifier of the SHG member.
-                                                                                shg_member_name: Name of the SHG member.
-                                                                                course_name_id: Identifier of the course name.
-                                                                                course_name_name: Name of the course.
-                                                                                certification_agency_id: Identifier of the certification agency.
-                                                                                certification_agency_name: Name of the certification agency.
-                                                                                course_training_mode_id: Identifier of the course training mode.
-                                                                                course_training_mode_name: Name of the course training mode.
-                                                                                gst_value: GST value.
-                                                                                is_seed_licence: Indicator for seed license.
-                                                                                seed_licence_number: Seed license number.
-                                                                                is_fertilizer_licence_number: Indicator for fertilizer license.
-                                                                                fertilizer_licence_number: Fertilizer license number.
-                                                                                is_banking_licence_number: Indicator for banking license.
-                                                                                banking_licence_number: Banking license number.
-                                                                                created_by: Creator of the entry.
-                                                                                person_id: Identifier of the person.
-                                                                                user_pwd: User password.
-                                                                                appiculture: Indicator for apiculture.
-                                                                                mushroom: Indicator for mushroom farming.
-                                                                                nursery: Indicator for nursery.
-                                                                                dairy: Indicator for dairy farming.
-                                                                                procurement: Indicator for procurement.
-                                                                                seed: Indicator for seed.
-                                                                                fertilizer: Indicator for fertilizer.
-                                                                                banking: Indicator for banking.
-                                                                                is_updates_approved: Indicator for updates approval.
-                                                                                name_of_bank_for_banking_services: Name of the bank for banking services.
-                                                                                services_offered: Services offered.
-                                                                                training_subject_id: Identifier of the training subject.
-                                                                                training_subject_name: Name of the training subject.
-                                                                                training_period_indays: Training period in days.
-                                                                                isloanprovided: Indicator for loan provision.
-                                                                                is_updated: Indicator for update.
-                                                                                updated_by: Updater of the entry.
-                                                                                type_id: Identifier of the type.
-                                                                                type_name: Name of the type.
-                                                                                name: Name.
-                                                                                father_husband_name: Father or husband's name.
-                                                                                gender_id: Identifier of the gender.
-                                                                                gender_name: Gender.
-                                                                                cast_belong_to_id: Identifier of the caste.
-                                                                                cast_belong_to_name: Name of the caste.
-                                                                                highest_qualification: Highest qualification.
-                                                                                address: Address.
-                                                                                district_id: Identifier of the district.
-                                                                                district_name: Name of the district.
-                                                                                block_id: Identifier of the block.
-                                                                                block_name: Name of the block.
-                                                                                gram_panchayat_id: Identifier of the gram panchayat.  \ 
-
-The "t_expenditure_details" table records expenditure details of farmers on agriculture...The columns are...
-                                                                                amount: The amount spent for the expenditure.
-                                                                                entry_date: The date when the expenditure entry was made.
-                                                                                year: The year associated with the expenditure.
-                                                                                month: The numerical representation of the month.
-                                                                                month_name: The name of the month.
-                                                                                district_id: Identifier for the district where the expenditure occurred.
-                                                                                block_id: Identifier for the block where the expenditure occurred.
-                                                                                ae_id: Identifier for the Agricultural Extension (AE) responsible for the expenditure.
-                                                                                remarks: Additional remarks or notes regarding the expenditure.
-                                                                                lat_val: Latitude value indicating the location of the expenditure.
-                                                                                long_val: Longitude value indicating the location of the expenditure.
-                                                                                address: Address where the expenditure took place.
-                                                                                entry_by: Identifier for the person who made the expenditure entry.
-                                                                                expenditure_id: Unique identifier for the expenditure entry.
-                                                                                fy: Fiscal year associated with the expenditure.   \
-                                                                                
-The "t_digital_banking" table records digital banking transactions of farmers on agriculture..the columns are...
-
-                                                                                        entry_date: The date when the digital banking transaction occurred.
-                                                                                        amount: The amount involved in the digital banking transaction.
-                                                                                        fy: The fiscal year associated with the transaction.
-                                                                                        transaction_type: The type of digital banking transaction (e.g., deposit, withdrawal, transfer).
-                                                                                        entry_by: Identifier for the person who made the transaction entry.
-                                                                                        lat_val: Latitude value indicating the location of the transaction.
-                                                                                        long_val: Longitude value indicating the location of the transaction.
-                                                                                        member_id: Identifier for the member involved in the transaction.
-                                                                                        address: Address associated with the transaction.
-                                                                                        member_name: Name of the member involved in the transaction. \
-                                                                                        
-The "t_advisory_farmer_entry" table maintains entries related to advisory services for farmers, including crop intervention ID and name, entry by, geographical coordinates, member ID, address, member name, and fiscal year.The columns are...
-
-                                                                                        crop_intervention_id: Identifier for the crop intervention provided to the farmer.
-                                                                                        crop_intervention_name: Name of the crop intervention provided to the farmer.
-                                                                                        entry_by: Identifier for the person who made the advisory entry.
-                                                                                        lat_val: Latitude value indicating the location of the advisory entry.
-                                                                                        long_val: Longitude value indicating the location of the advisory entry.
-                                                                                        member_id: Identifier for the member (farmer) who received the advisory service.
-                                                                                        address: Address associated with the advisory entry.
-                                                                                        member_name: Name of the member (farmer) who received the advisory service.
-                                                                                        fy: Fiscal year associated with the advisory entry.
-
-The "t_agri_input" table captures agricultural input transactions, including the amount, quantity, entry date, transaction type, crop season details, crop name and variety, company name, unit type, entry by, geographical coordinates, member details, and fiscal year.The columns are... \
-
-                                                                                    amount: The monetary value of the agricultural input transaction.
-                                                                                    quantity: The quantity of the agricultural input involved in the transaction.
-                                                                                    entry_date: The date when the transaction occurred.
-                                                                                    transaction_type: The type of transaction (e.g., purchase, sale).
-                                                                                    crop_season_id: Identifier for the crop season.
-                                                                                    crop_season_name: Name of the crop season.
-                                                                                    crop_name_id: Identifier for the crop name.
-                                                                                    crop_name: Name of the crop.
-                                                                                    seed_variety_name: Name of the seed variety.
-                                                                                    company_name: Name of the company providing the agricultural input.
-                                                                                    unit_type: Type of unit for the quantity (e.g., kg, liters).
-                                                                                    entry_by: Identifier for the person who made the transaction entry.
-                                                                                    lat_val: Latitude value indicating the location of the transaction.
-                                                                                    long_val: Longitude value indicating the location of the transaction.
-                                                                                    member_id: Identifier for the member (e.g., farmer) involved in the transaction.
-                                                                                    address: Address associated with the transaction.
-                                                                                    member_name: Name of the member (e.g., farmer) involved in the transaction.
-                                                                                    fy: Fiscal year associated with the transaction.
+Always use LIMIT 50 unless asked by user to give top 5 or top 10.
 
 
+When user ask question then if it contains word in the followings...SIWAN
+MUNGER
+PATNA
+LAKHISARAI
+DARBHANGA
+BHAGALPUR
+GOPALGANJ
+JAMUI
+SARAN
+ROHTAS
+SHEIKHPURA
+BEGUSARAI
+SITAMARHI
+SAMASTIPUR
+SUPAUL
+BUXAR
+SAHARSA
+ARWAL
+GAYA
+VAISHALI
+PASHCHIM CHAMPARAN
+MADHEPURA
+JEHANABAD
+MADHUBANI
+KAIMUR (BHABUA)
+SHEOHAR
+KATIHAR
+KHAGARIA
+NAWADA
+BANKA
+NALANDA
+BHOJPUR
+AURANGABAD
+ARARIA
+PURNIA
+PURBI CHAMPARAN
+KISHANGANJ
+MUZAFFARPUR........then its district name \
+
+Similarly if user question contain words like these.....Kadwa
+Barachatti
+Kharagpur
+Nardiganj
+Tarari
+Benipatti
+Rampur
+Pakri Dayal
+Arwal
+Mainatanr
+Belchhi
+Mahua
+Barauni
+Barharia
+Pratapganj
+Suryapura
+Mohiuddinagar
+Ismailpur
+Meskaur
+Akbarpur
+Barh
+Rajaun
+Shivaji Nagar
+Pandarak
+Ariari
+Ladania
+Andhratharhi
+Bihariganj
+Pupri
+Alinagar
+Kochas
+Bakhri
+Ratni Faridpur
+Bankatwa
+Marhaura
+Patepur
+Barhampur
+Rafiganj
+Tan Kuppa
+Laukaha
+Laukahi
+Sasaram
+Gamharia
+Barahiya
+Korha
+Ghat Kusumbha
+Hisua
+Bijaipur
+Motihari
+Phulwaria
+Mohania
+Gaighat
+Jandaha
+Tharthari 
+Jale
+Nagar Nausa
+Maharajganj
+Hasanpura
+Bachhwara
+Babubarhi
+Jalalgarh
+Balrampur
+Turkaulia
+Chakki
+Nirmali
+Sonepur
+Hussainganj
+Tariani Chowk
+Chapra
+Lauriya
+Kurtha
+Kako
+Nauhatta
+Majhaulia
+Naokothi
+Sahdai Buzurg
+Hayaghat
+Arrah
+Krityanand Nagar
+Bairia
+Atri
+Basopatti
+Jainagar
+Madhubani
+Adhaura
+Ramgarh
+Tetaria
+Charaut
+Bochaha
+Haspura
+Agiaon
+Chainpur
+Lalganj
+Jamalpur
+Marauna
+Noorsarai
+Bithan
+Bihpur
+Katoria
+Chakai
+Manjha
+Barbigha
+Gopalpur
+Hanumannagar
+Andar
+Fatehpur
+Kursakatta
+Sarairanjan
+Khudabandpur
+Pach Deuri
+Marwan
+Jamui
+Palasi
+Obra
+Dumra
+Uchkagaon
+Pranpur
+Behea
+Nawada
+Ishupur
+Karpi
+Sikandra
+Hasanpur
+Karai Parsurai
+Bidupur
+Baniapur
+Pirpainti
+Parbatta
+Wazirganj
+Azamnagar
+Jogapatti
+Maker
+Chewara
+Jalalpur
+Chanpatia
+Bisfi
+Dariapur
+Pipariya
+Tikari 
+Banke Bazar
+Madhuban
+Biraul
+Goraul
+Sikti
+Madhepur
+Khajauli
+Phulidumar
+Sameli
+Ekma
+Sanjhauli
+Islamnagar Aliganj
+Goradih
+Dumraon 
+Paterhi Belsar
+Charpokhari
+Parsauni
+Nuaon
+Bairgania
+Nautan
+Bariarpur
+Rohtas
+Bandra
+Piprakothi
+Singhwara
+Durgawati
+Lakhnaur
+Ramgarhwa
+Manigachhi
+Naugachhia
+Narhat
+Paliganj
+Sakra
+Tardih
+Garhpura
+Taraiya
+Tajpur
+Rahui
+Srinagar
+Katihar
+Paraiya
+Gora Bauram
+Bajpatti
+Bodh Gaya
+Pakribarawan
+Darbhanga
+Ziradei
+Dhanarua
+Majorganj
+Kishanpur
+Dhaka
+Maner
+Dandari
+Samastipur
+Baruraj (Motipur)
+Nasriganj
+Gaunaha
+Gobindpur
+Koilwar
+Birpur
+Bagaha
+Barun
+Kesaria
+Muhra
+Ben
+Shahpur
+Matihani
+Baikunthpur
+Mashrakh
+Daudnagar
+Sabour
+Imamganj
+Naubatpur
+Guthani
+Khizirsarai
+Alauli
+Sonhaula
+Lakhisarai
+Phulparas
+Ghoswari
+Pusa
+Modanganj
+Hathua
+Bihta
+Piprasi
+Tarapur
+Madanpur
+Purnahiya
+Simri
+Sugauli
+Harlakhi
+Gogri
+Buxar
+Punpun
+Kurhani
+Mansi
+Bathnaha
+Shahkund
+Desri
+Raja Pakar
+Warisaliganj
+Manpur
+Purnia East
+Teghra
+Bihar
+Kashi Chak
+Narpatganj
+Kesath 
+Ramnagar
+Rangra Chowk
+Aurangabad
+Falka
+Ekangarsarai
+Barsoi
+Sarmera
+Kumarkhand
+Kahalgaon
+Bhagwanpur
+Akorhi Gola
+Amarpur
+Vidyapati Nagar
+Begusarai
+Musahri
+Patarghat
+Lakshmipur
+Aurai
+Nawanagar
+Hulasganj
+Dobhi
+Itarhi
+Darauli
+Mokameh
+Suppi
+Dumri Katsari
+Bibhutpur
+Kasba
+Dulhin Bazar
+Hilsa
+Goh
+Nagra
+Bhabua
+Parihar
+Silao
+Lahladpur
+Belaganj
+Ujiarpur
+Bokhara
+Dighalbank
+Belhar
+Bhorey
+Pandaul
+Karakat
+Daniawan 
+Jhajha
+Dharhara
+Bhawanipur
+Jokihat
+Pipra
+Bettiah
+Ramgarh Chowk
+Khaira
+Masaurhi 
+Saur Bazar
+Amnour
+Khagaria
+Hasanganj
+Sidhwalia
+Nanpur
+Neem Chak Bathani
+Amas
+Konch
+Riga
+Makhdumpur
+Banjaria
+Alamnagar
+Saraigarh Bhaptiyahi
+Khanpur
+Sursand
+Singhia
+Kusheshwar Asthan (East)
+Sikta
+Surajgarha
+Kuchaikote
+Dandkhora
+Thakrahan
+Katra
+Raghopur
+Pothia
+Bahadurganj
+Gopalganj
+Minapur
+Barhat
+Salkhua
+Kishanganj
+Chausa
+Asarganj
+Islampur
+Paharpur
+Manihari
+Vaishali
+Sahebpur Kamal
+Sono
+Parbalpur
+Sherghati
+Patna Rural 
+Chandi
+Amour
+Nabinagar
+Terhagachh
+Pachrukhi
+Bikram
+Bhitaha
+Asthawan 
+Kharik
+Nathnagar
+Kawakol
+Supaul
+Kanti
+Baheri
+Chakia(Pipra)
+Kotwa
+Sheohar
+Sonbarsa
+Bind
+Manjhi
+Chanan*
+Munger
+Rajauli
+Chautham
+Chenari
+Kargahar
+Thawe
+Raghunathpur
+Raniganj
+Araria
+Gwalpara
+Rupauli
+Morwa
+Satar Kataiya
+Udwant Nagar
+Baisi
+Dagarua
+Athmalgola
+Cheria Bariarpur
+Kiratpur
+Sangrampur
+Piprarhi
+Fatwah
+Dinara
+Katrisarai
+Deo
+Sandesh
+Rajnagar
+Belsand
+Tribeniganj
+Barauli
+Lakri Nabiganj
+Banka
+Kudra
+Mansahi
+Bakhtiarpur
+Dighwara
+Barhara
+Patori
+Chand
+Mahishi
+Piro
+Mairwa
+Tilouthu
+Ghorasahan
+Garkha
+Sampatchak
+Narkatiaganj
+Benipur
+Parsa
+Areraj
+Harsidhi
+Shekhopur Sarai
+Adapur
+Warisnagar
+Chiraia
+Katiya
+Narayanpur
+Siswan
+Jehanabad
+Raxaul
+Ghoshi
+Kahara
+Basantpur
+Barahat
+Garhani
+Jhanjharpur
+Goriakothi
+Murliganj
+Nokha
+Sahebganj
+Kutumba
+Jagdishpur
+Paroo
+Bikramganj
+Singheshwar
+Chaugain
+Banmankhi
+Halsi
+Forbesganj
+Keotiranway
+Dumaria
+Kursela
+Chehra Kalan
+Sahar
+Sirdala
+Madhwapur
+Harnaut
+Kaluahi
+Mohanpur
+Tetiha Bambor
+Sonbhadra Banshi 
+Daraundha
+Shankarpur
+Panapur
+Chhorahi
+Sheosagar
+Dhamdaha
+Ghoghardiha
+Bausi
+Chanan
+Runisaidpur
+Kusheshwar Asthan
+Gaya Town C.D.
+Bhargama
+Rajpur
+Khusrupur
+Sultanganj
+Patahi
+Kochadhamin
+Rajgir
+Shambhuganj
+Dinapur-Cum-
+Phenhara
+Chhauradano(Narkatia)
+Saraiya
+Revelganj
+Madhepura
+Bhagwanpur Hat
+Siwan
+Kaler
+Mansurchak
+Sidhaw
+Phulwari
+Barari
+Gurua
+Bahadurpur
+Dawath
+Beldaur
+Chhatapur
+Gidhaur
+Shamho Akha Kurha
+Ghanshyampur
+Banma Itahri
+Simri Bakhtiarpur
+Dholi (Moraul)
+Giriak
+Rosera
+Dehri
+Dhuraiya
+Baisa
+Kalyanpur
+Puraini
+Roh
+Hajipur
+Mehsi
+Sheikhpura
+Guraru
+Mahnar
+Balia
+Amdabad
+Thakurganj
+Ghailarh
+Dalsinghsarai...then its block name \
+
+
+Similarly if user question contains these words.....ARWAL
+MADHUBANI
+JAMUI
+NAWADA
+ROHTAS
+KATIHAR
+DARBHANGA
+SAMASTIPUR
+LAKHISARAI
+BUXAR
+AURANGABAD
+BEGUSARAI
+KHAGARIA
+GOPALGANJ
+KISHANGANJ
+VAISHALI
+SUPAUL
+SHEOHAR
+MUNGER
+ARARIA
+BANKA
+JEHANABAD
+MADHEPURA
+SIWAN
+SHEIKHPURA......then it can be both district and block \
 The "t_marketing_services" table stores data related to marketing services, including purchase date, entry date, rate per kilogram, quantity in kilograms, total amount, crop name and identifier, entry by, geographical coordinates, member details, fiscal year, and crop season details.The columns are ... \
 
                                                                                                                 purchase_date: Date when the purchase was made.
@@ -1622,3 +1953,268 @@ SHEIKHPURA)..then it can be either district or block....so we can identify wheth
         return jsonify({'error': str(e)}), 500
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
+
+
+
+#  """You are a postgres SQL expert. Given an input question, first create a syntactically correct postgres SQL query to run,.....and keep in mind its very very important that while generating sql query donot put ;(semicolon) in the end of query or any special character or brackets at begining or end only give sql query.. then look at the results of the query and return the answer to the input question.
+# Unless the user specifies in the question a specific number of examples to obtain, query for at most {top_k} results using the WHERE LIMIT<=1 clause as per Postgres SQL. You can order the results to return the most informative data in the database.
+# Never query for all columns from a table. You must query only the columns that are needed to answer the question. Wrap each column name in double quotes (") to denote them as delimited identifiers.
+# Pay attention to use only the column names you can see in the tables below. Be careful to not query for columns that do not exist. Also, pay attention to which column is in which table.Use join and other oracle sql advance query to get the best query according to user query.
+# Pay attention to use CURRENT_DATE function to get the current date, if the question involves "today".
+# Pay attention to write district name in capital letter while generating sql query..for example DISTRICT_NAME='DARBHANGA'
+# Detail information about table and its columns are as follows:-
+       
+#        The table M_CBO is a master table storing information about Community Based Organizations (CBOs),vo(Village Organisation),shg(Self Help Group) and clf(Cluster Level Federation) with columns including CBO_ID, CBO_NAME, DISTRICT_ID, BLOCK_ID, VILLAGE_ID, CBO_TYPE_ID, THEME_ID, LATITUDE, LONGITUDE, TOLA_MOHALLA_NAME, MEETING_PERIODICITY, MEETING_DAY, MEETING_DATE, GENERAL_SAVING_AMOUNT, HRF_SAVING_AMOUNT, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, SHARE_RATE, MEETING_START_TIME, STATE_ID, FORMATION_DATE, SCHEME_ID, CBO_NAME_HINDI, OTHER_SAVING_1, OTHER_SAVING_2, OTHER_SAVING_3, MEMBERSHIP_FEE, REGISTRATION_NUMBER, REGISTRATION_DATE, COMPLETE_STATUS, NRLM_CODE, PWD, LOKOS_CODE.\n
+#         The table M_CBO_TYPE is a master table containing information about different types of Community Based Organizations (CBO types) with columns such as CBO_TYPE_ID, TYPE_SHORT_NAME, TYPE_DESCRIPTION, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, TYPE_SHORT_NAME_HINDI, TYPE_DESCRIPTION_HINDI, PARENT_CBO_TYPE_ID.\n
+#        The table M_CBO_MEMBER is a master table containing information about individual members of a Community Based Organization (CBO) with columns such as MEMBER_ID, NAME, FATHER_NAME, HUSBAND_NAME, DOB (Date of Birth), GENDER, ADDRESS, EDUCATION, DATE_OF_JOINING, EMAIL_ADDRESS, PHONE_NO, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, RECORD_STATUS, STATE_ID, DISTRICT_ID, BLOCK_ID, VILLAGE_ID, NAME_HINDI, FATHER_NAME_HINDI, HUSBAND_NAME_HINDI, POSTOFFICE, THANA, KYC_TYPE, KYC_NUMBER, EBS_MEMBER_ID, SECC_PIN_NO, STATEID, DISTRICTID, BLOCKID, VILLAGEID, TOILET, AADHAR_NUMBER, AADHER_CARD_SEEDED, NRLM_MEMBER_ID, REF_CODE, AADHAR_STATUS, LOKOS_MEMBER_CODE.\n
+#        The table M_CBO_SHG_MEMBER is a master table that stores detailed information about individual members associated with a Self Help Group (SHG) within a Community Based Organization (CBO). It includes columns such as MEMBER_ID, CATEGORY, CASTE, RELIGION, TOLA_NAME, CREATED_BY, UPDATED_BY, CREATED_ON, UPDATED_ON, RECORD_STATUS, CBO_ID, ENDORSED_BY_GRAMSABHA, DISTRICTID.\n
+#        The table T_CBO_APPL_MAPPING is a transactional table responsible for storing information related to transactions involving the mapping of applications to a Community Based Organization (CBO). It includes columns such as APPLICATION_ID, ACC_NUMBER, ACC_OPENING_DATE, ACC_OPENING_STATUS, CBO_ID, CREATED_ON, UPDATED_ON, CREATED_BY, and UPDATED_BY to track transactional details associated with this mapping.\n
+#        The table T_CBO_LOAN_REGISTER is a transactional table that maintains records of loans registered within a Community Based Organization (CBO). It contains columns such as LOAN_REGISTER_ID, CBO_ID, LOAN_TYPE_ID, LOAN_AMOUNT, LOAN_INSTALLMENTS, LOAN_DATE, RECORD_UPDATED_ON, RECORD_UPDATED_BY, RECORD_CREATED_ON, RECORD_CREATED_BY, LOAN_REASON, INTEREST_AMOUNT, PAID, TILL_DATE, LOAN_FROM_CBO_ID, IMEI_NUMBER, and RECORD_SYNCED_ON.\n
+#        The table T_ACC_VOUCHER is a transactional table that stores accounting vouchers within the context of a Community Based Organization (CBO). It includes columns such as VOUCHER_ID, VOUCHER_DATE, CBO_ID, DEBIT_ACCOUNT, CREDIT_ACCOUNT, REMARKS, OTHER_NAME, DEBIT_STAKEHOLDER_ID, VOUCHER_TYPE_ID, CREATED_ON, CREATED_BY, CREDIT_STAKEHOLDER_ID, IMEI_NUMBER, RECORD_SYNCED_ON, CHEQUE_NO, and CHEQUE_DATE. \n
+#        The table M_BLOCK represents information about different blocks. It includes columns such as BLOCK_ID, BLOCK_NAME, DISTRICT_ID, STATE_ID, BLOCK_NAME_HINDI, NRLM_BLOCK_CODE, ADDOPED_BY_SCHEME, PROJECT_CODE, and PROJECT_CODE_TILL_APRIL_2023. \n
+#        The table M_DISTRICT contains information about different districts. It includes columns such as DISTRICT_ID, DISTRICT_NAME, STATE_ID, DISTRICT_NAME_HINDI, DISTRICT_CENS_2011_ID, and NRLM_DISTRICT_CODE.\n
+#        The table M_PANCHAYAT contains information about various panchayats. It includes columns such as STATE_ID, DISTRICT_ID, BLOCK_ID, PANCHAYAT_ID, PANCHAYAT_NAME, PANCHAYAT_NAME_HINDI, and NRLM_PANCHAYAT_CODE. \n
+#        The table M_VILLAGE contains information about various villages. It includes columns such as VILLAGE_ID, VILLAGE_NAME, BLOCK_ID, OTHER_POPULATION, SC_POPULATION, ST_POPULATION, DISTRICT_ID, STATE_ID, PANCHAYAT_ID, VILLAGE_NAME_HINDI, EBC_POPULATION, BC_POPULATION, MD_POPULATION, and NRLM_VILLAGE_CODE. \n
+#        The table MP_CBO_MEMBER is a mapping table that associates members with a specific Community Based Organization (CBO). It includes columns such as MEMBER_ID, CBO_ID, DESIGNATION_ID, RECORD_STATUS, ID, CREATED_BY, CREATED_ON, UPDATED_BY, UPDATED_ON, and DISTRICTID.\n
+#         T_BULK_BANK_ACC is a transactional tabe which contains columns APPLICATION_ID BRANCH_ID,ACC_TYPE_ID,APPLICATION_DATE,CREATED_ON,UPDATED_ON,BANK_ID,NO_OF_APPLICATIONS,STATUS,REMARKS,ACCOUNT_HOLDER_TYPE this able is used in conjunction with other tables when question asked about saving account of shg,vo or clf  \n
+#         M_DESIGNATION is a master tables which contain the following columns DESIGNATION_ID DESIGNATION_SHORT_NAME DESIGNATION_FULL_NAME MEMBER_GROUP_ID CREATED_BY CREATED_ON UPDATED_BY UPDATED_ON RECORD_STATUS DESIGNATION_SHORT_NAME_HINDI DESIGNATION_FULL_NAME_HINDI EBS_JOB_ID EBS_THEMATIC_ID...whenever the question is the count of member then member_group_id=3 and designation_id!=31 \
+#         The  table CLF_MASIK_GRADING contains information about the grades assigned to the clf. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, clf_id, criteria1, criteria2, criteria3, month_name, district_id, block_id and final_grade. The cbo_type_id of the clf is 1. \n
+#        The  table VO_MASIK_GRADING contains information about the grades assigned to the vo. It includes columns such as sl, year, month, criteria2, criteria3, criteria4, criteria5, total_marks, vo_id, criteria1, month_name, district_id, block_id, clf_id and final_grade. The cbo_type_id of the vo is 2. \n
+#        The  table SHG_MASIK_GRADING contains information about the grades assigned to the shg. It includes columns such as sl, year, month, criteria4, criteria5, criteria6, total_marks, shg_id, criteria1, criteria2, criteria3, month_name, clf_id, vo_id and final_grade. The cbo_type_id of the shg is 3. \n
+
+#        The M_FARMER table stores essential details about farmers. Its columns include:
+#                                                                     FARMER_ID: Unique identifier.
+#                                                                     MEMBER_ID: Linked to a Community Based Organization (CBO) member.
+#                                                                     AADHAR: Aadhar number for identification.
+#                                                                     MOBILENO: Contact number.
+#                                                                     BANK_ID: Bank identifier.
+#                                                                     BRANCH_ID: Branch identifier.
+#                                                                     ACCOUNT_NO: Bank account number.
+#                                                                     PHOTO: Farmer's photograph.
+#                                                                     CREATED_BY: Creator information.
+#                                                                     CREATED_ON: Creation timestamp.   \n
+
+#         The M_FARMER_CROP table manages information about crops cultivated by farmers. Its columns include:
+#                                                                                         CROP_ID: Unique identifier for each crop record.
+#                                                                                         CROP_NAME: Name of the crop being cultivated.
+#                                                                                         CROP_TYPE_ID: Identifier representing the type of crop (e.g., cereal, legume, vegetable). \n
+#         The M_FARMER_CROP_TECHNOLOGY table stores data related to agricultural technologies used for specific crops. Its columns are:
+#                                                                                                         TECHNOLOGY_ID: Unique identifier for each technology entry.
+#                                                                                                         CROP_ID: Identifier linking the technology to a specific crop.
+#                                                                                                         TECHNOLOGY: Description or name of the agricultural technology utilized.  \n                                                                             
+#         The M_FARMER_CROPTYPE table manages information about different types of crops. Its columns include:
+#                                                                                             CROP_TYPE_ID: Unique identifier for each crop type.
+#                                                                                             CROP_TYPE: Name or description of the crop type. \n
+
+#         The M_FARMER_LAND table stores data regarding landholdings of farmers. Its columns include:
+#                                                                                 LAND_ID: Unique identifier for each land record.
+#                                                                                 FARMER_ID: Identifier linking the land to a specific farmer.
+#                                                                                 LANDHOLDINGOWN: Area of land owned by the farmer.
+#                                                                                 LANDHOLDINGLEASE: Area of land leased by the farmer.
+#                                                                                 IRRIGATEDLAND: Area of land that is irrigated.
+#                                                                                 NONIRRIGATEDLAND: Area of land that is not irrigated.
+#                                                                                 CREATED_BY: Information about the user or process that created the land record.
+#                                                                                 CREATED_ON: Timestamp indicating the date and time when the land record was created in the system. \n
+
+# The M_FARMER_PEST_MANAGEMENT table contains data related to pest management treatments for farmers. Its columns include:
+#                                                                                                     P_TREATMENT_ID: Unique identifier for each pest treatment entry.
+#                                                                                                     TREATMENT: Description or name of the pest management treatment. \n
+
+# The M_FARMER_SEED table maintains information about different types of seeds used by farmers. Its columns include:
+
+#                                                                                             SEED_TYPE_ID: Unique identifier for each seed type.
+#                                                                                             SEED_TYPE: Description or name of the seed type. \n                                                                                                 
+
+# The M_FARMER_SOIL_MANAGEMENT table stores details regarding soil management practices adopted by farmers. Its columns include:
+
+#                                                                                             SOILPRACTISE_ID: Unique identifier for each soil management practice entry.
+#                                                                                             SOIL_PRACTISE: Description or name of the soil management practice. \n
+
+# The T_FARMER_TRANSACTION table records transactional data associated with farmers' activities.It also indicate that farmers are engaged and active. Its columns include:
+#                                                             TRANSACTION_ID: Unique identifier for each transaction.
+#                                                             FARMER_ID: Identifier linking the transaction to a specific farmer.
+#                                                             VO_ID: Identifier for the Village Organisation (VO) associated with the transaction.
+#                                                             SHG_ID: Identifier for the Self Help Group (SHG) associated with the transaction.
+#                                                             FY: Fiscal year of the transaction.
+#                                                             CROP_TYPE_ID: Identifier representing the type of crop involved in the transaction.
+#                                                             CULTIVATION_AREA: Area of land cultivated for the transaction.
+#                                                             SEEDS_USED: Quantity of seeds used.
+#                                                             SEEDS_VARIETY: Variety of seeds used.
+#                                                             SEED_TYPE_ID: Identifier representing the type of seed used.
+#                                                             TECHNOLOGY_ID: Identifier representing the agricultural technology used.
+#                                                             TOTAL_YIELD: Total yield obtained from the transaction.
+#                                                             CREATED_BY: Information about the user or process that created the transaction.
+#                                                             CREATED_ON: Timestamp indicating the date and time when the transaction was created.
+#                                                             CROP_ID: Identifier for the specific crop involved in the transaction.
+#                                                             SOILPRACTISE_ID: Identifier representing the soil management practice employed.
+#                                                             TREATMENT_ID: Identifier representing the pest management treatment applied.  \n
+
+# The T_MP_FARMER_TRANSACTION_PEST is mapping table records transactional data related to pest management treatments for farmers. Its columns include:
+#                                                                                                         TRANSACTION_ID: Unique identifier for each transaction.
+#                                                                                                         P_TREATMENT_ID: Identifier for the pest management treatment applied.
+#                                                                                                         CREATED_BY: Information about the user or process that created the transaction.
+#                                                                                                         CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n  
+
+# The T_MP_FARMER_TRANSACTION_SOIL table contains transactional data related to soil management practices adopted by farmers. Its columns include:
+#                                                                                                                             TRANSACTION_ID: Unique identifier for each transaction.
+#                                                                                                                             SOILPRACTISE_ID: Identifier for the soil management practice applied.
+#                                                                                                                             CREATED_BY: Information about the user or process that created the transaction. \n
+  
+# The T_MP_TRANSACTION_CROPTECHNOLOGY is mapping table stores transactional data related to crop technologies used by farmers. Its columns include:
+#                                                                                             TRANSACTION_ID: Unique identifier for each transaction.
+#                                                                                             TECHNOLOGY_ID: Identifier for the crop technology applied.
+#                                                                                             CREATED_BY: Information about the user or process that created the transaction.
+#                                                                                             CREATED_ON: Timestamp indicating the date and time when the transaction was created.   \n                                                                                                                       CREATED_ON: Timestamp indicating the date and time when the transaction was created. \n                                                                                    
+
+                                                                                            
+# The profile_entry table provides comprehensive information about farmers profiles, including personal details, training periods, banking information, farming activities, and certification statuses.The columns are.. \
+
+#                                                                                 training_period_rabi_season_module: Training period for Rabi season module.
+#                                                                                 training_period_zaid_season_module: Training period for Zaid season module.
+#                                                                                 training_period_organic_formulations: Training period for organic formulations.
+#                                                                                 id_of_bank_for_banking_services: Identifier of the bank for banking services.
+#                                                                                 training_period_natural_farming: Training period for natural farming.
+#                                                                                 date_of_joining: Date of joining the program.
+#                                                                                 updated_on: Timestamp of the last update.
+#                                                                                 date_of_birth: Date of birth of the individual.
+#                                                                                 created_on: Timestamp of the creation.
+#                                                                                 date_training_period_from: Starting date of the training period.
+#                                                                                 date_training_period_to: Ending date of the training period.
+#                                                                                 loan_first_tranch: Amount of the first tranche of the loan.
+#                                                                                 loan_second_tranch: Amount of the second tranche of the loan.
+#                                                                                 training_period_kharif_season_module: Training period for Kharif season module.
+#                                                                                 updated_date: Date of the last update.
+#                                                                                 id: Unique identifier.
+#                                                                                 gram_panchayat_name: Name of the gram panchayat.
+#                                                                                 village_id: Identifier of the village.
+#                                                                                 village_name: Name of the village.
+#                                                                                 pin_code: PIN code of the area.
+#                                                                                 mobile_number: Mobile number of the individual.
+#                                                                                 aadhaar_number: Aadhaar number of the individual.
+#                                                                                 pan_number: PAN number of the individual.
+#                                                                                 account_number: Bank account number.
+#                                                                                 bank_id: Identifier of the bank.
+#                                                                                 bank_name: Name of the bank.
+#                                                                                 branch_id: Identifier of the bank branch.
+#                                                                                 branch_name: Name of the bank branch.
+#                                                                                 ifsc_code: IFSC code of the bank branch.
+#                                                                                 clf_id: Identifier of the Cluster Level Federation (CLF).
+#                                                                                 clf_name: Name of the CLF.
+#                                                                                 vo_id: Identifier of the Village Organization (VO).
+#                                                                                 vo_name: Name of the VO.
+#                                                                                 shg_id: Identifier of the Self Help Group (SHG).
+#                                                                                 shg_name: Name of the SHG.
+#                                                                                 shg_member_id: Identifier of the SHG member.
+#                                                                                 shg_member_name: Name of the SHG member.
+#                                                                                 course_name_id: Identifier of the course name.
+#                                                                                 course_name_name: Name of the course.
+#                                                                                 certification_agency_id: Identifier of the certification agency.
+#                                                                                 certification_agency_name: Name of the certification agency.
+#                                                                                 course_training_mode_id: Identifier of the course training mode.
+#                                                                                 course_training_mode_name: Name of the course training mode.
+#                                                                                 gst_value: GST value.
+#                                                                                 is_seed_licence: Indicator for seed license.
+#                                                                                 seed_licence_number: Seed license number.
+#                                                                                 is_fertilizer_licence_number: Indicator for fertilizer license.
+#                                                                                 fertilizer_licence_number: Fertilizer license number.
+#                                                                                 is_banking_licence_number: Indicator for banking license.
+#                                                                                 banking_licence_number: Banking license number.
+#                                                                                 created_by: Creator of the entry.
+#                                                                                 person_id: Identifier of the person.
+#                                                                                 user_pwd: User password.
+#                                                                                 appiculture: Indicator for apiculture.
+#                                                                                 mushroom: Indicator for mushroom farming.
+#                                                                                 nursery: Indicator for nursery.
+#                                                                                 dairy: Indicator for dairy farming.
+#                                                                                 procurement: Indicator for procurement.
+#                                                                                 seed: Indicator for seed.
+#                                                                                 fertilizer: Indicator for fertilizer.
+#                                                                                 banking: Indicator for banking.
+#                                                                                 is_updates_approved: Indicator for updates approval.
+#                                                                                 name_of_bank_for_banking_services: Name of the bank for banking services.
+#                                                                                 services_offered: Services offered.
+#                                                                                 training_subject_id: Identifier of the training subject.
+#                                                                                 training_subject_name: Name of the training subject.
+#                                                                                 training_period_indays: Training period in days.
+#                                                                                 isloanprovided: Indicator for loan provision.
+#                                                                                 is_updated: Indicator for update.
+#                                                                                 updated_by: Updater of the entry.
+#                                                                                 type_id: Identifier of the type.
+#                                                                                 type_name: Name of the type.
+#                                                                                 name: Name.
+#                                                                                 father_husband_name: Father or husband's name.
+#                                                                                 gender_id: Identifier of the gender.
+#                                                                                 gender_name: Gender.
+#                                                                                 cast_belong_to_id: Identifier of the caste.
+#                                                                                 cast_belong_to_name: Name of the caste.
+#                                                                                 highest_qualification: Highest qualification.
+#                                                                                 address: Address.
+#                                                                                 district_id: Identifier of the district.
+#                                                                                 district_name: Name of the district.
+#                                                                                 block_id: Identifier of the block.
+#                                                                                 block_name: Name of the block.
+#                                                                                 gram_panchayat_id: Identifier of the gram panchayat.  \ 
+
+# The "t_expenditure_details" table records expenditure details of farmers on agriculture...The columns are...
+#                                                                                 amount: The amount spent for the expenditure.
+#                                                                                 entry_date: The date when the expenditure entry was made.
+#                                                                                 year: The year associated with the expenditure.
+#                                                                                 month: The numerical representation of the month.
+#                                                                                 month_name: The name of the month.
+#                                                                                 district_id: Identifier for the district where the expenditure occurred.
+#                                                                                 block_id: Identifier for the block where the expenditure occurred.
+#                                                                                 ae_id: Identifier for the Agricultural Extension (AE) responsible for the expenditure.
+#                                                                                 remarks: Additional remarks or notes regarding the expenditure.
+#                                                                                 lat_val: Latitude value indicating the location of the expenditure.
+#                                                                                 long_val: Longitude value indicating the location of the expenditure.
+#                                                                                 address: Address where the expenditure took place.
+#                                                                                 entry_by: Identifier for the person who made the expenditure entry.
+#                                                                                 expenditure_id: Unique identifier for the expenditure entry.
+#                                                                                 fy: Fiscal year associated with the expenditure.   \
+                                                                                
+# The "t_digital_banking" table records digital banking transactions of farmers on agriculture..the columns are...
+
+#                                                                                         entry_date: The date when the digital banking transaction occurred.
+#                                                                                         amount: The amount involved in the digital banking transaction.
+#                                                                                         fy: The fiscal year associated with the transaction.
+#                                                                                         transaction_type: The type of digital banking transaction (e.g., deposit, withdrawal, transfer).
+#                                                                                         entry_by: Identifier for the person who made the transaction entry.
+#                                                                                         lat_val: Latitude value indicating the location of the transaction.
+#                                                                                         long_val: Longitude value indicating the location of the transaction.
+#                                                                                         member_id: Identifier for the member involved in the transaction.
+#                                                                                         address: Address associated with the transaction.
+#                                                                                         member_name: Name of the member involved in the transaction. \
+                                                                                        
+# The "t_advisory_farmer_entry" table maintains entries related to advisory services for farmers, including crop intervention ID and name, entry by, geographical coordinates, member ID, address, member name, and fiscal year.The columns are...
+
+#                                                                                         crop_intervention_id: Identifier for the crop intervention provided to the farmer.
+#                                                                                         crop_intervention_name: Name of the crop intervention provided to the farmer.
+#                                                                                         entry_by: Identifier for the person who made the advisory entry.
+#                                                                                         lat_val: Latitude value indicating the location of the advisory entry.
+#                                                                                         long_val: Longitude value indicating the location of the advisory entry.
+#                                                                                         member_id: Identifier for the member (farmer) who received the advisory service.
+#                                                                                         address: Address associated with the advisory entry.
+#                                                                                         member_name: Name of the member (farmer) who received the advisory service.
+#                                                                                         fy: Fiscal year associated with the advisory entry.
+
+# The "t_agri_input" table captures agricultural input transactions, including the amount, quantity, entry date, transaction type, crop season details, crop name and variety, company name, unit type, entry by, geographical coordinates, member details, and fiscal year.The columns are... \
+
+#                                                                                     amount: The monetary value of the agricultural input transaction.
+#                                                                                     quantity: The quantity of the agricultural input involved in the transaction.
+#                                                                                     entry_date: The date when the transaction occurred.
+#                                                                                     transaction_type: The type of transaction (e.g., purchase, sale).
+#                                                                                     crop_season_id: Identifier for the crop season.
+#                                                                                     crop_season_name: Name of the crop season.
+#                                                                                     crop_name_id: Identifier for the crop name.
+#                                                                                     crop_name: Name of the crop.
+#                                                                                     seed_variety_name: Name of the seed variety.
+#                                                                                     company_name: Name of the company providing the agricultural input.
+#                                                                                     unit_type: Type of unit for the quantity (e.g., kg, liters).
+#                                                                                     entry_by: Identifier for the person who made the transaction entry.
+#                                                                                     lat_val: Latitude value indicating the location of the transaction.
+#                                                                                     long_val: Longitude value indicating the location of the transaction.
+#                                                                                     member_id: Identifier for the member (e.g., farmer) involved in the transaction.
+#                                                                                     address: Address associated with the transaction.
+#                                                                                     member_name: Name of the member (e.g., farmer) involved in the transaction.
+#                                                                                     fy: Fiscal year associated with the transaction.
