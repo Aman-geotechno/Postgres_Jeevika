@@ -1572,7 +1572,33 @@ def api():
         Remember that vo means village organisation,shg means self help group,cbo means community based organisation and clf means cluster level federation  \
                     Pay attention to not add anything from your side in answer.. just give simple natural language answer including this value {db.run(final_query)}. 
                 
-                Once you give the answer the based on user question suggest five more similar questions like this....{question}""")
+         Also if the answer has two or more columns then retun the answr in tabular format.Only return first 50 \
+            
+            Now one also important thing that if user query that is this..{question}...contains any word in this..(ARWAL
+MADHUBANI
+JAMUI
+NAWADA
+ROHTAS
+KATIHAR
+DARBHANGA
+SAMASTIPUR
+LAKHISARAI
+BUXAR
+AURANGABAD
+BEGUSARAI
+KHAGARIA
+GOPALGANJ
+KISHANGANJ
+VAISHALI
+SUPAUL
+SHEOHAR
+MUNGER
+ARARIA
+BANKA
+JEHANABAD
+MADHEPURA
+SIWAN
+SHEIKHPURA)..then it can be either district or block....so we can identify whether it is district or block by looking at the sql query generated which is this..{final_query}..if it contains block then include word block in final answer else if there is district then include district in final answer...""")
         print(response)
 
         
