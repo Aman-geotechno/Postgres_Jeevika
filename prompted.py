@@ -1,4 +1,29 @@
-examples = [
+examples = [{ "input": "list blocks present in patna district",
+            "sql_cmd": """SELECT BLOCK_NAME
+FROM m_block
+WHERE DISTRICT_ID = (
+    SELECT DISTRICT_ID
+    FROM m_district
+    WHERE upper(DISTRICT_NAME) = 'PATNA'
+)
+LIMIT 50""",
+            "result": "[(Maner,Dinapur)]",
+            "answer": "Maner,Dinapur ",
+
+},
+{   "input": "count of block in samastipur district",
+            "sql_cmd": """SELECT count(block_id)
+FROM m_block
+WHERE DISTRICT_ID = (
+    SELECT DISTRICT_ID
+    FROM m_district
+    WHERE upper(DISTRICT_NAME) = 'SAMASTIPUR'
+)
+""",
+            "result": "[()]",
+            "answer": " ",
+
+},
     {
     
             "input": "What is the total count of shg?",
