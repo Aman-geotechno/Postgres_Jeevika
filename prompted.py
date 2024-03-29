@@ -55,6 +55,15 @@ WHERE DISTRICT_ID = (
             "result": """[(75368)]""",
             "answer": """There are total 75368 VO""",
 },
+	    {
+		"input": "What is the total count of tlc?",
+            "sql_cmd": """SELECT COUNT(DISTINCT c.cbo_id) AS tlc_count 
+                            FROM m_cbo c 
+                            INNER JOIN m_cbo_type t ON c.cbo_type_id = t.cbo_type_id 
+                            WHERE upper(t.type_short_name) = 'TLC' AND c.record_status=1""",
+            "result": "[(1075033)]",
+            "answer": "There are total 1075033 SHG ",    
+	    },
 {
             "input": "Number of cbo per block per district",
             "sql_cmd": """SELECT d.DISTRICT_NAME, b.BLOCK_NAME, COUNT(c.CBO_ID) AS cbos \
@@ -104,14 +113,14 @@ AND c.formation_date > CURRENT_DATE - INTERVAL '10 MONTH'""",
         {
             "input": "total count of shg in project nrlm in current year",
             "sql_cmd": """SELECT COUNT(c.cbo_id) AS shg_count
-                        FROM m_cbo c
-                        INNER JOIN m_block b ON b.block_id = c.block_id
-                        WHERE upper(b.project_code) = 'NRLM' 
-                        AND c.cbo_type_id = (SELECT cbo_type_id FROM m_cbo_type WHERE upper(type_short_name) = 'SHG')
-                        AND EXTRACT(YEAR FROM c.formation_date) = EXTRACT(YEAR FROM SYSDATE)
-                        AND c.record_status=1""",
-            "result": """[(32)]""",
-            "answer": """There are total 32 SHG in project NRLM in current year""",
+FROM m_cbo c
+INNER JOIN m_block b ON b.block_id = c.block_id
+WHERE UPPER(b.project_code) = 'NRLM' 
+AND c.cbo_type_id = (SELECT cbo_type_id FROM m_cbo_type WHERE UPPER(type_short_name) = 'SHG')
+AND EXTRACT(YEAR FROM c.formation_date) = EXTRACT(YEAR FROM CURRENT_DATE)
+AND c.record_status=1""",
+            "result": """[(139)]""",
+            "answer": """There are total 139 SHG in project NRLM in current year""",
         },
         {
             "input": "how many clf are in NRETP project",
@@ -2212,6 +2221,54 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number cnrp is 8772.""",
         },
         {
+            "input": "cnrp in purnia?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'PURNIA'""",
+            "result": """[(8772,)]""",
+            "answer": """The total number cnrp in Purnia district is 8772.""",
+        },
+        {
+            "input": "number of cnrp in gaya?",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'GAYA'""",
+            "result": """[(8772,)]""",
+            "answer": """The total number cnrp in Gaya district is 8772.""",
+        },
+        {
+ "input": "cnrp in siwan block",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_block c on a.block_code = c.block_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.block_name) = 'SIWAN'""",
+            "result": """[(21,)]""",
+            "answer": """The total number cnrp in SIWAN block is 21.""",
+        },
+        {
+"input": "in siwan how many cnrp",
+            "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+            inner join m_district c on a.district_code = c.district_id
+            where upper(a.user_type) = 'CNRP USER'
+            and b.active = 1
+            and upper(c.district_name) = 'SIWAN'""",
+            "result": """[(21,)]""",
+            "answer": """The total number cnrp in SIWAN DISTRICT is 21."""
+        },
+        {
             "input": "What is the total number of cnrp in munger district?",
             "sql_cmd": """select count(distinct a.user_id) as toatl_cnrp
             from m_profile a
@@ -2245,6 +2302,26 @@ AND upper(mg.district_name)='BANKA'""",
             and a.created_date BETWEEN '2023-04-01' AND '2024-03-31'""",
             "result": """[(3650,)]""",
             "answer": """The total number of cnrp in the year 2023-2024 is 3650.""",
+        },
+        {
+"input": "trained cnrp year wise",
+            "sql_cmd": """SELECT EXTRACT(YEAR FROM a.created_date) AS year,
+       COUNT(DISTINCT c.cm_cnrp_id) AS total_trained_cnrp
+FROM m_profile a
+INNER JOIN m_shg_hns_user_table b ON a.user_id = b.user_id
+INNER JOIN t_training_of_cadre_and_pmt c ON a.user_id = c.cm_cnrp_id
+WHERE UPPER(a.user_type) = 'CNRP USER'
+  AND b.active = 1
+  AND c.training_completed_status = 'Yes'
+GROUP BY EXTRACT(YEAR FROM a.created_date)""",
+            "result": """[(2021	1
+2022	3676
+2023	1483
+2024	185)]""",
+            "answer": """2021	1
+2022	3676
+2023	1483
+2024	185""",
         },
         {
             "input": "What is the total number of cnrp in the year 2023-2024 in munger district?",
@@ -2351,6 +2428,20 @@ AND upper(mg.district_name)='BANKA'""",
             "answer": """The total number of mrp user in patna district is 75.""",
         },
         {
+"input": "buxar has how many mrp?",
+            "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
+            from m_profile a
+            inner join m_shg_hns_user_table b on a.user_id = b.user_id
+           
+            inner join m_block d on a.block_code = d.block_id
+            inner join m_district e on a.district_code = e.district_id
+            where upper(a.user_type) = 'MRP USER'
+            and b.active = 1
+            and upper(e.district_name) = 'BUXAR'""",
+            "result": """[(31,)]""",
+            "answer": """Buxar district has 31 mrp""",
+        },
+        {
             "input": "What is the total number of mrp in hilsa block?",
             "sql_cmd": """select count(distinct a.user_id) as total_mrp_user
             from m_profile a
@@ -2398,6 +2489,7 @@ AND upper(mg.district_name)='BANKA'""",
             "result": """[(989,)]""",
             "answer": """The total number of hh visit or member visit last month is 989""",
         },
+        
         {
             "input": "What is the total number of hh visit or member visit in last 6 months?",
             "sql_cmd": """select count(distinct a.user_id) as total_hh_visit
