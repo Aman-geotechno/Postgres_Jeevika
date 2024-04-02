@@ -33,6 +33,7 @@ from langchain_community.chat_models import ChatGooglePalm
 #import prompted
 import psycopg2
 from langchain_community.vectorstores.pgvector import PGVector
+from langchain.chains.sql_database.prompt import _postgres_prompt
 
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
